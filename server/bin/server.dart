@@ -7,6 +7,8 @@ import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_router/shelf_router.dart';
 
 import 'package:habitduel_server/handlers/auth_handler.dart';
+import 'package:habitduel_server/handlers/checkins_handler.dart';
+import 'package:habitduel_server/handlers/duels_handler.dart';
 import 'package:habitduel_server/middleware/jwt_middleware.dart';
 import 'package:habitduel_server/db/database.dart';
 
@@ -23,7 +25,11 @@ Future<void> main() async {
   // --- Auth routes (public, no JWT required) ---
   final authHandler = AuthHandler(env);
 
-  // --- Protected routes placeholder (JWT required) ---
+  // --- Duel + Checkin handlers ---
+  final duelsHandler = DuelsHandler();
+  final checkinsHandler = CheckinsHandler();
+
+  // --- Protected routes (JWT required) ---
   final protectedRouter = Router();
   // GET /users/me — quick smoke-test for JWT middleware
   protectedRouter.get('/users/me', (Request request) async {
@@ -62,6 +68,10 @@ Future<void> main() async {
       headers: {'Content-Type': 'application/json'},
     );
   });
+
+  // Mount duels and checkins onto the protected router
+  protectedRouter.mount('/duels/', duelsHandler.router.call);
+  protectedRouter.mount('/duels/', checkinsHandler.router.call);
 
   // --- Build the top-level router ---
   final app = Router();
