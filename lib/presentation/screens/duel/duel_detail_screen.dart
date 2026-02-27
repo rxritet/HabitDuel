@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/network/duel_ws_service.dart';
+import '../../../core/notifications/notification_service.dart';
 import '../../../domain/entities/duel.dart';
 import '../../providers/duel_provider.dart';
 
@@ -18,6 +19,7 @@ class DuelDetailScreen extends ConsumerStatefulWidget {
 
 class _DuelDetailScreenState extends ConsumerState<DuelDetailScreen> {
   StreamSubscription<DuelWsEvent>? _wsSub;
+  bool _isCheckinLoading = false;
 
   @override
   void initState() {
@@ -41,6 +43,13 @@ class _DuelDetailScreenState extends ConsumerState<DuelDetailScreen> {
         // Refresh detail to show updated streaks / new check-in
         ref.read(duelDetailProvider.notifier).load(widget.duelId);
         ref.read(duelsListProvider.notifier).load();
+        // Show local push notification for opponent's broken streak
+        final opponentName = event.data['username'] as String? ?? 'Opponent';
+        final oldStreak = event.data['old_streak'] as int? ?? 0;
+        NotificationService.instance.showStreakBrokenNotification(
+          opponentUsername: opponentName,
+          oldStreak: oldStreak,
+        );
       case 'duel_completed':
         ref.read(duelDetailProvider.notifier).load(widget.duelId);
         ref.read(duelsListProvider.notifier).load();
@@ -70,16 +79,22 @@ class _DuelDetailScreenState extends ConsumerState<DuelDetailScreen> {
   }
 
   Future<void> _handleCheckIn() async {
-    final ok = await ref
-        .read(duelDetailProvider.notifier)
-        .checkIn(widget.duelId);
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(ok ? 'Checked in!' : 'Check-in failed'),
-        ),
-      );
-      if (ok) ref.read(duelsListProvider.notifier).load();
+    if (_isCheckinLoading) return;
+    setState(() => _isCheckinLoading = true);
+    try {
+      final ok = await ref
+          .read(duelDetailProvider.notifier)
+          .checkIn(widget.duelId);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(ok ? 'Checked in!' : 'Check-in failed'),
+          ),
+        );
+        if (ok) ref.read(duelsListProvider.notifier).load();
+      }
+    } finally {
+      if (mounted) setState(() => _isCheckinLoading = false);
     }
   }
 
@@ -114,6 +129,7 @@ class _DuelDetailScreenState extends ConsumerState<DuelDetailScreen> {
             duel: duel,
             onCheckIn: _handleCheckIn,
             onAccept: _handleAccept,
+            isCheckinLoading: _isCheckinLoading,
           ),
       },
     );
@@ -127,10 +143,12 @@ class _DuelBody extends StatelessWidget {
     required this.duel,
     required this.onCheckIn,
     required this.onAccept,
+    required this.isCheckinLoading,
   });
   final Duel duel;
   final VoidCallback onCheckIn;
   final VoidCallback onAccept;
+  final bool isCheckinLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -201,9 +219,15 @@ class _DuelBody extends StatelessWidget {
         // ── Action buttons ──
         if (duel.status == 'active')
           FilledButton.icon(
-            onPressed: onCheckIn,
-            icon: const Icon(Icons.check_circle),
-            label: const Text('Check In'),
+            onPressed: isCheckinLoading ? null : onCheckIn,
+            icon: isCheckinLoading
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.check_circle),
+            label: Text(isCheckinLoading ? 'Checking in…' : 'Check In'),
           ),
         if (duel.status == 'pending')
           FilledButton.icon(
