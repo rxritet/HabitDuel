@@ -5,6 +5,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../core/network/dio_client.dart';
 import '../../data/datasources/auth_remote_ds.dart';
 import '../../data/datasources/duel_remote_ds.dart';
+import '../../data/datasources/leaderboard_remote_ds.dart';
+import '../../data/datasources/profile_remote_ds.dart';
 import '../../data/repositories/auth_repo_impl.dart';
 import '../../data/repositories/duel_repo_impl.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -81,4 +83,14 @@ final getDuelDetailUseCaseProvider = Provider<GetDuelDetailUseCase>((ref) {
 
 final checkInUseCaseProvider = Provider<CheckInUseCase>((ref) {
   return CheckInUseCase(ref.watch(duelRepositoryProvider));
+});
+
+// ─── Leaderboard + Profile data layer providers ─────────────────────────
+
+final leaderboardRemoteDSProvider = Provider<LeaderboardRemoteDataSource>((ref) {
+  return LeaderboardRemoteDataSource(ref.watch(dioProvider));
+});
+
+final profileRemoteDSProvider = Provider<ProfileRemoteDataSource>((ref) {
+  return ProfileRemoteDataSource(ref.watch(dioProvider));
 });
