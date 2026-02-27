@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/screens/auth/login_screen.dart';
 import 'presentation/screens/auth/register_screen.dart';
+import 'presentation/screens/duel/create_duel_screen.dart';
+import 'presentation/screens/duel/duel_detail_screen.dart';
+import 'presentation/screens/home/home_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,36 +67,18 @@ class _HabitDuelAppState extends ConsumerState<HabitDuelApp> {
       routes: {
         '/login': (_) => const LoginScreen(),
         '/register': (_) => const RegisterScreen(),
-        // Home placeholder — will be implemented in Week 2
-        '/home': (_) => const _HomePlaceholder(),
+        '/home': (_) => const HomeScreen(),
+        '/create-duel': (_) => const CreateDuelScreen(),
       },
-    );
-  }
-}
-
-/// Temporary home screen placeholder until Week 2.
-class _HomePlaceholder extends ConsumerWidget {
-  const _HomePlaceholder();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('HabitDuel'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => ref.read(authProvider.notifier).logout(),
-          ),
-        ],
-      ),
-      body: const Center(
-        child: Text(
-          'Welcome to HabitDuel!\nHome screen coming in Week 2.',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 18),
-        ),
-      ),
+      onGenerateRoute: (settings) {
+        if (settings.name == '/duel') {
+          final duelId = settings.arguments as String;
+          return MaterialPageRoute(
+            builder: (_) => DuelDetailScreen(duelId: duelId),
+          );
+        }
+        return null;
+      },
     );
   }
 }
