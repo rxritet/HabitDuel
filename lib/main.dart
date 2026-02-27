@@ -7,6 +7,8 @@ import 'presentation/screens/auth/register_screen.dart';
 import 'presentation/screens/duel/create_duel_screen.dart';
 import 'presentation/screens/duel/duel_detail_screen.dart';
 import 'presentation/screens/home/home_screen.dart';
+import 'presentation/screens/leaderboard/leaderboard_screen.dart';
+import 'presentation/screens/profile/profile_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,8 +69,10 @@ class _HabitDuelAppState extends ConsumerState<HabitDuelApp> {
       routes: {
         '/login': (_) => const LoginScreen(),
         '/register': (_) => const RegisterScreen(),
-        '/home': (_) => const HomeScreen(),
+        '/home': (_) => const MainShell(),
         '/create-duel': (_) => const CreateDuelScreen(),
+        '/leaderboard': (_) => const LeaderboardScreen(),
+        '/profile': (_) => const ProfileScreen(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/duel') {
@@ -79,6 +83,52 @@ class _HabitDuelAppState extends ConsumerState<HabitDuelApp> {
         }
         return null;
       },
+    );
+  }
+}
+
+/// Shell with bottom navigation: Duels / Leaderboard / Profile.
+class MainShell extends StatefulWidget {
+  const MainShell({super.key});
+
+  @override
+  State<MainShell> createState() => _MainShellState();
+}
+
+class _MainShellState extends State<MainShell> {
+  int _index = 0;
+
+  static const _screens = <Widget>[
+    HomeScreen(),
+    LeaderboardScreen(),
+    ProfileScreen(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(index: _index, children: _screens),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _index,
+        onDestinationSelected: (i) => setState(() => _index = i),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.local_fire_department_outlined),
+            selectedIcon: Icon(Icons.local_fire_department),
+            label: 'Duels',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.leaderboard_outlined),
+            selectedIcon: Icon(Icons.leaderboard),
+            label: 'Leaderboard',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
     );
   }
 }

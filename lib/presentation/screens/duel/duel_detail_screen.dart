@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/network/duel_ws_service.dart';
 import '../../../domain/entities/duel.dart';
 import '../../providers/duel_provider.dart';
 
@@ -14,12 +17,56 @@ class DuelDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _DuelDetailScreenState extends ConsumerState<DuelDetailScreen> {
+  StreamSubscription<DuelWsEvent>? _wsSub;
+
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-      () => ref.read(duelDetailProvider.notifier).load(widget.duelId),
-    );
+    Future.microtask(() {
+      ref.read(duelDetailProvider.notifier).load(widget.duelId);
+      _connectWs();
+    });
+  }
+
+  void _connectWs() {
+    final ws = ref.read(duelWsServiceProvider);
+    ws.connect(widget.duelId);
+    _wsSub = ws.events.listen(_onWsEvent);
+  }
+
+  void _onWsEvent(DuelWsEvent event) {
+    switch (event.type) {
+      case 'checkin_created':
+      case 'streak_broken':
+        // Refresh detail to show updated streaks / new check-in
+        ref.read(duelDetailProvider.notifier).load(widget.duelId);
+        ref.read(duelsListProvider.notifier).load();
+      case 'duel_completed':
+        ref.read(duelDetailProvider.notifier).load(widget.duelId);
+        ref.read(duelsListProvider.notifier).load();
+        if (mounted) {
+          final winner = event.data['winner_username'] as String?;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                winner != null
+                    ? 'Duel completed! Winner: $winner 🏆'
+                    : 'Duel completed — it\'s a draw!',
+              ),
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        }
+      default:
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    _wsSub?.cancel();
+    ref.read(duelWsServiceProvider).disconnect();
+    super.dispose();
   }
 
   Future<void> _handleCheckIn() async {
