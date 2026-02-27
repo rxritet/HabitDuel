@@ -9,8 +9,10 @@ import 'package:shelf_router/shelf_router.dart';
 import 'package:habitduel_server/handlers/auth_handler.dart';
 import 'package:habitduel_server/handlers/checkins_handler.dart';
 import 'package:habitduel_server/handlers/duels_handler.dart';
+import 'package:habitduel_server/handlers/leaderboard_handler.dart';
 import 'package:habitduel_server/middleware/jwt_middleware.dart';
 import 'package:habitduel_server/db/database.dart';
+import 'package:habitduel_server/websocket/duel_ws_handler.dart';
 
 Future<void> main() async {
   // Load environment
@@ -25,9 +27,14 @@ Future<void> main() async {
   // --- Auth routes (public, no JWT required) ---
   final authHandler = AuthHandler(env);
 
+  // --- WebSocket hub ---
+  final jwtSecret = env['JWT_SECRET'] ?? 'default_secret';
+  final wsHub = DuelWsHub(jwtSecret);
+
   // --- Duel + Checkin handlers ---
   final duelsHandler = DuelsHandler();
-  final checkinsHandler = CheckinsHandler();
+  final checkinsHandler = CheckinsHandler(wsHub: wsHub);
+  final leaderboardHandler = LeaderboardHandler();
 
   // --- Protected routes (JWT required) ---
   final protectedRouter = Router();
@@ -72,6 +79,7 @@ Future<void> main() async {
   // Mount duels and checkins onto the protected router
   protectedRouter.mount('/duels/', duelsHandler.router.call);
   protectedRouter.mount('/duels/', checkinsHandler.router.call);
+  protectedRouter.mount('/leaderboard/', leaderboardHandler.router.call);
 
   // --- Build the top-level router ---
   final app = Router();
@@ -91,8 +99,21 @@ Future<void> main() async {
       .addHandler(app.call);
 
   // --- Start server ---
-  final server = await shelf_io.serve(handler, InternetAddress.anyIPv4, port);
+  final server = await HttpServer.bind(InternetAddress.anyIPv4, port);
   print('🚀 HabitDuel server running on http://localhost:${server.port}');
+
+  // Route incoming requests: WebSocket upgrades go to wsHub,
+  // everything else goes through Shelf pipeline.
+  server.listen((HttpRequest request) {
+    final path = request.uri.path;
+    if (path.startsWith('/ws/')) {
+      // WebSocket upgrade
+      wsHub.handleUpgrade(request);
+    } else {
+      // Shelf handler
+      shelf_io.handleRequest(request, handler);
+    }
+  });
 }
 
 /// Simple CORS middleware that allows all origins (fine for MVP / dev).
