@@ -1,110 +1,245 @@
-# 🗣️ Speakera
+# ⚔️ HabitDuel
 
 ![Flutter](https://img.shields.io/badge/Flutter-%2302569B.svg?style=for-the-badge&logo=Flutter&logoColor=white)
 ![Dart](https://img.shields.io/badge/Dart-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white)
-![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Web%20%7C%20Desktop-lightgrey?style=for-the-badge)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS-lightgrey?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-In%20Development-orange?style=for-the-badge)
 
-**Speakera** is a cross-platform Flutter application designed to manage and monitor English language learning assessments. It features a robust role-based architecture, offering tailored dashboards for both administrators and students to track performance, visualize test results, and identify at-risk learners.
+**HabitDuel** — мобильное приложение для соревновательного трекинга привычек. Брось вызов другу или незнакомцу: кто дольше держит streak по привычке — тот побеждает. Никаких курсов, никакого edtech — только мотивация через здоровую конкуренцию.
 
 ---
 
-## ✨ Key Features
+## 💡 Концепция
 
-### 🔐 Authentication
-* **Role-Based Access Control (RBAC):** Secure login routing for Admin and Student profiles.
-* **Refined UI:** Animated fade-in transitions and password visibility toggles for better UX.
+Большинство трекеров привычек скучны и бросаются через неделю. HabitDuel добавляет **социальный контракт**: ты публично берёшь обязательство перед соперником. Проиграл — получаешь публичный "позор" (streak сбрасывается, соперник видит твой провал). Победил — растёт рейтинг и счётчик побед.
 
-### 👨‍💻 Admin Dashboard
-* **Analytics Overview:** KPI stat cards tracking total students, average scores, active tests, and high-risk learners.
-* **Student Management:** Search by name/email, filter by risk level (Low / Medium / High), and dynamic risk badges.
-* **Test Tracking:** Monitor Placement, Progress, and Mock tests with status filters (Active / Draft / Archived).
-* **Granular Results:** Expandable result cards featuring per-skill score breakdowns and interactive bar charts.
-* **Theming:** Seamless Light/Dark mode integration.
+---
 
-### 🎓 Student Dashboard
-* **Personalized Overview:** Welcome screen displaying the average score and the strongest skill highlight.
-* **Performance Visualizations:** Interactive bar charts breaking down skills (Listening, Reading, Writing, Speaking, Grammar).
-* **Test History:** Comprehensive log of past tests with expandable, detailed result cards.
+## ✨ Ключевые фичи
+
+### ⚔️ Дуэли
+- Создать дуэль по привычке (название, описание, длительность в днях)
+- Пригласить друга по username или принять случайный вызов
+- Статусы дуэли: `pending` → `active` → `completed` / `abandoned`
+
+### 🔥 Streak-система
+- Ежедневное подтверждение выполнения привычки (check-in)
+- Автоматический сброс streak при пропуске дня
+- История check-in'ов с датами
+
+### 📊 Realtime-обновления
+- Оба участника видят прогресс соперника в реальном времени (WebSocket)
+- Push-уведомление при пропуске соперника: "Твой соперник сломал streak — атакуй!"
+
+### 🏆 Рейтинг и профиль
+- Личный профиль: win/loss, текущие дуэли, история
+- Глобальный лидерборд по победам
+- Бейджи за серии побед (3, 5, 10 побед подряд)
+
+### 🔐 Авторизация
+- Регистрация и вход по email/паролю
+- JWT-токены, хранение в secure storage
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Component | Technology / Package |
+| Слой | Технология |
 | :--- | :--- |
-| **Framework** | Flutter (Dart SDK `>=3.11.0`) |
-| **Data Visualization** | [`fl_chart ^0.68.0`](https://pub.dev/packages/fl_chart) |
-| **Icons** | `cupertino_icons ^1.0.8` |
-| **Code Quality** | `flutter_lints ^6.0.0` |
+| **Мобильный клиент** | Flutter 3.x / Dart |
+| **State Management** | Riverpod |
+| **HTTP-клиент** | Dio + Retrofit |
+| **WebSocket** | `web_socket_channel` |
+| **Локальное хранение** | `flutter_secure_storage` (токены), `shared_preferences` (настройки) |
+| **Push-уведомления** | `flutter_local_notifications` |
+| **Бэкенд** | Dart (`shelf` + `shelf_router`) |
+| **База данных** | PostgreSQL 16 |
+| **ORM** | `postgres` (dart-pg драйвер) |
 
 ---
 
-## 📂 Project Architecture
+## 📂 Архитектура (Clean Architecture)
 
-The application follows a modular directory structure for scalability and maintainability:
-
-```text
+```
 lib/
+├── core/
+│   ├── constants/
+│   ├── errors/           # Failure классы
+│   ├── network/          # Dio client, interceptors
+│   └── utils/
 ├── data/
-│   └── mock_data.dart         # Mock data for students, tests, and results
-├── models/
-│   └── models.dart            # Core entities (UserRole, Student, Test, TestResult)
-├── screens/
-│   ├── login_screen.dart      # Authentication UI
-│   ├── admin_dashboard.dart   # Administrator interface
-│   └── student_dashboard.dart # Learner interface
-├── widgets/
-│   ├── filter_chips.dart      # Reusable filter chip components
-│   ├── kpi_chart.dart         # Wrapper for fl_chart bar charts
-│   ├── risk_badge.dart        # Color-coded risk level indicators
-│   └── stat_card.dart         # KPI summary components
-└── main.dart                  # Application entry point, routing, and theme setup
+│   ├── datasources/      # RemoteDataSource (API calls)
+│   ├── models/           # JSON-сериализация (User, Duel, CheckIn)
+│   └── repositories/     # Реализации репозиториев
+├── domain/
+│   ├── entities/         # Чистые Dart-классы (User, Duel, CheckIn)
+│   ├── repositories/     # Абстрактные интерфейсы
+│   └── usecases/         # CreateDuel, CheckIn, GetLeaderboard...
+├── presentation/
+│   ├── providers/        # Riverpod providers
+│   ├── screens/
+│   │   ├── auth/         # login_screen, register_screen
+│   │   ├── home/         # home_screen (список активных дуэлей)
+│   │   ├── duel/         # duel_detail_screen, create_duel_screen
+│   │   ├── profile/      # profile_screen
+│   │   └── leaderboard/  # leaderboard_screen
+│   └── widgets/          # streak_card, duel_tile, badge_chip...
+└── main.dart
+```
+
+**Бэкенд (Dart/shelf):**
+```
+server/
+├── bin/
+│   └── server.dart       # Точка входа
+├── lib/
+│   ├── db/               # PostgreSQL connection pool
+│   ├── handlers/         # auth, duels, checkins, leaderboard
+│   ├── middleware/        # JWT auth middleware
+│   ├── models/           # Dart-модели БД
+│   └── websocket/        # WebSocket handler
+└── pubspec.yaml
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🗄️ Схема БД (PostgreSQL)
 
-Follow these steps to set up the project locally.
+```sql
+-- Пользователи
+CREATE TABLE users (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    username    VARCHAR(50) UNIQUE NOT NULL,
+    email       VARCHAR(255) UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    wins        INT DEFAULT 0,
+    losses      INT DEFAULT 0,
+    created_at  TIMESTAMPTZ DEFAULT NOW()
+);
 
-### Prerequisites
-* [Flutter SDK](https://docs.flutter.dev/get-started/install) (Version 3.x or higher)
-* Dart SDK `^3.11.0`
+-- Дуэли
+CREATE TABLE duels (
+    id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    habit_name   VARCHAR(100) NOT NULL,
+    description  TEXT,
+    creator_id   UUID REFERENCES users(id),
+    opponent_id  UUID REFERENCES users(id),
+    status       VARCHAR(20) DEFAULT 'pending', -- pending|active|completed|abandoned
+    duration_days INT NOT NULL,
+    starts_at    TIMESTAMPTZ,
+    ends_at      TIMESTAMPTZ,
+    created_at   TIMESTAMPTZ DEFAULT NOW()
+);
 
-### 1. Clone the repository
-```bash
-git clone https://github.com/rxritet/Speakera.git
-cd Speakera
+-- Стрики участников дуэли
+CREATE TABLE duel_participants (
+    id        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    duel_id   UUID REFERENCES duels(id) ON DELETE CASCADE,
+    user_id   UUID REFERENCES users(id),
+    streak    INT DEFAULT 0,
+    last_checkin DATE,
+    UNIQUE(duel_id, user_id)
+);
+
+-- История чек-инов
+CREATE TABLE checkins (
+    id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    duel_id    UUID REFERENCES duels(id) ON DELETE CASCADE,
+    user_id    UUID REFERENCES users(id),
+    checked_at TIMESTAMPTZ DEFAULT NOW(),
+    note       TEXT
+);
+
+-- Бейджи
+CREATE TABLE badges (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id     UUID REFERENCES users(id),
+    badge_type  VARCHAR(50) NOT NULL, -- wins_3, wins_5, wins_10...
+    earned_at   TIMESTAMPTZ DEFAULT NOW()
+);
 ```
 
-### 2. Install dependencies
+---
+
+## 🌐 REST API (эндпоинты)
+
+| Метод | URL | Описание |
+| :--- | :--- | :--- |
+| `POST` | `/auth/register` | Регистрация |
+| `POST` | `/auth/login` | Вход, получение JWT |
+| `GET` | `/users/me` | Профиль текущего пользователя |
+| `GET` | `/users/:username` | Профиль по username |
+| `POST` | `/duels` | Создать дуэль |
+| `GET` | `/duels` | Список своих дуэлей |
+| `GET` | `/duels/:id` | Детали дуэли |
+| `POST` | `/duels/:id/accept` | Принять вызов |
+| `POST` | `/duels/:id/checkin` | Отметить выполнение привычки |
+| `GET` | `/leaderboard` | Топ-50 по победам |
+| `WS` | `/ws/duels/:id` | WebSocket-канал дуэли |
+
+---
+
+## 🚀 Запуск проекта
+
+### Требования
+- Flutter SDK 3.x
+- Dart SDK ^3.0.0
+- PostgreSQL 16
+- Docker (опционально)
+
+### 1. Клонировать репозиторий
 ```bash
+git clone https://github.com/rxritet/HabitDuel.git
+cd HabitDuel
+```
+
+### 2. Запустить PostgreSQL
+```bash
+# Через Docker
+docker run --name habitduel-db \
+  -e POSTGRES_USER=habitduel \
+  -e POSTGRES_PASSWORD=secret \
+  -e POSTGRES_DB=habitduel \
+  -p 5432:5432 -d postgres:16
+```
+
+### 3. Применить миграции
+```bash
+cd server
+dart run bin/migrate.dart
+```
+
+### 4. Запустить бэкенд
+```bash
+cd server
+dart run bin/server.dart
+# Сервер стартует на http://localhost:8080
+```
+
+### 5. Запустить Flutter-приложение
+```bash
+cd ..
 flutter pub get
-```
-
-### 3. Run the application
-Start the app on your connected device or emulator:
-```bash
 flutter run
 ```
 
 ---
 
-## 📦 Build & Deployment
+## 📅 Roadmap
 
-Speakera is configured for multi-platform support (Android, iOS, Web, Windows, macOS, Linux). 
-
-To build a production-ready Web release:
-```bash
-flutter build web
-```
-
-To build an APK for Android:
-```bash
-flutter build apk --release
-```
+- [x] Инициализация проекта
+- [ ] Авторизация (register/login, JWT)
+- [ ] CRUD дуэлей
+- [ ] Streak + check-in механика
+- [ ] WebSocket realtime
+- [ ] Лидерборд
+- [ ] Push-уведомления
+- [ ] Бейджи
+- [ ] UI полировка + анимации
 
 ---
 
-## 📸 Screenshots
-*(Coming soon — consider adding UI screenshots here to showcase the dashboards)*
+## 📄 Лицензия
+
+MIT License — используй свободно.
