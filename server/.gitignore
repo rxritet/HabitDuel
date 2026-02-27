@@ -1,0 +1,14 @@
+# See https://dart.dev/guides/libraries/private-files
+# Dart/Flutter
+.dart_tool/
+.packages
+build/
+pubspec.lock
+
+# Environment
+.env
+
+# IDE
+.idea/
+.vscode/
+*.iml
