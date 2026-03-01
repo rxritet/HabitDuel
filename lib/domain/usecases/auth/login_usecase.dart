@@ -1,6 +1,6 @@
 import '../../repositories/auth_repository.dart';
 
-/// Use case: login with email + password.
+/// Вариант использования: аутентификация по email + пароль.
 class LoginUseCase {
   const LoginUseCase(this._repo);
   final AuthRepository _repo;

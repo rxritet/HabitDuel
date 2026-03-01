@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/utils/validators.dart';
@@ -38,7 +38,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final authState = ref.watch(authProvider);
     final isLoading = authState is AuthLoading;
 
-    // Show error snackbar when login fails
+    // Показываем snackbar с ошибкой при неудачном входе
     ref.listen<AuthState>(authProvider, (prev, next) {
       if (next is Unauthenticated && next.error != null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -60,7 +60,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // ── Logo area ──
+                  // ── Логотип ──
                   const Icon(
                     Icons.local_fire_department_rounded,
                     size: 72,
@@ -96,7 +96,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // ── Password ──
+                  // ── Пароль ──
                   TextFormField(
                     controller: _passwordCtrl,
                     obscureText: _obscurePassword,
@@ -120,7 +120,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // ── Login button ──
+                  // ── Кнопка входа ──
                   SizedBox(
                     width: double.infinity,
                     height: 48,
@@ -140,7 +140,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // ── Navigate to register ──
+                  // ── Переход к регистрации ──
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

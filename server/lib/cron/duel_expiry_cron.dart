@@ -5,8 +5,8 @@ import '../services/duel_completion_service.dart';
 import '../websocket/duel_ws_handler.dart';
 import 'package:postgres/postgres.dart';
 
-/// Periodically checks for expired duels and completes them.
-/// Runs every 5 minutes.
+/// Периодически проверяет истекшие дуэли и завершает их.
+/// Запускается каждые 5 минут.
 class DuelExpiryCron {
   DuelExpiryCron({required this.wsHub});
 
@@ -14,7 +14,7 @@ class DuelExpiryCron {
   Timer? _timer;
 
   void start() {
-    // Run immediately on start, then every 5 minutes.
+    // Запускаем сразу, затем каждые 5 мин.
     _tick();
     _timer = Timer.periodic(const Duration(minutes: 5), (_) => _tick());
     print('⏰ Duel expiry cron started (every 5 min)');
@@ -29,7 +29,7 @@ class DuelExpiryCron {
     try {
       final conn = await Database.connection;
 
-      // Find active duels whose ends_at has passed.
+      // Находим активные дуэли, у которых истёк ends_at.
       final expired = await conn.execute(
         Sql.named('''
           SELECT id FROM duels

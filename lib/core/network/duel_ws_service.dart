@@ -8,16 +8,15 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../constants/app_constants.dart';
 
-/// Event received from the duel WebSocket.
+/// Событие WebSocket дуэла.
 class DuelWsEvent {
   const DuelWsEvent(this.type, this.data);
   final String type;
   final Map<String, dynamic> data;
 }
 
-/// Manages a single WebSocket connection to `/ws/duels/:id`.
-/// Handles JWT authentication, automatic reconnection with
-/// exponential backoff (1s → 2s → 4s … → 30s cap).
+/// Управляет WS-соединением к `/ws/duels/:id`.
+/// JWT-аутентификация, автоподключения с экспоненциальным бэкофом (1с → 2с → 4с … макс. 30с).
 class DuelWsService {
   DuelWsService(this._storage);
 
@@ -35,12 +34,12 @@ class DuelWsService {
 
   final _controller = StreamController<DuelWsEvent>.broadcast();
 
-  /// Stream of decoded events from the WebSocket.
+  /// Поток декодированных событий.
   Stream<DuelWsEvent> get events => _controller.stream;
 
-  /// Connect to a duel room.
+  /// Подключиться к комнате дуэля.
   Future<void> connect(String duelId) async {
-    // Disconnect previous if any
+    // Отключиться, если уже подключены
     await disconnect();
     _disposed = false;
     _currentDuelId = duelId;
@@ -54,7 +53,7 @@ class DuelWsService {
     final token = await _storage.read(key: kTokenKey);
     if (token == null) return;
 
-    // Build ws:// URL from kBaseUrl
+    // Строим ws:// URL из kBaseUrl
     final httpUri = Uri.parse(kBaseUrl);
     final wsScheme = httpUri.scheme == 'https' ? 'wss' : 'ws';
     final wsUri = Uri(
@@ -84,7 +83,7 @@ class DuelWsService {
       final event = data['event'] as String? ?? 'unknown';
       _controller.add(DuelWsEvent(event, data));
     } catch (_) {
-      // Ignore malformed messages
+      // Игнорируем бракованные сообщения
     }
   }
 
@@ -114,7 +113,7 @@ class DuelWsService {
     _reconnectTimer = Timer(delay, _doConnect);
   }
 
-  /// Disconnect from the current room. Safe to call multiple times.
+  /// Отключиться. Безопасно вызывать несколько раз.
   Future<void> disconnect() async {
     _disposed = true;
     _currentDuelId = null;
@@ -128,14 +127,14 @@ class DuelWsService {
     _channel = null;
   }
 
-  /// Permanently dispose this service.
+  /// Окончательно уничтожить сервис.
   void dispose() {
     disconnect();
     _controller.close();
   }
 }
 
-/// Riverpod provider — one instance per app lifetime.
+/// Riverpod-провайдер — один экземпляр на всё время жизни приложения.
 final duelWsServiceProvider = Provider<DuelWsService>((ref) {
   final storage = ref.watch(
     Provider<FlutterSecureStorage>((_) => const FlutterSecureStorage()),

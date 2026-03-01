@@ -2,14 +2,14 @@ import 'package:postgres/postgres.dart';
 
 import '../websocket/duel_ws_handler.dart';
 
-/// Completes a duel by comparing participant streaks, updating stats.
-/// Extracted so it can be called from both checkins_handler and the cron job.
+/// Завершает дуэль, сравнивая серии участников и обновляя статистику.
+/// Вынесено, чтобы использоваться из checkins_handler и из cron-задачи.
 Future<void> completeDuel(
   Connection conn,
   String duelId, {
   DuelWsHub? wsHub,
 }) async {
-  // Get both participants' streaks
+  // Получаем серии обоих участников
   final parts = await conn.execute(
     Sql.named('''
       SELECT dp.user_id, dp.streak, u.username
@@ -41,14 +41,14 @@ Future<void> completeDuel(
     winnerUsername = p2['username'] as String;
     loserId = p1['user_id'] as String;
   }
-  // If equal, it's a draw — no winner/loser
+  // Если равны — ничья (нет победителя)
 
   await conn.execute(
     Sql.named("UPDATE duels SET status = 'completed' WHERE id = @id::uuid"),
     parameters: {'id': duelId},
   );
 
-  // Update stats
+  // Обновляем статистику
   if (winnerId != null && loserId != null) {
     await conn.execute(
       Sql.named('UPDATE users SET wins = wins + 1 WHERE id = @id::uuid'),

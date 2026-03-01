@@ -1,4 +1,4 @@
-/// Simple validator helpers used across Forms.
+/// Вспомогательные валидаторы для форм.
 class Validators {
   Validators._();
 

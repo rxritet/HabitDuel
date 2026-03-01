@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -9,18 +9,18 @@ import '../../../core/theme/app_typography.dart';
 //  Enumerations
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Controls the manual validation state of [HabitInput].
+/// Управляет Բունական состоянием валидации [HabitInput].
 enum HabitInputState {
-  /// No validation feedback — default idle state.
+  /// Без обратной связи — состояние по умолчанию.
   idle,
 
-  /// Field value is acceptable — shows a success icon.
+  /// Значение приемлемо — показывает иконку успеха.
   success,
 
-  /// Non-blocking advisory — amber border + warning icon.
+  /// Неблокирующее предупреждение — янтарная рамка + иконка предупреждения.
   warning,
 
-  /// Hard validation error — red border + error icon.
+  /// Ошибка валидации — красная рамка + иконка ошибки.
   error,
 }
 
@@ -28,16 +28,14 @@ enum HabitInputState {
 //  HabitInput
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Premium Glass design-system text input.
+/// Текстовое поле входа для дизайн-системы Premium Glass.
 ///
-/// ### Visual behaviour
-/// - **Idle**: surface-coloured fill, warm-grey border, no shadow.
-/// - **Focused**: border animates to primary colour; a soft primary-tinted
-///   glow shadow fades in (250 ms `easeOut`).
-/// - **Warning**: amber border + [Icons.warning_amber_rounded] suffix icon.
-/// - **Error**: red border + [Icons.error_rounded] suffix icon; helper text
-///   rendered below in error colour.
-/// - **Success**: green border + [Icons.check_circle_rounded] suffix icon.
+/// ### Визуальное поведение
+/// - **Idle**: заливка цветом поверхности, серая рамка.
+/// - **Focused**: рамка анимируется в primary; свечение появляется за 250 мс.
+/// - **Warning**: янтарь + иконка предупреждения.
+/// - **Error**: красная рамка + иконка ошибки; текст под полем.
+/// - **Success**: зелёная рамка + иконка галочки.
 ///
 /// ### Parameters
 /// ```dart
@@ -80,20 +78,18 @@ class HabitInput extends StatefulWidget {
   final String? label;
   final String? hint;
 
-  /// Shown below the field in neutral colour when [inputState] is not error.
+  /// Показывается под полем в нейтральном цвете, когда [inputState] не является ошибкой.
   final String? helperText;
 
-  /// Shown below the field in error colour; also forces [inputState] to
-  /// [HabitInputState.error] regardless of the explicit [inputState] value.
+  /// Показывается под полем цветом ошибки; также принудительно устанавливает [inputState] в [HabitInputState.error].
   final String? errorText;
 
   final TextEditingController? controller;
 
-  /// An external [FocusNode]. If `null` the widget manages its own.
+  /// Внешний [FocusNode]. Если `null` — виджет управляет им сам.
   final FocusNode? focusNode;
 
-  /// Explicit validation state. Ignored when [errorText] is non-null
-  /// (error state takes precedence).
+  /// Явное состояние валидации. Игнорируется, если [errorText] не пустой.
   final HabitInputState inputState;
 
   final ValueChanged<String>? onChanged;
@@ -110,7 +106,7 @@ class HabitInput extends StatefulWidget {
   final int? maxLength;
   final List<TextInputFormatter>? inputFormatters;
 
-  /// Leading icon shown inside the field. Tinted to primary when focused.
+  /// Ведущая иконка. Окрашивается в primary при фокусе.
   final Widget? prefixIcon;
 
   final bool autofocus;
@@ -127,10 +123,10 @@ class _HabitInputState extends State<HabitInput>
   bool _ownsFocusNode = false;
 
   late AnimationController _animCtrl;
-  late Animation<double> _focusAnim;  // 0.0 = unfocused, 1.0 = focused
+  late Animation<double> _focusAnim;  // 0.0 = без фокуса, 1.0 = с фокусом
 
   bool _focused = false;
-  bool _obscured = false; // for password toggle
+  bool _obscured = false; // для переключения видимости пароля
 
   @override
   void initState() {
@@ -170,15 +166,15 @@ class _HabitInputState extends State<HabitInput>
     focused ? _animCtrl.forward() : _animCtrl.reverse();
   }
 
-  // ── Effective state ──────────────────────────────────────────────────────
+  // ── Эффективное состояние ──────────────────────────────────────────────
 
-  /// `errorText` always overrides explicit `inputState`.
+  /// `errorText` всегда перезаписывает явный `inputState`.
   HabitInputState get _effectiveState =>
       (widget.errorText?.isNotEmpty == true)
           ? HabitInputState.error
           : widget.inputState;
 
-  // ── Resolved colours ─────────────────────────────────────────────────────
+  // ── Определённые цвета ────────────────────────────────────────────────
 
   Color _primaryColor(bool isDark) =>
       isDark ? AppColors.primaryNight : AppColors.primary;
@@ -209,7 +205,7 @@ class _HabitInputState extends State<HabitInput>
           ? _primaryColor(isDark)
           : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary);
 
-  // ── Suffix icon ──────────────────────────────────────────────────────────
+  // ── Иконка суффикса ─────────────────────────────────────────────────────
 
   Widget? _buildSuffixIcon(bool isDark) {
     if (widget.obscureText) {
@@ -243,7 +239,7 @@ class _HabitInputState extends State<HabitInput>
     };
   }
 
-  // ── Glow shadow ──────────────────────────────────────────────────────────
+  // ── Тень свечения ───────────────────────────────────────────────────────
 
   List<BoxShadow> _buildShadows(bool isDark, double t) {
     if (_effectiveState != HabitInputState.idle || t == 0.0) return const [];
@@ -264,7 +260,7 @@ class _HabitInputState extends State<HabitInput>
     ];
   }
 
-  // ── Build ─────────────────────────────────────────────────────────────────
+  // ── Сборка ────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
@@ -275,14 +271,14 @@ class _HabitInputState extends State<HabitInput>
       builder: (context, _) {
         final t = _focusAnim.value;
 
-        // Interpolate border colour between idle and active
+        // Интерполируем цвет границы между idle и active
         final idleBorder = _borderIdle(isDark);
         final activeBorder = _borderForState(isDark);
         final borderColor = (_effectiveState == HabitInputState.idle && !_focused)
             ? idleBorder
             : Color.lerp(idleBorder, activeBorder, t) ?? activeBorder;
 
-        final borderWidth = 1.0 + 0.5 * t; // 1.0 → 1.5 on focus
+        final borderWidth = 1.0 + 0.5 * t; // 1.0 → 1.5 при фокусе
         final shadows = _buildShadows(isDark, t);
         final suffixIcon = _buildSuffixIcon(isDark);
 
@@ -346,7 +342,7 @@ class _HabitInputState extends State<HabitInput>
                   hintStyle: AppTypography.input.copyWith(
                     color: _hintColor(isDark),
                   ),
-                  // Strip all default decoration — we paint our own container
+                  // Убираем стандартное оформление — рисуем своё
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
@@ -386,7 +382,7 @@ class _HabitInputState extends State<HabitInput>
                     minWidth: AppSpacing.iconSm + AppSpacing.base + AppSpacing.sm,
                     minHeight: 0,
                   ),
-                  counterText: '', // hide maxLength counter
+                  counterText: '', // скрываем счётчик maxLength
                   isDense: true,
                   isCollapsed: false,
                 ),

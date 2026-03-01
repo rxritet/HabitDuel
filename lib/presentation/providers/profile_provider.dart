@@ -1,10 +1,10 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+﻿import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/errors/failures.dart';
 import '../../domain/entities/profile.dart';
 import 'core_providers.dart';
 
-// ─── State ──────────────────────────────────────────────────────────────
+// ─── Состояние ─────────────────────────────────────────────────────────
 
 sealed class ProfileState {
   const ProfileState();
@@ -28,7 +28,7 @@ class ProfileError extends ProfileState {
   final String message;
 }
 
-// ─── Notifier ───────────────────────────────────────────────────────────
+// ─── Обработчик ────────────────────────────────────────────────────────
 
 class ProfileNotifier extends StateNotifier<ProfileState> {
   ProfileNotifier(this._ref) : super(const ProfileInitial());

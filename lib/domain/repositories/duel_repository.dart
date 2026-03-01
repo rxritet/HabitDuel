@@ -1,8 +1,8 @@
 import '../entities/duel.dart';
 
-/// Abstract contract for duel operations.
+/// Абстрактный контракт дуэлей.
 abstract class DuelRepository {
-  /// Create a new duel.
+  /// Создать дуэль.
   Future<Duel> createDuel({
     required String habitName,
     String? description,
@@ -10,16 +10,16 @@ abstract class DuelRepository {
     String? opponentUsername,
   });
 
-  /// Accept a pending duel.
+  /// Принять ожидающий дуэль.
   Future<Duel> acceptDuel(String duelId);
 
-  /// Get list of user's duels.
+  /// Список дуэлей пользователя.
   Future<List<Duel>> getMyDuels();
 
-  /// Get full duel detail by id.
+  /// Полная информация о дуэле по id.
   Future<Duel> getDuelDetail(String duelId);
 
-  /// Perform a check-in on a duel.
+  /// Выполнить check-in в дуэле.
   Future<CheckInResult> checkIn(String duelId, {String? note});
 }
 

@@ -1,4 +1,4 @@
-import 'dart:math' as math;
+﻿import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
@@ -10,12 +10,12 @@ import '../../../core/theme/app_gradients.dart';
 //  Enumerations
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Predefined outer diameter for [DuelRingProgress].
+/// Заранее заданный внешний диаметр для [DuelRingProgress].
 enum DuelRingSize {
-  /// 120 px outer diameter — compact duel card.
+  /// 120 пт — компактная карточка дуэли.
   medium,
 
-  /// 160 px outer diameter — hero / VS screen.
+  /// 160 пт — главный экран / экран VS.
   large,
 }
 
@@ -23,16 +23,15 @@ enum DuelRingSize {
 //  DuelRingProgress
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Circular progress ring designed for duel participant display.
+/// Кольцевой индикатор прогресса для отображения участника дуэли.
 ///
-/// ### Spec
-/// - Sizes: `medium` = 120 px, `large` = 160 px
-/// - Stroke width: 12 px
-/// - Track: surface colour at 30 % opacity
-/// - Progress arc: primary gradient (`primaryDay` / `primaryNight`)
-/// - Arc start: top-centre (−90°), sweeps clockwise
-/// - Animation: 800 ms `easeOutQuart` on [value] change
-/// - Centre: accepts any widget (typically a [UserAvatar])
+/// ### Спецификация
+/// - Размеры: `medium` = 120 пт, `large` = 160 пт
+/// - Толщина: 12 пт
+/// - Дорожка: поверхность 30 %
+/// - Дуга: градиент primary
+/// - Начало: сверху (−0°), по часовой стрелке
+/// - Анимация: 800 мс `easeOutQuart`
 ///
 /// ```dart
 /// DuelRingProgress(
@@ -56,22 +55,22 @@ class DuelRingProgress extends StatefulWidget {
     this.trackOpacity = 0.30,
   });
 
-  /// Progress fraction — clamped to [0.0, 1.0].
+  /// Доля прогресса — ограничена диапазоном [0.0, 1.0].
   final double value;
 
-  /// Outer diameter preset.
+  /// Предустановленный диаметр.
   final DuelRingSize size;
 
-  /// Widget rendered at the centre of the ring (e.g. a [UserAvatar]).
+  /// Виджет в центре кольца (напр., [UserAvatar]).
   final Widget? center;
 
-  /// Arc stroke width. Defaults to 12 px.
+  /// Толщина дуги. По умолчанию 12 пт.
   final double strokeWidth;
 
-  /// Set `true` to use the secondary (coral/rose) gradient — for the opponent.
+  /// `true` — вторичный градиент (coral/rose) для противника.
   final bool useSecondaryGradient;
 
-  /// Track circle opacity. Defaults to 30 %.
+  /// Прозрачность дорожки. По умолчанию 30 %.
   final double trackOpacity;
 
   @override
@@ -176,7 +175,7 @@ class _RingPainter extends CustomPainter {
     final radius = (size.width - strokeWidth) / 2;
     final rect = Rect.fromCircle(center: center, radius: radius);
 
-    // ── Track circle ─────────────────────────────────────────────────────────
+    // ── Кольцо-дорожка ──────────────────────────────────────────────────────
     canvas.drawCircle(
       center,
       radius,
@@ -190,7 +189,7 @@ class _RingPainter extends CustomPainter {
 
     if (fraction <= 0.0) return;
 
-    // ── Gradient progress arc ─────────────────────────────────────────────────
+    // ── Градиентная дуга прогресса ───────────────────────────────────────────
     final sweepAngle = 2 * math.pi * fraction;
     final startAngle = -math.pi / 2; // top-centre
 
@@ -206,8 +205,8 @@ class _RingPainter extends CustomPainter {
 
     canvas.drawArc(rect, startAngle, sweepAngle, false, gradientPaint);
 
-    // ── Leading dot at the arc tip ────────────────────────────────────────────
-    // A filled circle at the tip makes the end cap look like a proper nib.
+    // ── Точка на конце дуги ────────────────────────────────────────────────────
+    // Заполненный круг на конце придаёт завершённый вид.
     final tipAngle = startAngle + sweepAngle;
     final tipX = center.dx + radius * math.cos(tipAngle);
     final tipY = center.dy + radius * math.sin(tipAngle);

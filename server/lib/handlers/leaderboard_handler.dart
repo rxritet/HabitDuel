@@ -8,8 +8,7 @@ import '../db/database.dart';
 
 /// GET /leaderboard?limit=50&offset=0
 ///
-/// Returns top users sorted by wins DESC with correct dense ranking
-/// (users with the same win count share the same rank).
+/// Возвращает топ пользователей по победам (плотный ранг для равных).
 class LeaderboardHandler {
   Router get router {
     final r = Router();
@@ -51,7 +50,7 @@ class LeaderboardHandler {
       };
     }).toList();
 
-    // Also get total count for pagination
+    // Получаем общее количество для пагинации
     final countResult = await conn.execute(
       Sql.named('SELECT COUNT(*)::int AS total FROM users'),
     );

@@ -4,10 +4,10 @@ import '../../core/constants/app_constants.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_ds.dart';
 
-/// Concrete implementation of [AuthRepository].
+/// Реализация [AuthRepository].
 ///
-/// Calls the remote data source and persists/clears the JWT token
-/// in [FlutterSecureStorage].
+/// Вызывает удалённый источник данных и сохраняет/удаляет JWT-токен
+/// через [FlutterSecureStorage].
 class AuthRepositoryImpl implements AuthRepository {
   const AuthRepositoryImpl(this._remoteDS, this._storage);
 
@@ -26,7 +26,7 @@ class AuthRepositoryImpl implements AuthRepository {
       password: password,
     );
 
-    // Persist token
+    // Сохраняем токен
     await _storage.write(key: kTokenKey, value: response.token);
     await _storage.write(key: kUserIdKey, value: response.user.id);
     await _storage.write(key: kUsernameKey, value: response.user.username);
@@ -44,7 +44,7 @@ class AuthRepositoryImpl implements AuthRepository {
       password: password,
     );
 
-    // Persist token
+    // Сохраняем токен
     await _storage.write(key: kTokenKey, value: response.token);
     await _storage.write(key: kUserIdKey, value: response.user.id);
     await _storage.write(key: kUsernameKey, value: response.user.username);

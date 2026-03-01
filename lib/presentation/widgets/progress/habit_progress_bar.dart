@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../../../core/animations/app_animations.dart';
 import '../../../core/theme/app_colors.dart';
@@ -8,16 +8,16 @@ import '../../../core/theme/app_gradients.dart';
 //  HabitProgressBar
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Linear progress bar for habit completion tracking.
+/// Линейная полоса прогресса для отслеживания выполнения привычки.
 ///
-/// ### Spec (DESIGN.md §2)
-/// - Height: 8 px
-/// - Track: surface colour at 50 % opacity
-/// - Fill: primary gradient (`primaryDay` / `primaryNight`)
-/// - Fill animation: 800 ms `easeOutQuart`
-/// - Completion pulse: brightness flash when [value] reaches 1.0
+/// ### Спецификация (DESIGN.md §2)
+/// - Высота: 8 пт
+/// - Дорожка: цвет поверхности 50 %
+/// - Заливка: градиент primary
+/// - Анимация: 800 мс `easeOutQuart`
+/// - Импульс завершения при [value] = 1.0
 ///
-/// [value] must be in `0.0 … 1.0`. Values outside this range are clamped.
+/// [value] должен быть в диапазоне `0.0 … 1.0`.
 ///
 /// ```dart
 /// HabitProgressBar(value: habit.completionRatio)       // 0.0 – 1.0
@@ -33,19 +33,19 @@ class HabitProgressBar extends StatefulWidget {
     this.showLabel = false,
   });
 
-  /// Progress fraction — clamped to [0.0, 1.0].
+  /// Доля прогресса — ограничена диапазоном [0.0, 1.0].
   final double value;
 
-  /// Bar height. Defaults to 8 px.
+  /// Высота полосы. По умолчанию 8 пт.
   final double height;
 
-  /// Corner radius. Defaults to pill shape.
+  /// Радиус скругления. По умолчанию — форма пилюли.
   final double borderRadius;
 
-  /// Optional text rendered to the right of the bar.
+  /// Опциональный текст справа от полосы.
   final String? label;
 
-  /// When `true` the [label] (or the percentage string) is shown.
+  /// Если `true` — [label] или строка с процентами отображается.
   final bool showLabel;
 
   @override
@@ -54,11 +54,11 @@ class HabitProgressBar extends StatefulWidget {
 
 class _HabitProgressBarState extends State<HabitProgressBar>
     with SingleTickerProviderStateMixin {
-  // ── Fill animation ───────────────────────────────────────────────────────
+  // ── Анимация заполнения ─────────────────────────────────────────────────
   late AnimationController _fillCtrl;
   late Animation<double> _fillAnim;
 
-  // ── Completion pulse animations ──────────────────────────────────────────
+  // ── Анимации импульса завершения ──────────────────────────────────────
   late AnimationController _pulseCtrl;
   late Animation<double> _pulseAnim;
 
@@ -82,7 +82,7 @@ class _HabitProgressBarState extends State<HabitProgressBar>
       vsync: this,
       duration: const Duration(milliseconds: 600),
     );
-    // brightness pulse: 1.0 → 1.4 → 1.0 (opacity-represented as 0…1 mapping)
+    // пульс яркости: 1.0 → 1.4 → 1.0 (представлен через 0…1)
     _pulseAnim = TweenSequence<double>([
       TweenSequenceItem(tween: Tween(begin: 0.0, end: 1.0), weight: 30),
       TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.0), weight: 70),
@@ -104,7 +104,7 @@ class _HabitProgressBarState extends State<HabitProgressBar>
         curve: Curves.easeOutQuart,
       );
       if (target >= 1.0) {
-        // Delay pulse until fill animation reaches 100 %
+        // Задержка импульса до завершения анимации заполнения
         Future.delayed(AppAnimations.progressBarFillDuration, () {
           if (mounted) _pulseCtrl.forward(from: 0.0);
         });
@@ -119,7 +119,7 @@ class _HabitProgressBarState extends State<HabitProgressBar>
     super.dispose();
   }
 
-  // ── Build ─────────────────────────────────────────────────────────────────
+  // ── Сборка ────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +195,7 @@ class _ProgressBarPainter extends CustomPainter {
   final double borderRadius;
   final double totalWidth;
 
-  /// 0…1 extra glow overlay alpha driven by the completion pulse animation.
+  /// Альфа 0…1 дополнительного светового оверлея при импульсе.
   final double pulseAlpha;
 
   @override
@@ -204,7 +204,7 @@ class _ProgressBarPainter extends CustomPainter {
     final trackRect = Offset.zero & size;
     final fillWidth = size.width * fraction;
 
-    // ── Track ───────────────────────────────────────────────────────────────
+    // ── Дорожка ──────────────────────────────────────────────────────────────
     canvas.drawRRect(
       RRect.fromRectAndRadius(trackRect, r),
       Paint()..color = trackColor,
@@ -212,7 +212,7 @@ class _ProgressBarPainter extends CustomPainter {
 
     if (fraction <= 0.0) return;
 
-    // ── Gradient fill — clipped to fillRect ─────────────────────────────────
+    // ── Градиентная заливка — обрезана по fillRect ──────────────────────────
     canvas.save();
     canvas.clipRRect(RRect.fromRectAndRadius(
       Rect.fromLTWH(0, 0, fillWidth + borderRadius, size.height),
@@ -230,7 +230,7 @@ class _ProgressBarPainter extends CustomPainter {
         ),
     );
 
-    // ── Completion brightness pulse — white overlay ─────────────────────────
+    // ── Импульс яркости — белый оверлей ─────────────────────────────────────
     if (pulseAlpha > 0.0) {
       canvas.drawRRect(
         RRect.fromRectAndRadius(

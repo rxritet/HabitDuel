@@ -1,7 +1,7 @@
 import '../../domain/entities/user.dart';
 
-/// Data-layer model for the User entity.
-/// Handles JSON serialization / deserialization.
+/// Модель уровня данных для сущности User.
+/// Отвечает за сериализацию/десериализацию JSON.
 class UserModel extends User {
   const UserModel({
     required super.id,

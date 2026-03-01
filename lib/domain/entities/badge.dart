@@ -1,4 +1,4 @@
-/// Domain entity for a user badge.
+/// Доменная сущность значка пользователя.
 class Badge {
   const Badge({
     required this.badgeType,

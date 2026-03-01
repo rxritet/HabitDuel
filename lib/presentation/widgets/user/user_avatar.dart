@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_gradients.dart';
@@ -9,33 +9,33 @@ import '../../../core/theme/app_typography.dart';
 //  Enumerations
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Predefined sizes for [UserAvatar].
+/// Заранее заданные размеры для [UserAvatar].
 enum AvatarSize {
-  /// 32 px — used in lists, chat bubbles, compact rows.
+  /// 32 пт — списки, пузыри, компактные строки.
   small,
 
-  /// 48 px — standard list tiles, notification items.
+  /// 48 пт — стандартные элементы списка.
   medium,
 
-  /// 64 px — profile headers, duel cards.
+  /// 64 пт — заголовки профиля, карточки дуэлей.
   large,
 
-  /// 96 px — full profile screen, victory overlays.
+  /// 96 пт — экран профиля, оверлей победы.
   extraLarge,
 }
 
-/// Online/activity status that controls the avatar border styling.
+/// Статус онлайн/активности, определяющий стиль рамки.
 enum AvatarStatus {
-  /// No border — neutral / unknown state.
+  /// Без рамки — нейтральное состояние.
   none,
 
-  /// Primary gradient ring — user is currently active or in a duel.
+  /// Градиентное кольцо primary — пользователь активен или участвует в дуэли.
   active,
 
-  /// Tertiary (green) gradient ring — this user won the duel.
+  /// Кольцо tertiary (зелёное) — этот пользователь победил в дуэли.
   winner,
 
-  /// Flat grey ring — user is offline.
+  /// Плоское серое кольцо — пользователь оффлайн.
   offline,
 }
 
@@ -51,7 +51,7 @@ extension _AvatarSizeValue on AvatarSize {
     AvatarSize.extraLarge => 96.0,
   };
 
-  /// Border ring thickness scales with avatar size.
+  /// Толщина границы кольца зависит от размера аватара.
   double get borderWidth => switch (this) {
     AvatarSize.small      => 1.5,
     AvatarSize.medium     => 2.0,
@@ -59,7 +59,7 @@ extension _AvatarSizeValue on AvatarSize {
     AvatarSize.extraLarge => 3.0,
   };
 
-  /// Gap between the gradient ring and the image circle.
+  /// Зазор между градиентным кольцом и изображением.
   double get ringGap => switch (this) {
     AvatarSize.small      => 1.5,
     AvatarSize.medium     => 2.0,
@@ -67,7 +67,7 @@ extension _AvatarSizeValue on AvatarSize {
     AvatarSize.extraLarge => 3.0,
   };
 
-  /// Font size for the initials fallback.
+  /// Размер шрифта для инициалов.
   double get initialsFontSize => switch (this) {
     AvatarSize.small      => 12.0,
     AvatarSize.medium     => 16.0,
@@ -75,7 +75,7 @@ extension _AvatarSizeValue on AvatarSize {
     AvatarSize.extraLarge => 34.0,
   };
 
-  /// Status dot diameter.
+  /// Диаметр точки статуса.
   double get dotSize => switch (this) {
     AvatarSize.small      => 8.0,
     AvatarSize.medium     => 10.0,
@@ -88,24 +88,21 @@ extension _AvatarSizeValue on AvatarSize {
 //  UserAvatar
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Circular user avatar with gradient-border status ring and initials fallback.
+/// Круглый аватар с градиентным статусным кольцом и резервным отображением инициалов.
 ///
-/// ### Sizes
-/// Four predefined sizes via [AvatarSize]: `small` (32), `medium` (48),
-/// `large` (64), `extraLarge` (96).
+/// ### Размеры
+/// Четыре предустановленных через [AvatarSize]: `small` (32), `medium` (48), `large` (64), `extraLarge` (96).
 ///
-/// ### Status borders
-/// | [AvatarStatus]  | Border                        |
-/// |-----------------|-------------------------------|
-/// | `none`          | transparent (no border)       |
-/// | `active`        | primary gradient ring         |
-/// | `winner`        | tertiary / success gradient   |
-/// | `offline`       | flat grey ring                |
+/// ### Границы статуса
+/// | [AvatarStatus]  | Граница                      |
+/// |-----------------|-----------------------------|
+/// | `none`          | прозрачная (без рамки)     |
+/// | `active`        | градиент primary             |
+/// | `winner`        | градиент tertiary/success    |
+/// | `offline`       | плоское серое кольцо       |
 ///
-/// ### Image / fallback
-/// Supply [imageUrl] for a network image.  If `null` or loading fails the
-/// widget falls back to a coloured circle with [initials] (derived from
-/// [name] if not provided explicitly).
+/// ### Изображение / резерв
+/// Укажите [imageUrl] для сетевого изображения. При отсутствии — цветной круг с [initials].
 ///
 /// ```dart
 /// UserAvatar(
@@ -127,28 +124,28 @@ class UserAvatar extends StatelessWidget {
     this.showStatusDot = false,
   });
 
-  /// Controls the overall diameter of the avatar.
+  /// Управляет общим диаметром аватара.
   final AvatarSize size;
 
-  /// Status ring style.
+  /// Стиль границы статуса.
   final AvatarStatus status;
 
-  /// Remote image URL. Falls back to initials when null or on error.
+  /// URL сетевого изображения. При отсутствии — инициалы.
   final String? imageUrl;
 
-  /// Display name — used to derive initials when [initials] is not provided.
+  /// Отображаемое имя — используется для вывода инициалов.
   final String? name;
 
-  /// Explicit initials override (max 2 characters shown).
+  /// Явные инициалы (макс 2 символа).
   final String? initials;
 
-  /// Optional tap callback.
+  /// Опциональный колбэк нажатия.
   final VoidCallback? onTap;
 
-  /// When `true`, renders a small status-colour dot at the bottom-right corner.
+  /// Если `true` — небольшая точка статуса в правом нижнем углу.
   final bool showStatusDot;
 
-  // ── Derived initials ───────────────────────────────────────────────────────
+  // ── Формирование инициалов ─────────────────────────────────────────────────
 
   String _resolveInitials() {
     final src = initials ?? name ?? '';
@@ -160,7 +157,7 @@ class UserAvatar extends StatelessWidget {
     return src.substring(0, src.length.clamp(1, 2)).toUpperCase();
   }
 
-  // ── Initials background colour — deterministic hash from name ─────────────
+  // ── Цвет фона инициалов — детерминированный хеш ─────────────────────────
 
   Color _initialsBackground(String text) {
     const palette = [
@@ -192,7 +189,7 @@ class UserAvatar extends StatelessWidget {
       isDark: isDark,
     );
 
-    // Status dot overlay
+    // Накладка индикатора статуса
     if (showStatusDot && status != AvatarStatus.none) {
       avatar = Stack(
         clipBehavior: Clip.none,
@@ -366,7 +363,7 @@ class _InitialsCircle extends StatelessWidget {
 //  _RingPainter
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Paints the circular gradient / solid border ring.
+/// Рисует круговую градиентную / сплошную рамку аватара.
 class _RingPainter extends CustomPainter {
   _RingPainter({
     required this.status,
@@ -415,7 +412,7 @@ class _RingPainter extends CustomPainter {
 //  _StatusDot
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Small solid dot at the bottom-right of the avatar indicating online status.
+/// Небольшая точка в правом нижнем углу для отображения онлайн-статуса.
 class _StatusDot extends StatelessWidget {
   const _StatusDot({
     required this.status,

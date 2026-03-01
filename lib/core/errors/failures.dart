@@ -1,4 +1,4 @@
-/// Base class for all application failures.
+/// Базовый класс всех ошибок приложения.
 sealed class Failure {
   const Failure(this.message);
   final String message;
@@ -7,23 +7,23 @@ sealed class Failure {
   String toString() => message;
 }
 
-/// Server returned an error response.
+/// Сервер вернул ошибочный ответ.
 class ServerFailure extends Failure {
   const ServerFailure(super.message, {this.statusCode});
   final int? statusCode;
 }
 
-/// Auth-specific failures.
+/// Ошибки аутентификации.
 class AuthFailure extends Failure {
   const AuthFailure(super.message);
 }
 
-/// Network not reachable.
+/// Сеть недоступна.
 class NetworkFailure extends Failure {
   const NetworkFailure([super.message = 'No internet connection']);
 }
 
-/// Unexpected / catch-all failure.
+/// Непредвиденная / пойманная ошибка.
 class UnexpectedFailure extends Failure {
   const UnexpectedFailure([super.message = 'Unexpected error']);
 }

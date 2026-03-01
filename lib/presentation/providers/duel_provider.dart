@@ -1,10 +1,10 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+﻿import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/errors/failures.dart';
 import '../../domain/entities/duel.dart';
 import 'core_providers.dart';
 
-// ─── Duels list state ───────────────────────────────────────────────────
+// ─── Состояние списка дуэлей ───────────────────────────────────────────
 
 sealed class DuelsListState {
   const DuelsListState();
@@ -28,7 +28,7 @@ class DuelsListError extends DuelsListState {
   final String message;
 }
 
-// ─── Duels list notifier ────────────────────────────────────────────────
+// ─── Обработчик списка дуэлей ──────────────────────────────────────────
 
 class DuelsListNotifier extends StateNotifier<DuelsListState> {
   DuelsListNotifier(this._ref) : super(const DuelsListInitial());
@@ -52,7 +52,7 @@ final duelsListProvider =
   return DuelsListNotifier(ref);
 });
 
-// ─── Duel detail state ──────────────────────────────────────────────────
+// ─── Состояние деталей дуэли ───────────────────────────────────────────
 
 sealed class DuelDetailState {
   const DuelDetailState();
@@ -72,7 +72,7 @@ class DuelDetailError extends DuelDetailState {
   final String message;
 }
 
-// ─── Duel detail notifier ───────────────────────────────────────────────
+// ─── Обработчик деталей дуэли ──────────────────────────────────────────
 
 class DuelDetailNotifier extends StateNotifier<DuelDetailState> {
   DuelDetailNotifier(this._ref) : super(const DuelDetailLoading());
@@ -93,7 +93,7 @@ class DuelDetailNotifier extends StateNotifier<DuelDetailState> {
   Future<bool> checkIn(String duelId, {String? note}) async {
     try {
       await _ref.read(checkInUseCaseProvider).call(duelId, note: note);
-      await load(duelId); // refresh
+      await load(duelId); // обновляем состояние
       return true;
     } on Failure {
       return false;
@@ -103,7 +103,7 @@ class DuelDetailNotifier extends StateNotifier<DuelDetailState> {
   Future<bool> accept(String duelId) async {
     try {
       await _ref.read(acceptDuelUseCaseProvider).call(duelId);
-      await load(duelId); // refresh
+      await load(duelId); // обновляем состояние
       return true;
     } on Failure {
       return false;
@@ -116,7 +116,7 @@ final duelDetailProvider =
   return DuelDetailNotifier(ref);
 });
 
-// ─── Create duel state ──────────────────────────────────────────────────
+// ─── Состояние создания дуэли ──────────────────────────────────────────
 
 sealed class CreateDuelState {
   const CreateDuelState();

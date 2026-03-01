@@ -1,6 +1,6 @@
 import '../../repositories/auth_repository.dart';
 
-/// Use case: register a new user.
+/// Вариант использования: регистрация нового пользователя.
 class RegisterUseCase {
   const RegisterUseCase(this._repo);
   final AuthRepository _repo;

@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,7 +40,7 @@ class _DuelDetailScreenState extends ConsumerState<DuelDetailScreen> {
     switch (event.type) {
       case 'checkin_created':
       case 'streak_broken':
-        // Refresh detail to show updated streaks / new check-in
+        // Обновляем детали для отображения актуальных данных
         ref.read(duelDetailProvider.notifier).load(widget.duelId);
         ref.read(duelsListProvider.notifier).load();
         // Show local push notification for opponent's broken streak

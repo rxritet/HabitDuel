@@ -1,10 +1,10 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+﻿import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/errors/failures.dart';
 import '../../domain/entities/leaderboard_entry.dart';
 import 'core_providers.dart';
 
-// ─── State ──────────────────────────────────────────────────────────────
+// ─── Состояние ─────────────────────────────────────────────────────────
 
 sealed class LeaderboardState {
   const LeaderboardState();
@@ -29,7 +29,7 @@ class LeaderboardError extends LeaderboardState {
   final String message;
 }
 
-// ─── Notifier ───────────────────────────────────────────────────────────
+// ─── Обработчик ────────────────────────────────────────────────────────
 
 class LeaderboardNotifier extends StateNotifier<LeaderboardState> {
   LeaderboardNotifier(this._ref) : super(const LeaderboardInitial());

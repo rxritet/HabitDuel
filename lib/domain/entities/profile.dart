@@ -1,4 +1,4 @@
-/// Domain entity for a user profile (extended User).
+/// Доменная сущность профиля пользователя.
 class UserProfile {
   const UserProfile({
     required this.id,

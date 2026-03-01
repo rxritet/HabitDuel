@@ -1,4 +1,4 @@
-/// Dart model for the `users` table.
+/// Модель таблицы `users` базы данных.
 class UserModel {
   const UserModel({
     required this.id,
@@ -10,7 +10,7 @@ class UserModel {
     required this.createdAt,
   });
 
-  /// Construct a [UserModel] from a PostgreSQL row map.
+  /// Создаёт [UserModel] из строки PostgreSQL.
   factory UserModel.fromRow(Map<String, dynamic> row) {
     return UserModel(
       id: row['id'] as String,
@@ -33,7 +33,7 @@ class UserModel {
   final int losses;
   final DateTime createdAt;
 
-  /// Public JSON representation (never exposes password_hash).
+  /// Публичное JSON (без password_hash).
   Map<String, dynamic> toPublicJson() {
     return {
       'id': id,
@@ -43,7 +43,7 @@ class UserModel {
     };
   }
 
-  /// Extended public JSON that also includes email (for /users/me).
+  /// Расширенное JSON с email (email для /users/me).
   Map<String, dynamic> toPrivateJson() {
     return {
       'id': id,

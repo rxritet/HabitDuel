@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
@@ -9,7 +9,7 @@ import 'package:shelf_router/shelf_router.dart';
 
 import '../db/database.dart';
 
-/// Handles `/auth/register` and `/auth/login`.
+/// Обрабатывает `/auth/register` и `/auth/login`.
 class AuthHandler {
   AuthHandler(this._env);
 
@@ -23,7 +23,7 @@ class AuthHandler {
   }
 
   // ---------------------------------------------------------------------------
-  // POST /auth/register
+  // POST /auth/register — регистрация
   // ---------------------------------------------------------------------------
   Future<Response> _register(Request request) async {
     final body = await request.readAsString();
@@ -38,7 +38,7 @@ class AuthHandler {
     final email = (json['email'] as String?)?.trim();
     final password = json['password'] as String?;
 
-    // --- Validation ---
+    // --- Валидация ---
     if (username == null || username.isEmpty) {
       return _json({'error': 'username_required'}, 400);
     }
@@ -80,7 +80,7 @@ class AuthHandler {
         'token': token,
       }, 201);
     } on ServerException catch (e) {
-      // PostgreSQL unique_violation code = 23505
+      // Код PostgreSQL unique_violation = 23505
       if (e.message.contains('23505') ||
           e.message.contains('unique') ||
           e.message.contains('duplicate key')) {
@@ -93,7 +93,7 @@ class AuthHandler {
   }
 
   // ---------------------------------------------------------------------------
-  // POST /auth/login
+  // POST /auth/login — вход
   // ---------------------------------------------------------------------------
   Future<Response> _login(Request request) async {
     final body = await request.readAsString();
@@ -148,17 +148,16 @@ class AuthHandler {
   }
 
   // ---------------------------------------------------------------------------
-  // Helpers
+  // Вспомогательные методы
   // ---------------------------------------------------------------------------
 
-  /// SHA-256 hash of the password (simple for MVP; upgrade to bcrypt later).
+  /// SHA-256 хеш пароля (для MVP; в production лучше bcrypt).
   String _hashPassword(String password) {
     final bytes = utf8.encode(password);
     return sha256.convert(bytes).toString();
   }
 
-  /// Generate a JWT with `sub` (user id) and `username` claims.
-  /// Token expires in 30 days.
+  /// Генерирует JWT с `sub` (userId) и `username` сроком на 30 дней.
   String _generateToken(String userId, String username) {
     final secret = _env['JWT_SECRET'] ?? 'default_secret';
     final jwt = JWT(
@@ -173,7 +172,7 @@ class AuthHandler {
     );
   }
 
-  /// Shorthand for returning a JSON response.
+  /// Краткий метод для JSON-ответа.
   Response _json(Map<String, dynamic> data, int statusCode) {
     return Response(
       statusCode,

@@ -5,18 +5,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-/// Keys for SharedPreferences.
+/// Ключи SharedPreferences.
 const kReminderEnabledKey = 'reminder_enabled';
 const kReminderHourKey = 'reminder_hour';
 const kReminderMinuteKey = 'reminder_minute';
 
-/// Notification channel / IDs.
+/// Идентификаторы канала / уведомлений.
 const _dailyReminderId = 0;
 const _streakBrokenId = 1;
 const _channelId = 'habitduel_channel';
 const _channelName = 'HabitDuel';
 
-/// Singleton notification service.
+/// Сервис уведомлений (синглтон).
 class NotificationService {
   NotificationService._();
   static final instance = NotificationService._();
@@ -24,7 +24,7 @@ class NotificationService {
   final _plugin = FlutterLocalNotificationsPlugin();
   bool _initialised = false;
 
-  /// Must be called once at app startup.
+  /// Вызывается один раз при запуске приложения.
   Future<void> init() async {
     if (_initialised) return;
     _initialised = true;
@@ -45,7 +45,7 @@ class NotificationService {
 
     await _plugin.initialize(initSettings);
 
-    // Request permission on Android 13+
+    // Запрос разрешения на Android 13+
     if (Platform.isAndroid) {
       await _plugin
           .resolvePlatformSpecificImplementation<
@@ -54,14 +54,14 @@ class NotificationService {
     }
   }
 
-  // ─── Daily reminder ─────────────────────────────────────────────────
+  // ─── Ежедневное напоминание ─────────────────────────────────────────────────
 
-  /// Schedule (or reschedule) the daily check-in reminder.
+  /// Запланировать (перезапланировать) ежедневное напоминание.
   Future<void> scheduleDailyReminder({
     required int hour,
     required int minute,
   }) async {
-    // Cancel existing daily reminder first.
+    // Сначала отменяем текущее напоминание.
     await _plugin.cancel(_dailyReminderId);
 
     final now = tz.TZDateTime.now(tz.local);
@@ -87,16 +87,16 @@ class NotificationService {
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time, // repeats daily
+      matchDateTimeComponents: DateTimeComponents.time, // повторяется ежедневно
     );
   }
 
-  /// Cancel the daily reminder.
+  /// Отменить ежедневное напоминание.
   Future<void> cancelDailyReminder() async {
     await _plugin.cancel(_dailyReminderId);
   }
 
-  /// Restore daily reminder from saved preferences (call on app start).
+  /// Восстановить напоминание из сохранённых настроек (при запуске).
   Future<void> restoreReminder() async {
     final prefs = await SharedPreferences.getInstance();
     final enabled = prefs.getBool(kReminderEnabledKey) ?? false;
@@ -106,7 +106,7 @@ class NotificationService {
     await scheduleDailyReminder(hour: hour, minute: minute);
   }
 
-  /// Save reminder settings and schedule.
+  /// Сохранить настройки и запланировать.
   Future<void> saveAndScheduleReminder({
     required bool enabled,
     required int hour,
@@ -124,9 +124,9 @@ class NotificationService {
     }
   }
 
-  // ─── Instant "Attack!" notification ──────────────────────────────────
+  // ─── Мгновенное уведомление «Атака!» ──────────────────────────────────
 
-  /// Show an immediate notification when opponent's streak breaks.
+  /// Показать уведомление при прерыве серии противника.
   Future<void> showStreakBrokenNotification({
     required String opponentUsername,
     required int oldStreak,

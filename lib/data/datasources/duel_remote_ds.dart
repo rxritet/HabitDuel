@@ -3,12 +3,12 @@ import 'package:dio/dio.dart';
 import '../../core/errors/failures.dart';
 import '../models/duel_model.dart';
 
-/// Handles raw HTTP calls to /duels/* endpoints.
+/// Выполняет HTTP-запросы к эндпоинтам /duels/*.
 class DuelRemoteDataSource {
   const DuelRemoteDataSource(this._dio);
   final Dio _dio;
 
-  /// POST /duels
+  /// POST /duels — создать дуэль
   Future<DuelModel> createDuel({
     required String habitName,
     String? description,
@@ -28,7 +28,7 @@ class DuelRemoteDataSource {
     }
   }
 
-  /// POST /duels/:id/accept
+  /// POST /duels/:id/accept — принять дуэль
   Future<DuelModel> acceptDuel(String duelId) async {
     try {
       final response = await _dio.post('/duels/$duelId/accept');
@@ -50,7 +50,7 @@ class DuelRemoteDataSource {
     }
   }
 
-  /// GET /duels
+  /// GET /duels — список дуэлей текущего пользователя
   Future<List<DuelModel>> getMyDuels() async {
     try {
       final response = await _dio.get('/duels');
@@ -64,7 +64,7 @@ class DuelRemoteDataSource {
     }
   }
 
-  /// GET /duels/:id
+  /// GET /duels/:id — детали дуэли
   Future<DuelModel> getDuelDetail(String duelId) async {
     try {
       final response = await _dio.get('/duels/$duelId');
@@ -74,7 +74,7 @@ class DuelRemoteDataSource {
     }
   }
 
-  /// POST /duels/:id/checkin
+  /// POST /duels/:id/checkin — отметить выполнение
   Future<Map<String, dynamic>> checkIn(String duelId, {String? note}) async {
     try {
       final response = await _dio.post(

@@ -1,33 +1,23 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'app_colors.dart';
 import 'app_spacing.dart';
 import 'app_typography.dart';
 
-/// Premium Glass Design System — Root ThemeData
+/// Корневой ThemeData дизайн-системы Premium Glass.
 ///
-/// Implements the "Premium Glass" concept from DESIGN.md.
-/// Colours, typography, radii, and component defaults all derive from
-/// [AppColors], [AppTypography], and [AppSpacing] tokens.
-///
-/// Usage:
-/// ```dart
-/// MaterialApp(
-///   theme: AppTheme.light,
-///   darkTheme: AppTheme.dark,
-///   themeMode: ThemeMode.system,
-/// )
-/// ```
+/// Цвета, типографика, радиусы и умолчания берутся из
+/// [AppColors], [AppTypography] и [AppSpacing].
 abstract final class AppTheme {
-  // ── Public entries ─────────────────────────────────────────────────────────
+  // ── Публичные точки входа ─────────────────────────────────────────────────────────
 
   static ThemeData get light => _build(isDark: false);
   static ThemeData get dark  => _build(isDark: true);
 
-  // ── Internal builder ───────────────────────────────────────────────────────
+  // ── Внутренний будьовщик ───────────────────────────────────────────────────────
 
   static ThemeData _build({required bool isDark}) {
-    // ── Resolved palette ─────────────────────────────────────────────────────
+    // ── Палитра цветов ─────────────────────────────────────────────────────
     final bg             = isDark ? AppColors.darkBackground      : AppColors.lightBackground;
     final surface        = isDark ? AppColors.darkSurface         : AppColors.lightSurface;
     final surfaceElev    = isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated;
@@ -42,12 +32,12 @@ abstract final class AppTheme {
     final tertiaryColor  = isDark ? AppColors.tertiaryNight       : AppColors.tertiary;
     final brightness     = isDark ? Brightness.dark               : Brightness.light;
 
-    // Status-bar icons contrast
+    // Контраст иконок статус-бара
     final overlayStyle = isDark
         ? SystemUiOverlayStyle.light
         : SystemUiOverlayStyle.dark;
 
-    // ── ColorScheme ──────────────────────────────────────────────────────────
+    // \u2500\u2500 ColorScheme
     final colorScheme = ColorScheme(
       brightness: brightness,
 
@@ -81,23 +71,23 @@ abstract final class AppTheme {
       errorContainer: isDark ? const Color(0xFF7F1D1D) : const Color(0xFFFEE2E2),
       onErrorContainer: isDark ? const Color(0xFFFCA5A5) : const Color(0xFF991B1B),
 
-      // Surfaces
+      // Поверхности
       surface: surface,
       onSurface: textPrimary,
       surfaceContainerHighest: surfaceElev,
       onSurfaceVariant: textSecondary,
 
-      // Scaffold background / legacy
+      // Фон экрана
       // ignore: deprecated_member_use
       background: bg,
       // ignore: deprecated_member_use
       onBackground: textPrimary,
 
-      // Outline / border
+      // Границы / разделители
       outline: borderColor,
       outlineVariant: glassBorder,
 
-      // Misc
+      // Прочее
       shadow: Colors.black,
       scrim: AppColors.scrim,
       inverseSurface: isDark ? AppColors.lightSurface  : AppColors.darkSurface,
@@ -105,21 +95,21 @@ abstract final class AppTheme {
       inversePrimary: isDark ? AppColors.primary : AppColors.primaryNight,
     );
 
-    // ── ThemeData ────────────────────────────────────────────────────────────
+    // \u2500\u2500 ThemeData
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: bg,
 
-      // ── Typography ──────────────────────────────────────────────────────
+      // \u2500\u2500 \u0422\u0438\u043f\u043e\u0433\u0440\u0430\u0444\u0438\u043a\u0430
       textTheme: AppTypography.toTextTheme(
         primaryColor: textPrimary,
         secondaryColor: textSecondary,
         mutedColor: textMuted,
       ),
 
-      // ── AppBar ──────────────────────────────────────────────────────────
+      // \u2500\u2500 AppBar
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -130,10 +120,10 @@ abstract final class AppTheme {
         centerTitle: false,
       ),
 
-      // ── Card ────────────────────────────────────────────────────────────
-      // Glass card: semi-transparent fill + subtle border.
-      // BackdropFilter blur must be applied in the widget, but base colours
-      // are defined here so GlassCard can read them from the theme.
+      // \u2500\u2500 \u041a\u0430\u0440\u0442\u043e\u0447\u043a\u0430
+      // \u0421\u0442\u0435\u043a\u043b\u044f\u043d\u043d\u0430\u044f \u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0430: \u043f\u043e\u043b\u0443\u043f\u0440\u043e\u0437\u0440\u0430\u0447\u043d\u044b\u0439 \u0444\u043e\u043d + \u0442\u043e\u043d\u043a\u0430\u044f \u0433\u0440\u0430\u043d\u0438\u0446\u0430.
+      // \u0422\u043e\u043a\u0435\u043d\u044b GlassCard \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u0435\u0441\u043a\u0438 \u0447\u0438\u0442\u0430\u044e\u0442\u0441\u044f \u0438\u0437 \u0442\u0435\u043c\u044b.
+      
       cardTheme: CardThemeData(
         color: glassBg,
         elevation: 0,
@@ -147,7 +137,7 @@ abstract final class AppTheme {
         ),
       ),
 
-      // ── Elevated Button ─────────────────────────────────────────────────
+      // \u2500\u2500 \u041e\u0441\u043d\u043e\u0432\u043d\u0430\u044f \u043a\u043d\u043e\u043f\u043a\u0430
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryColor,
@@ -167,7 +157,7 @@ abstract final class AppTheme {
         ),
       ),
 
-      // ── Outlined Button ─────────────────────────────────────────────────
+      // \u2500\u2500 \u041a\u043e\u043d\u0442\u0443\u0440\u043d\u0430\u044f \u043a\u043d\u043e\u043f\u043a\u0430
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: primaryColor,
@@ -184,7 +174,7 @@ abstract final class AppTheme {
         ),
       ),
 
-      // ── Text Button ─────────────────────────────────────────────────────
+      // \u2500\u2500 \u0422\u0435\u043a\u0441\u0442\u043e\u0432\u0430\u044f \u043a\u043d\u043e\u043f\u043a\u0430
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: primaryColor,
@@ -195,7 +185,7 @@ abstract final class AppTheme {
         ),
       ),
 
-      // ── Input / TextField ────────────────────────────────────────────────
+      // \u2500\u2500 \u041f\u043e\u043b\u0435 \u0432\u0432\u043e\u0434\u0430 / TextField
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: glassBg,
@@ -230,7 +220,7 @@ abstract final class AppTheme {
         suffixIconColor: textSecondary,
       ),
 
-      // ── NavigationBar (Material 3) ───────────────────────────────────────
+      // \u2500\u2500 NavigationBar (Material 3)
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         indicatorColor: primaryColor.withAlpha(40),
@@ -250,7 +240,7 @@ abstract final class AppTheme {
         height: AppSpacing.bottomNavHeight,
       ),
 
-      // ── Bottom Navigation Bar (legacy) ───────────────────────────────────
+      // \u2500\u2500 \u041d\u0438\u0436\u043d\u044f\u044f \u043d\u0430\u0432\u0438\u0433\u0430\u0446\u0438\u0448\u043d\u0430\u044f \u043f\u0430\u043d\u0435\u043b\u044c
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         selectedItemColor: primaryColor,
@@ -261,17 +251,17 @@ abstract final class AppTheme {
         unselectedLabelStyle: AppTypography.overline,
       ),
 
-      // ── Divider ─────────────────────────────────────────────────────────
+      // \u2500\u2500 \u0420\u0430\u0437\u0434\u0435\u043b\u0438\u0442\u0435\u043b\u044c
       dividerTheme: DividerThemeData(
         color: borderColor,
         thickness: 1,
         space: 1,
       ),
 
-      // ── Icon ────────────────────────────────────────────────────────────
+      // \u2500\u2500 \u0418\u043a\u043e\u043d\u043a\u0430
       iconTheme: IconThemeData(color: textSecondary, size: AppSpacing.iconMd),
 
-      // ── Chip ────────────────────────────────────────────────────────────
+      // \u2500\u2500 \u0427\u0438\u043f
       chipTheme: ChipThemeData(
         backgroundColor: glassBg,
         selectedColor: primaryColor.withAlpha(50),
@@ -286,7 +276,7 @@ abstract final class AppTheme {
         ),
       ),
 
-      // ── Dialog ──────────────────────────────────────────────────────────
+      // \u2500\u2500 \u0414\u0438\u0430\u043b\u043e\u0433
       dialogTheme: DialogThemeData(
         backgroundColor: surfaceElev,
         elevation: 0,
@@ -297,7 +287,7 @@ abstract final class AppTheme {
         contentTextStyle: AppTypography.body.copyWith(color: textSecondary),
       ),
 
-      // ── Snackbar ────────────────────────────────────────────────────────
+      // \u2500\u2500 Snackbar
       snackBarTheme: SnackBarThemeData(
         backgroundColor: surfaceElev,
         contentTextStyle: AppTypography.body.copyWith(color: textPrimary),
@@ -308,14 +298,14 @@ abstract final class AppTheme {
         elevation: 0,
       ),
 
-      // ── Progress Indicator ───────────────────────────────────────────────
+      // \u2500\u2500 \u0418\u043d\u0434\u0438\u043a\u0430\u0442\u043e\u0440 \u043f\u0440\u043e\u0433\u0440\u0435\u0441\u0441\u0430
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: primaryColor,
         linearTrackColor: glassBg,
         circularTrackColor: glassBg,
       ),
 
-      // ── Switch / Toggle ──────────────────────────────────────────────────
+      // \u2500\u2500 \u041f\u0435\u0440\u0435\u043a\u043b\u044e\u0447\u0430\u0442\u0435\u043b\u044c
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
@@ -329,7 +319,7 @@ abstract final class AppTheme {
         }),
       ),
 
-      // ── Floating Action Button ───────────────────────────────────────────
+      // \u2500\u2500 \u041f\u043b\u0430\u0432\u0430\u044e\u0449\u0430\u044f \u043a\u043d\u043e\u043f\u043a\u0430
       floatingActionButtonTheme: FloatingActionButtonThemeData(
         backgroundColor: primaryColor,
         foregroundColor: isDark ? AppColors.darkBackground : AppColors.lightSurface,
@@ -339,14 +329,14 @@ abstract final class AppTheme {
         ),
       ),
 
-      // ── Badge ────────────────────────────────────────────────────────────
+      // \u2500\u2500 \u0417\u043d\u0430\u0447\u043e\u043a
       badgeTheme: BadgeThemeData(
         backgroundColor: secondaryColor,
         textColor: AppColors.lightSurface,
         textStyle: AppTypography.overline,
       ),
 
-      // ── ListTile ─────────────────────────────────────────────────────────
+      // \u2500\u2500 ListTile
       listTileTheme: ListTileThemeData(
         tileColor: Colors.transparent,
         iconColor: textSecondary,

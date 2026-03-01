@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import '../../core/errors/failures.dart';
 import '../../domain/entities/leaderboard_entry.dart';
 
-/// Result container for leaderboard fetch.
+/// Контейнер результата запроса таблицы лидеров.
 class LeaderboardResult {
   const LeaderboardResult({
     required this.entries,
@@ -13,7 +13,7 @@ class LeaderboardResult {
   final int total;
 }
 
-/// Handles GET /leaderboard.
+/// Выполняет GET /leaderboard.
 class LeaderboardRemoteDataSource {
   const LeaderboardRemoteDataSource(this._dio);
   final Dio _dio;

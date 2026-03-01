@@ -1,4 +1,4 @@
-/// Pure domain entity for a Duel.
+/// Доменная сущность дуэля.
 class Duel {
   const Duel({
     required this.id,

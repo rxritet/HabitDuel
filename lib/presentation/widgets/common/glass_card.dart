@@ -1,4 +1,4 @@
-import 'dart:ui';
+﻿import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
@@ -9,37 +9,37 @@ import '../../../core/theme/app_spacing.dart';
 //  Enumerations
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Visual depth variant for [GlassCard].
+/// Вариант визуальной глубины для [GlassCard].
 ///
-/// | Variant   | Blur | Shadow depth   | Opacity modifier |
-/// |-----------|------|----------------|-----------------|
-/// | `default` | 20   | card           | 1.0             |
-/// | `elevated`| 20   | elevated + glow| 1.0             |
-/// | `flat`    | 12   | none           | 0.8             |
+/// | Вариант  | Blur | Тень          | Opacity |
+/// |-----------|------|-----------|---------|
+/// | `default` | 20   | card      | 1.0     |
+/// | `elevated`| 20   | elevated  | 1.0     |
+/// | `flat`    | 12   | нет        | 0.8     |
 enum GlassCardVariant {
-  /// Standard glass card — card-level shadow, full opacity.
+  /// Стандартная стеклянная карточка — тень уровня card, полная непрозрачность.
   defaultCard,
 
-  /// Lifted glass card — elevated shadow + optional Night glow ring.
+  /// Приподнятая карточка — глубокая тень + опциональное ночное свечение.
   elevated,
 
-  /// Flush glass panel — no shadow, reduced blur, slightly lower opacity.
+  /// Плоская стеклянная панель — без тени, меньше блюр, слегка прозрачнее.
   flat,
 }
 
-/// Optional outer glow colour applied in Night (dark) mode only.
+/// Опциональный цвет внешнего свечения — только в тёмном режиме.
 ///
-/// Matches the `glow-*` shadow tokens from DESIGN.md §2.6.
+/// Соответствует токенам `glow-*` из DESIGN.md §2.6.
 enum GlassGlowType {
   none,
 
-  /// `0 0 20px rgba(56,189,248,0.25)` — primary sky-blue.
+  /// `0 0 20px rgba(56,189,248,0.25)` — синее неба (primary).
   primary,
 
-  /// `0 0 20px rgba(251,113,133,0.25)` — secondary rose.
+  /// `0 0 20px rgba(251,113,133,0.25)` — розовый (secondary).
   secondary,
 
-  /// `0 0 20px rgba(52,211,153,0.25)` — success emerald.
+  /// `0 0 20px rgba(52,211,153,0.25)` — зелёный (success).
   success,
 }
 
@@ -47,20 +47,18 @@ enum GlassGlowType {
 //  GlassCard
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Premium Glass card component.
+/// Компонент стеклянной карточки Premium Glass.
 ///
-/// Renders a frosted-glass surface using [BackdropFilter] and adapts all
-/// visual properties — background opacity, border opacity, box shadows, and
-/// glow rings — to the current theme brightness automatically.
+/// Отрисовывает поверхность матового стекла через [BackdropFilter],
+/// адаптируя все визуальные свойства под текущую яркость темы.
 ///
-/// ### Variants
-/// - [GlassCardVariant.defaultCard] — standard card depth.
-/// - [GlassCardVariant.elevated]   — raised card with deeper shadow / Night glow.
-/// - [GlassCardVariant.flat]       — borderless, minimal-shadow panel.
+/// ### Варианты
+/// - [GlassCardVariant.defaultCard] — стандартная глубина.
+/// - [GlassCardVariant.elevated]   — приподнятая, с глубокой тенью и свечением.
+/// - [GlassCardVariant.flat]       — плоская, без тени и рамки.
 ///
-/// ### Shimmer animation
-/// Set [shimmer] to `true` to enable a continuous diagonal gradient sweep
-/// across the glass surface that adds a subtle premium sheen.
+/// ### Анимация мерцания
+/// Установите [shimmer] = `true` для диагонального прохода градиента.
 ///
 /// ```dart
 /// GlassCard(
@@ -85,35 +83,35 @@ class GlassCard extends StatefulWidget {
     this.onTap,
   });
 
-  /// Content rendered inside the glass surface.
+  /// Содержимое карточки.
   final Widget child;
 
-  /// Shadow / depth variant. Defaults to [GlassCardVariant.defaultCard].
+  /// Вариант тени/глубины. По умолчанию [GlassCardVariant.defaultCard].
   final GlassCardVariant variant;
 
-  /// Outer glow colour applied in dark mode only.
-  /// Has no effect in light mode or when [variant] is [GlassCardVariant.flat].
+  /// Цвет внешнего свечения в тёмном режиме.
+  /// Не активен в светлом режиме или при [GlassCardVariant.flat].
   final GlassGlowType glow;
 
-  /// When `true`, a diagonal shimmer gradient slowly sweeps across the surface.
+  /// Если `true`, диагональный градиент медленно проходит по поверхности.
   final bool shimmer;
 
-  /// Corner radius. Defaults to [AppSpacing.radiusLg] (16 px).
+  /// Радиус скругления. По умолчанию [AppSpacing.radiusLg] (16 пт).
   final BorderRadius? borderRadius;
 
-  /// Inner padding. Defaults to [AppSpacing.base] (16 px) on all sides.
+  /// Внутренние отступы. По умолчанию [AppSpacing.base] (все 4 стороны).
   final EdgeInsetsGeometry? padding;
 
-  /// Outer margin.
+  /// Внешние отступы.
   final EdgeInsetsGeometry? margin;
 
-  /// Optional fixed width.
+  /// Опциональная фиксированная ширина.
   final double? width;
 
-  /// Optional fixed height.
+  /// Опциональная фиксированная высота.
   final double? height;
 
-  /// Tap callback. When provided the card gains a subtle press scale.
+  /// Колбэк нажатия. При наличии — карточка масштабируется при нажатии.
   final VoidCallback? onTap;
 
   @override
@@ -122,11 +120,11 @@ class GlassCard extends StatefulWidget {
 
 class _GlassCardState extends State<GlassCard>
     with SingleTickerProviderStateMixin {
-  // ── Shimmer controller ───────────────────────────────────────────────────
+  // ── Контроллер мерцания ─────────────────────────────────────────────────
   late final AnimationController _shimmerController;
   late final Animation<double> _shimmerAnimation;
 
-  // ── Press state ──────────────────────────────────────────────────────────
+  // ── Состояние нажатия ───────────────────────────────────────────────────
   bool _pressed = false;
 
   @override
@@ -165,7 +163,7 @@ class _GlassCardState extends State<GlassCard>
     super.dispose();
   }
 
-  // ── Helpers ──────────────────────────────────────────────────────────────
+  // ── Вспомогательные методы ──────────────────────────────────────────────
 
   double get _blurSigma => switch (widget.variant) {
     GlassCardVariant.flat => 12.0,
@@ -176,7 +174,7 @@ class _GlassCardState extends State<GlassCard>
     final baseOpacity = widget.variant == GlassCardVariant.flat ? 0.85 : 1.0;
 
     if (isDark) {
-      // Night: charcoal at 60 %  →  flat: slightly less opaque
+      // Тёмная: серый уголь 60 % → flat: чуть менее непрозрачный
       return Color.fromARGB(
         (0x99 * baseOpacity).round(), // 0x99 = 153 ≈ 60 %
         0x1C,
@@ -184,7 +182,7 @@ class _GlassCardState extends State<GlassCard>
         0x17,
       );
     } else {
-      // Day: white at 70 %  →  flat: slightly more transparent
+      // Светлая: белый 70 % → flat: чуть прозрачнее
       return Color.fromARGB(
         (0xB3 * baseOpacity).round(), // 0xB3 = 179 ≈ 70 %
         0xFF,
@@ -196,11 +194,11 @@ class _GlassCardState extends State<GlassCard>
 
   Color _resolveBorderColor(bool isDark) {
     if (isDark) {
-      // Night: 5 % white; elevated gets 8 % for extra definition
+      // Тёмная: белый 5 %; elevated — 8 % для чёткости
       final alpha = widget.variant == GlassCardVariant.elevated ? 0x14 : 0x0D;
       return Color.fromARGB(alpha, 0xFF, 0xFF, 0xFF);
     } else {
-      // Day: 20 % white; elevated gets 26 % for extra definition
+      // Светлая: белый 20 %; elevated — 26 % для чёткости
       final alpha = widget.variant == GlassCardVariant.elevated ? 0x42 : 0x33;
       return Color.fromARGB(alpha, 0xFF, 0xFF, 0xFF);
     }
@@ -214,9 +212,9 @@ class _GlassCardState extends State<GlassCard>
 
     if (isDark) {
       return [
-        // ── Base shadow ─────────────────────────────────────────────────
+        // ── Базовая тень ────────────────────────────────────────────────
         ..._darkBaseShadow,
-        // ── Night glow ring ─────────────────────────────────────────────
+        // ── Ночное свечение ─────────────────────────────────────────────
         if (widget.glow != GlassGlowType.none &&
             widget.variant == GlassCardVariant.elevated)
           _nightGlow(widget.glow),
@@ -305,7 +303,7 @@ class _GlassCardState extends State<GlassCard>
     };
   }
 
-  // ── Build ─────────────────────────────────────────────────────────────────
+  // ── Сборка ────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
@@ -353,12 +351,12 @@ class _GlassCardState extends State<GlassCard>
       ),
     );
 
-    // Wrap in margin if provided
+    // Оборачиваем в margin если задан
     if (widget.margin != null) {
       card = Padding(padding: widget.margin!, child: card);
     }
 
-    // Interactive press feedback
+    // Интерактивная анимация нажатия
     if (widget.onTap != null) {
       card = GestureDetector(
         onTapDown: (_) => setState(() => _pressed = true),
@@ -384,12 +382,10 @@ class _GlassCardState extends State<GlassCard>
 //  Shimmer Overlay
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Internal widget that paints a slowly drifting diagonal gradient shimmer
-/// across the glass surface.
+/// Внутренний виджет медленно движущегося диагонального градиента.
 ///
-/// The [animation] value (0.0 → 1.0 → 0.0, looping) drives the gradient's
-/// [LinearGradient.begin] and [LinearGradient.end] alignment, creating a
-/// smooth sweep from top-left to bottom-right and back.
+/// Значение [animation] (0.0 → 1.0 → 0.0, цикл) управляет выравнивание
+/// [LinearGradient.begin]/[LinearGradient.end], создавая плавный проход слева-сверху направо-вниз.
 class _ShimmerOverlay extends AnimatedWidget {
   const _ShimmerOverlay({required Animation<double> animation})
     : super(listenable: animation);
@@ -400,7 +396,7 @@ class _ShimmerOverlay extends AnimatedWidget {
   Widget build(BuildContext context) {
     final t = _animation.value; // 0.0 → 1.0
 
-    // Shift the gradient begin/end diagonally as t progresses
+    // Смещаем начало/конец градиента по диагонали по мере t
     final begin = Alignment(-1.5 + t * 3.0, -1.5 + t * 1.5);
     final end = Alignment(-0.5 + t * 3.0, -0.5 + t * 1.5);
 
@@ -411,11 +407,11 @@ class _ShimmerOverlay extends AnimatedWidget {
             begin: begin,
             end: end,
             colors: const [
-              Color(0x00FFFFFF), //  0 % white — leading edge
-              Color(0x0CFFFFFF), //  5 % white — shimmer peak
-              Color(0x1AFFFFFF), // 10 % white — core glow
-              Color(0x0CFFFFFF), //  5 % white — trailing taper
-              Color(0x00FFFFFF), //  0 % white — trailing edge
+              Color(0x00FFFFFF), //  0 % белого — ведущий край
+              Color(0x0CFFFFFF), //  5 % белого — пик мерцания
+              Color(0x1AFFFFFF), // 10 % белого — ядро свечения
+              Color(0x0CFFFFFF), //  5 % белого — затухание
+              Color(0x00FFFFFF), //  0 % белого — ведомый край
             ],
             stops: const [0.0, 0.2, 0.5, 0.8, 1.0],
           ),

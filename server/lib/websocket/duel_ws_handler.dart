@@ -1,27 +1,27 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 import 'dart:io';
 
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 
-/// Manages per-duel WebSocket rooms.
+/// Управляет WebSocket-комнатами по дуэлям.
 ///
-/// Clients subscribe via `/ws/duels/:id?token=<jwt>`.
-/// The hub broadcasts JSON events to all connected clients in a room.
+/// Клиенты подписываются через `/ws/duels/:id?token=<jwt>`.
+/// Хаб рассылает JSON-события всем подключённым в комнату.
 class DuelWsHub {
   DuelWsHub(this._jwtSecret);
 
   final String _jwtSecret;
 
-  /// duelId → set of connected sockets
+  /// duelId → множество подключённых сокетов
   final Map<String, Set<WebSocket>> _rooms = {};
 
-  // ─── Connection management ──────────────────────────────────────────
+  // ─── Управление подключениями ─────────────────────────────────────────
 
-  /// Handles an incoming WebSocket upgrade request.
+  /// Обрабатывает входящий запрос на WebSocket-апгрейд.
   Future<void> handleUpgrade(HttpRequest request) async {
-    // Parse URI: /ws/duels/<duelId>?token=<jwt>
+  // Разбираем URI: /ws/duels/<duelId>?token=<jwt>
     final segments = request.uri.pathSegments;
-    // Expected: ws, duels, <duelId>
+    // Ожидаем: ws, duels, <duelId>
     if (segments.length < 3 || segments[0] != 'ws' || segments[1] != 'duels') {
       request.response
         ..statusCode = 400
@@ -33,7 +33,7 @@ class DuelWsHub {
     final duelId = segments[2];
     final token = request.uri.queryParameters['token'];
 
-    // Authenticate via JWT
+    // Аутентификация через JWT
     if (token == null || token.isEmpty) {
       request.response
         ..statusCode = 401
@@ -55,22 +55,22 @@ class DuelWsHub {
       return;
     }
 
-    // Upgrade to WebSocket
+    // Переводим соединение на WebSocket
     final socket = await WebSocketTransformer.upgrade(request);
 
     _rooms.putIfAbsent(duelId, () => {});
     _rooms[duelId]!.add(socket);
 
-    // Send welcome event
+    // Отправляем приветственное событие
     socket.add(jsonEncode({
       'event': 'connected',
       'duel_id': duelId,
       'user_id': userId,
     }));
 
-    // Listen for close
+    // Слушаем закрытие соединения
     socket.listen(
-      (_) {}, // we don't expect client→server messages
+      (_) {}, // сообщения от клиента не ожидаются
       onDone: () => _remove(duelId, socket),
       onError: (_) => _remove(duelId, socket),
     );
@@ -86,9 +86,9 @@ class DuelWsHub {
     } catch (_) {}
   }
 
-  // ─── Broadcasting ──────────────────────────────────────────────────
+  // ─── Рассылка событий ──────────────────────────────────────────────────
 
-  /// Broadcast an event to all clients subscribed to [duelId].
+  /// Рассылает событие всем клиентам в комнате [duelId].
   void broadcast(String duelId, Map<String, dynamic> event) {
     final room = _rooms[duelId];
     if (room == null || room.isEmpty) return;
@@ -104,13 +104,13 @@ class DuelWsHub {
       }
     }
 
-    // Clean up broken connections
+  // Удаляем оборванные соединения
     for (final s in stale) {
       _remove(duelId, s);
     }
   }
 
-  /// Convenience: broadcast `checkin_created` event.
+  /// Простая рассылка события `checkin_created`.
   void notifyCheckinCreated({
     required String duelId,
     required String userId,
@@ -130,7 +130,7 @@ class DuelWsHub {
     });
   }
 
-  /// Convenience: broadcast `streak_broken` event.
+  /// Простая рассылка события `streak_broken`.
   void notifyStreakBroken({
     required String duelId,
     required String userId,
@@ -146,7 +146,7 @@ class DuelWsHub {
     });
   }
 
-  /// Convenience: broadcast `duel_completed` event.
+  /// Простая рассылка события `duel_completed`.
   void notifyDuelCompleted({
     required String duelId,
     required String? winnerId,

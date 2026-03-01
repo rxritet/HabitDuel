@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import '../../core/errors/failures.dart';
 import '../models/user_model.dart';
 
-/// Result DTOs returned by [AuthRemoteDataSource].
+/// DTO-результаты, возвращаемые [AuthRemoteDataSource].
 class RegisterResponse {
   const RegisterResponse({required this.user, required this.token});
   final UserModel user;
@@ -16,12 +16,12 @@ class LoginResponse {
   final String token;
 }
 
-/// Handles raw HTTP calls to `/auth/*` endpoints.
+/// Выполняет HTTP-запросы к эндпоинтам `/auth/*`.
 class AuthRemoteDataSource {
   const AuthRemoteDataSource(this._dio);
   final Dio _dio;
 
-  /// POST /auth/register
+  /// POST /auth/register — регистрация пользователя
   Future<RegisterResponse> register({
     required String username,
     required String email,
@@ -50,7 +50,7 @@ class AuthRemoteDataSource {
     }
   }
 
-  /// POST /auth/login
+  /// POST /auth/login — вход пользователя
   Future<LoginResponse> login({
     required String email,
     required String password,
@@ -74,7 +74,7 @@ class AuthRemoteDataSource {
     }
   }
 
-  /// Translates Dio errors into domain [Failure]s.
+  /// Преобразует ошибки Dio в доменные [Failure].
   Never _handleDioError(DioException e) {
     final statusCode = e.response?.statusCode;
     final data = e.response?.data;

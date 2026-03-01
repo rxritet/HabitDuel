@@ -1,37 +1,37 @@
 import '../entities/user.dart';
 
-/// Result returned after a successful registration.
+/// Данные после успешной регистрации.
 class RegisterResult {
   const RegisterResult({required this.user, required this.token});
   final User user;
   final String token;
 }
 
-/// Result returned after a successful login.
+/// Данные после успешной аутентификации.
 class LoginResult {
   const LoginResult({required this.user, required this.token});
   final User user;
   final String token;
 }
 
-/// Abstract contract for authentication operations.
+/// Абстрактный контракт аутентификации.
 abstract class AuthRepository {
-  /// Register a new account. Throws [Failure] on error.
+  /// Регистрирует аккаунт. Бросает [Failure] при ошибке.
   Future<RegisterResult> register({
     required String username,
     required String email,
     required String password,
   });
 
-  /// Login with email + password. Throws [Failure] on error.
+  /// Аутентифицируется по email + пароль. Бросает [Failure] при ошибке.
   Future<LoginResult> login({
     required String email,
     required String password,
   });
 
-  /// Returns `true` if a JWT token is persisted locally.
+  /// Возвращает `true`, если JWT-токен сохранён локально.
   Future<bool> hasToken();
 
-  /// Clears persisted auth data (logout).
+  /// Удаляет данные аутентификации (выход).
   Future<void> logout();
 }

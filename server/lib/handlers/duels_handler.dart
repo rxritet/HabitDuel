@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 
 import 'package:postgres/postgres.dart';
 import 'package:shelf/shelf.dart';
@@ -6,7 +6,7 @@ import 'package:shelf_router/shelf_router.dart';
 
 import '../db/database.dart';
 
-/// Handles duel CRUD: create, accept, list, detail.
+/// Обрабатывает CRUD дуэлей: создание, принятие, список, детали.
 class DuelsHandler {
   Router get router {
     final r = Router();
@@ -18,7 +18,7 @@ class DuelsHandler {
   }
 
   // ---------------------------------------------------------------------------
-  // POST /duels — create a new duel
+  // POST /duels — создать дуэль
   // ---------------------------------------------------------------------------
   Future<Response> _createDuel(Request request) async {
     final userId = request.context['userId'] as String;
@@ -38,7 +38,7 @@ class DuelsHandler {
 
     final conn = await Database.connection;
 
-    // Resolve opponent if provided
+    // Находим противника если указан username
     String? opponentId;
     if (opponentUsername != null && opponentUsername.isNotEmpty) {
       final oppResult = await conn.execute(
@@ -51,7 +51,7 @@ class DuelsHandler {
       opponentId = oppResult.first.toColumnMap()['id'] as String;
     }
 
-    // Insert duel
+    // Вставляем дуэль в БД
     final duelResult = await conn.execute(
       Sql.named('''
         INSERT INTO duels (habit_name, description, creator_id, opponent_id, duration_days)
@@ -70,7 +70,7 @@ class DuelsHandler {
     final duel = duelResult.first.toColumnMap();
     final duelId = duel['id'] as String;
 
-    // Add creator as participant
+    // Добавляем создателя как участника
     await conn.execute(
       Sql.named(
         'INSERT INTO duel_participants (duel_id, user_id) VALUES (@d::uuid, @u::uuid)',
@@ -78,10 +78,10 @@ class DuelsHandler {
       parameters: {'d': duelId, 'u': userId},
     );
 
-    // Fetch creator info
+    // Получаем данные создателя
     final creatorRow = await _fetchUser(conn, userId);
 
-    // Fetch opponent info if exists
+    // Получаем данные противника, если указан
     Map<String, dynamic>? opponentInfo;
     if (opponentId != null) {
       opponentInfo = await _fetchUser(conn, opponentId);
@@ -100,13 +100,13 @@ class DuelsHandler {
   }
 
   // ---------------------------------------------------------------------------
-  // POST /duels/<id>/accept
+  // POST /duels/<id>/accept — принять дуэль
   // ---------------------------------------------------------------------------
   Future<Response> _acceptDuel(Request request, String id) async {
     final userId = request.context['userId'] as String;
     final conn = await Database.connection;
 
-    // Fetch duel
+    // Получаем дуэль
     final duelResult = await conn.execute(
       Sql.named('SELECT * FROM duels WHERE id = @id::uuid'),
       parameters: {'id': id},
@@ -122,12 +122,12 @@ class DuelsHandler {
       return _json({'error': 'duel_not_pending'}, 409);
     }
 
-    // Cannot accept own duel
+    // Нельзя принять свою же дуэль
     if (creatorId == userId) {
       return _json({'error': 'forbidden'}, 403);
     }
 
-    // If targeted duel, only the specified opponent can accept
+    // Если дуэль адресная — только указанный противник может принять
     if (opponentId != null && opponentId != userId) {
       return _json({'error': 'forbidden'}, 403);
     }
@@ -136,7 +136,7 @@ class DuelsHandler {
     final durationDays = duel['duration_days'] as int;
     final endsAt = now.add(Duration(days: durationDays));
 
-    // Activate duel
+    // Активируем дуэль
     await conn.execute(
       Sql.named('''
         UPDATE duels
@@ -154,7 +154,7 @@ class DuelsHandler {
       },
     );
 
-    // Add opponent as participant
+    // Добавляем противника как участника
     await conn.execute(
       Sql.named('''
         INSERT INTO duel_participants (duel_id, user_id)
@@ -173,7 +173,7 @@ class DuelsHandler {
   }
 
   // ---------------------------------------------------------------------------
-  // GET /duels — list duels for current user
+  // GET /duels — список дуэлей пользователя
   // ---------------------------------------------------------------------------
   Future<Response> _listDuels(Request request) async {
     final userId = request.context['userId'] as String;
@@ -215,7 +215,7 @@ class DuelsHandler {
   }
 
   // ---------------------------------------------------------------------------
-  // GET /duels/<id> — duel detail
+  // GET /duels/<id> — детали дуэли
   // ---------------------------------------------------------------------------
   Future<Response> _getDuel(Request request, String id) async {
     final userId = request.context['userId'] as String;
@@ -231,15 +231,15 @@ class DuelsHandler {
     final creatorId = duel['creator_id'] as String;
     final opponentId = duel['opponent_id'] as String?;
 
-    // Only participants can view
+    // Только участники могут просматривать
     if (creatorId != userId && opponentId != userId) {
-      // Allow open duels to be visible
+      // Открытые дуэли видны всем
       if (opponentId != null) {
         return _json({'error': 'forbidden'}, 403);
       }
     }
 
-    // Fetch participants with streaks
+    // Получаем участников со статистикой серий
     final partResult = await conn.execute(
       Sql.named('''
         SELECT dp.user_id, dp.streak, dp.last_checkin, u.username
@@ -260,7 +260,7 @@ class DuelsHandler {
       };
     }).toList();
 
-    // Fetch recent checkins (last 10)
+    // Получаем последние отметки (10 штук)
     final checkinsResult = await conn.execute(
       Sql.named('''
         SELECT c.id, c.user_id, u.username, c.checked_at, c.note
@@ -305,7 +305,7 @@ class DuelsHandler {
   }
 
   // ---------------------------------------------------------------------------
-  // Helpers
+  // Вспомогательные методы
   // ---------------------------------------------------------------------------
 
   Future<Map<String, dynamic>> _fetchUser(Connection conn, String userId) async {

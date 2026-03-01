@@ -1,4 +1,4 @@
-/// Pure domain entity representing an authenticated user.
+/// Доменная сущность аутентифицированного пользователя.
 class User {
   const User({
     required this.id,

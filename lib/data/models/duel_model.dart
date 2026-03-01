@@ -18,7 +18,7 @@ class DuelModel extends Duel {
     super.checkins,
   });
 
-  /// Parse from GET /duels list item.
+  /// Разбирает элемент списка GET /duels.
   factory DuelModel.fromListJson(Map<String, dynamic> json) {
     return DuelModel(
       id: json['id'] as String,
@@ -33,7 +33,7 @@ class DuelModel extends Duel {
     );
   }
 
-  /// Parse from GET /duels/:id detail.
+  /// Разбирает детальный ответ GET /duels/:id.
   factory DuelModel.fromDetailJson(Map<String, dynamic> json) {
     final parts = (json['participants'] as List<dynamic>? ?? [])
         .map((p) => DuelParticipant(
@@ -76,7 +76,7 @@ class DuelModel extends Duel {
     );
   }
 
-  /// Parse from POST /duels create response.
+  /// Разбирает ответ POST /duels при создании дуэли.
   factory DuelModel.fromCreateJson(Map<String, dynamic> json) {
     return DuelModel(
       id: json['id'] as String,

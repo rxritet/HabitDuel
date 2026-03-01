@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import '../../core/errors/failures.dart';
 import '../../domain/entities/profile.dart';
 
-/// Handles GET /users/me for full profile.
+/// Выполняет GET /users/me для получения полного профиля.
 class ProfileRemoteDataSource {
   const ProfileRemoteDataSource(this._dio);
   final Dio _dio;

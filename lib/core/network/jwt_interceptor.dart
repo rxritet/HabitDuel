@@ -3,11 +3,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../constants/app_constants.dart';
 
-/// Interceptor that attaches `Authorization: Bearer <jwt>` header
-/// to every outgoing request if a token is stored.
+/// Прикрепляет `Authorization: Bearer <jwt>` ко всем исходящим запросам.
 ///
-/// On a 401 response the stored token is cleared — the UI layer
-/// watches the auth state and will redirect to the login screen.
+/// При ответе 401 сохранённый токен удаляется, UI переходит на экран входа.
 class JwtInterceptor extends Interceptor {
   JwtInterceptor(this._storage);
 
@@ -31,7 +29,7 @@ class JwtInterceptor extends Interceptor {
     ErrorInterceptorHandler handler,
   ) async {
     if (err.response?.statusCode == 401) {
-      // Clear persisted auth data — provider listener will redirect.
+      // Удаляем данные аутентификации — провайдер перенаправит на экран входа.
       await _storage.delete(key: kTokenKey);
       await _storage.delete(key: kUserIdKey);
       await _storage.delete(key: kUsernameKey);

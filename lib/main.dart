@@ -32,7 +32,7 @@ class _HabitDuelAppState extends ConsumerState<HabitDuelApp> {
   @override
   void initState() {
     super.initState();
-    // Check for persisted session on app launch.
+    // Проверяем наличие сохранённой сессии при запуске.
     Future.microtask(
       () => ref.read(authProvider.notifier).checkSession(),
     );
@@ -40,7 +40,7 @@ class _HabitDuelAppState extends ConsumerState<HabitDuelApp> {
 
   @override
   Widget build(BuildContext context) {
-    // Listen to auth state changes and redirect accordingly.
+    // Отслеживаем изменения состояния аутентификации и перенаправляем.
     ref.listen<AuthState>(authProvider, (prev, next) {
       if (next is Authenticated) {
         _navigatorKey.currentState?.pushNamedAndRemoveUntil(

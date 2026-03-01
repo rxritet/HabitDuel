@@ -1,9 +1,8 @@
-/// Premium Glass Design System — Spacing & Sizing Scale
+/// Отступы и размеры дизайн-системы Premium Glass.
 ///
-/// Based on a 4 pt base grid. Use semantic names instead of raw numbers
-/// to keep the design consistent across the codebase.
+/// Основа — 4 pt grid. Используйте семантические названия вместо чисел.
 abstract final class AppSpacing {
-  // ── Base spacing (4 pt grid) ─────────────────────────────────────────────
+  // ── Базовые отступы (4 pt grid) ─────────────────────────────────────────────
 
   static const double xxs = 2.0;
   static const double xs = 4.0;
@@ -16,27 +15,27 @@ abstract final class AppSpacing {
   static const double xxxl = 48.0;
   static const double huge = 64.0;
 
-  // ── Semantic spacing ─────────────────────────────────────────────────────
+  // ── Семантические отступы ─────────────────────────────────────────────────────
 
-  /// Standard inner padding for cards and containers.
+  /// Внутренний отступ карточек и контейнеров.
   static const double cardPadding = xl; // 24
 
-  /// Padding for screen-level horizontal gutters.
+  /// Горизонтальные поля экрана.
   static const double screenPadding = base; // 16
 
-  /// Gap between stacked list/card items.
+  /// Интервал между строками списка / карточками.
   static const double itemGap = md; // 12
 
-  /// Gap between tightly related inline elements.
+  /// Интервал между близко связанными элементами.
   static const double inlineGap = sm; // 8
 
-  /// Gap between form fields.
+  /// Отступ между полями формы.
   static const double formFieldGap = base; // 16
 
-  /// Vertical section separator.
+  /// Вертикальный разделитель секций.
   static const double sectionGap = xxl; // 32
 
-  // ── Border radii ──────────────────────────────────────────────────────────
+  // ── Радиусы скругления ──────────────────────────────────────────────────────────
 
   static const double radiusXs = 4.0;
   static const double radiusSm = 8.0;
@@ -44,15 +43,15 @@ abstract final class AppSpacing {
   static const double radiusLg = 16.0;
   static const double radiusXl = 20.0;
   static const double radiusXxl = 24.0;
-  static const double radiusFull = 999.0; // pill / circular
+  static const double radiusFull = 999.0; // пилюля / округлый
 
-  /// Standard card corner radius.
+  /// Стандартный радиус углов карточки.
   static const double cardRadius = radiusXl; // 20
 
-  /// Button corner radius.
+  /// Радиус углов кнопки.
   static const double buttonRadius = radiusLg; // 16
 
-  // ── Icon sizes ────────────────────────────────────────────────────────────
+  // ── Размеры иконок ────────────────────────────────────────────────────────────
 
   static const double iconXs = 14.0;
   static const double iconSm = 18.0;
@@ -60,14 +59,14 @@ abstract final class AppSpacing {
   static const double iconLg = 32.0;
   static const double iconXl = 48.0;
 
-  // ── Avatar / image sizes ─────────────────────────────────────────────────
+  // ── Размеры аватаров / изображений ─────────────────────────────────────────────────
 
   static const double avatarSm = 32.0;
   static const double avatarMd = 48.0;
   static const double avatarLg = 64.0;
   static const double avatarXl = 80.0;
 
-  // ── Component heights ─────────────────────────────────────────────────────
+  // ── Высоты компонентов ─────────────────────────────────────────────────────
 
   static const double buttonHeight = 52.0;
   static const double buttonHeightSm = 40.0;

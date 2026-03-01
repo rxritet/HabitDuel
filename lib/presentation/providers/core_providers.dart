@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+﻿import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -19,7 +19,7 @@ import '../../domain/usecases/duels/create_duel_usecase.dart';
 import '../../domain/usecases/duels/get_duel_detail_usecase.dart';
 import '../../domain/usecases/duels/get_my_duels_usecase.dart';
 
-// ─── Infrastructure providers ───────────────────────────────────────────
+// ─── Инфраструктурные провайдеры ───────────────────────────────────────
 
 final secureStorageProvider = Provider<FlutterSecureStorage>(
   (_) => const FlutterSecureStorage(),
@@ -30,7 +30,7 @@ final dioProvider = Provider<Dio>((ref) {
   return createDioClient(storage);
 });
 
-// ─── Data layer providers ───────────────────────────────────────────────
+// ─── Провайдеры слоя данных ────────────────────────────────────────────
 
 final authRemoteDSProvider = Provider<AuthRemoteDataSource>((ref) {
   return AuthRemoteDataSource(ref.watch(dioProvider));
@@ -43,7 +43,7 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   );
 });
 
-// ─── Use case providers ─────────────────────────────────────────────────
+// ─── Провайдеры сценариев использования ────────────────────────────────
 
 final registerUseCaseProvider = Provider<RegisterUseCase>((ref) {
   return RegisterUseCase(ref.watch(authRepositoryProvider));
@@ -53,7 +53,7 @@ final loginUseCaseProvider = Provider<LoginUseCase>((ref) {
   return LoginUseCase(ref.watch(authRepositoryProvider));
 });
 
-// ─── Duel data layer providers ──────────────────────────────────────────
+// ─── Провайдеры данных дуэлей ──────────────────────────────────────────
 
 final duelRemoteDSProvider = Provider<DuelRemoteDataSource>((ref) {
   return DuelRemoteDataSource(ref.watch(dioProvider));
@@ -63,7 +63,7 @@ final duelRepositoryProvider = Provider<DuelRepository>((ref) {
   return DuelRepositoryImpl(ref.watch(duelRemoteDSProvider));
 });
 
-// ─── Duel use case providers ────────────────────────────────────────────
+// ─── Провайдеры сценариев дуэлей ───────────────────────────────────────
 
 final createDuelUseCaseProvider = Provider<CreateDuelUseCase>((ref) {
   return CreateDuelUseCase(ref.watch(duelRepositoryProvider));
@@ -85,7 +85,7 @@ final checkInUseCaseProvider = Provider<CheckInUseCase>((ref) {
   return CheckInUseCase(ref.watch(duelRepositoryProvider));
 });
 
-// ─── Leaderboard + Profile data layer providers ─────────────────────────
+// ─── Провайдеры данных таблицы лидеров и профиля ───────────────────────
 
 final leaderboardRemoteDSProvider = Provider<LeaderboardRemoteDataSource>((ref) {
   return LeaderboardRemoteDataSource(ref.watch(dioProvider));

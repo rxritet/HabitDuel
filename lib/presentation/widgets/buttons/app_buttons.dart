@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_gradients.dart';
@@ -6,7 +6,7 @@ import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 
 // ──────────────────────────────────────────────────────────────────────────────
-//  Shared constants
+//  Общие константы
 // ──────────────────────────────────────────────────────────────────────────────
 
 const _kPressScaleDown = 0.96;
@@ -18,7 +18,7 @@ const _kBorderRadius   = AppSpacing.radiusMd; // 12 px (spec)
 const _kVerticalPad    = AppSpacing.base;       // 16 px (spec)
 const _kHorizontalPad  = AppSpacing.xl;         // 24 px
 
-/// Greyscale colour-filter for the disabled state.
+/// Цветовой фильтр оттенков серого для состояния disabled.
 const ColorFilter _kGreyscale = ColorFilter.matrix(<double>[
   0.2126, 0.7152, 0.0722, 0, 0,
   0.2126, 0.7152, 0.0722, 0, 0,
@@ -27,13 +27,12 @@ const ColorFilter _kGreyscale = ColorFilter.matrix(<double>[
 ]);
 
 // ──────────────────────────────────────────────────────────────────────────────
-//  _PressableButton  (internal base)
+//  _PressableButton  (внутренняя база)
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Handles the press scale + opacity animation shared by all button variants.
+/// Обрабатывает анимацию масштаба + прозрачности, общую для всех вариантов кнопок.
 ///
-/// Subclasses supply [buildInner] which receives the current [pressed] state
-/// so they can tint / re-draw their own chrome if needed.
+/// Подклассы предоставляют [buildInner], который получает состояние [pressed].
 abstract class _PressableButton extends StatefulWidget {
   const _PressableButton({
     super.key,
@@ -49,7 +48,7 @@ abstract class _PressableButton extends StatefulWidget {
 
   final String label;
 
-  /// `null` renders the button in [isDisabled] state without calling setState.
+  /// `null` переводит кнопку в состояние [isDisabled].
   final VoidCallback? onPressed;
   final Widget? icon;
   final bool isLoading;
@@ -58,8 +57,7 @@ abstract class _PressableButton extends StatefulWidget {
   final double? height;
   final TextStyle? textStyle;
 
-  /// Build the button's visual chrome. [pressed] is `true` while the finger
-  /// is held down, allowing subclasses to darken borders etc.
+  /// Отрисовывает визуальную оболочку кнопки. [pressed] = `true` пока палец удержан.
   Widget buildInner(
     BuildContext context, {
     required bool pressed,
@@ -138,7 +136,7 @@ class _PressableButtonState extends State<_PressableButton>
       ),
     );
 
-    // Disabled: greyscale + 50 % opacity
+    // Отключено: оттенки серого + 50 % прозрачности
     if (widget.isDisabled) {
       child = Opacity(
         opacity: 0.5,
@@ -159,13 +157,13 @@ class _PressableButtonState extends State<_PressableButton>
 //  PrimaryButton
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Gradient-fill CTA button.
+/// Кнопка CTA с градиентной заливкой.
 ///
-/// - Background: `AppGradients.primaryDay` / `primaryNight`
-/// - Border radius: 12 px, vertical padding: 16 px (DESIGN.md spec)
-/// - Press: scale → 0.96, opacity → 0.80, 150 ms easeOut
-/// - Loading: `CircularProgressIndicator` replaces label
-/// - Disabled: greyscale + 0.5 opacity
+/// - Фон: `AppGradients.primaryDay` / `primaryNight`
+/// - Радиус: 12 пт, отступ: 16 пт
+/// - Нажатие: масштаб → 0.96, прозрачность → 0.80, 150 мс
+/// - Загрузка: [CircularProgressIndicator]
+/// - Disabled: серые тона + прозрачность 0.5
 ///
 /// ```dart
 /// PrimaryButton(
@@ -203,7 +201,7 @@ class PrimaryButton extends _PressableButton {
       decoration: BoxDecoration(
         gradient: gradient,
         borderRadius: BorderRadius.circular(_kBorderRadius),
-        // Pressed inner shadow to reinforce depth
+        // Внутренняя тень при нажатии для усиления глубины
         boxShadow: pressed
             ? const []
             : [
@@ -234,10 +232,9 @@ class PrimaryButton extends _PressableButton {
 //  SecondaryButton
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Outlined button with gradient border stroke and transparent background.
+/// Кнопка с прозрачным фоном и градиентной рамкой.
 ///
-/// Uses a `CustomPaint` gradient border so the stroke inherits the same
-/// ocean-blue → cyan / rose → blush colours as [PrimaryButton].
+/// Использует `CustomPaint` для градиентного БИ рамки.
 ///
 /// ```dart
 /// SecondaryButton(label: 'Cancel', onPressed: _cancel)
@@ -256,8 +253,7 @@ class SecondaryButton extends _PressableButton {
     this.useSecondaryGradient = false,
   });
 
-  /// When `true` the border uses the secondary (coral/rose) gradient instead
-  /// of the primary (ocean/sky) gradient.
+  /// Если `true` — рамка использует вторичный градиент (coral/rose) вместо primary.
   final bool useSecondaryGradient;
 
   @override
@@ -270,7 +266,7 @@ class SecondaryButton extends _PressableButton {
         ? (isDark ? AppGradients.secondaryNight : AppGradients.secondaryDay)
         : (isDark ? AppGradients.primaryNight   : AppGradients.primaryDay);
 
-    // Derive a single solid colour from the gradient for the label / icon
+    // Получаем сплошной цвет из градиента для метки и иконки
     final labelColor = useSecondaryGradient
         ? (isDark ? AppColors.secondaryNight : AppColors.secondary)
         : (isDark ? AppColors.primaryNight   : AppColors.primary);
@@ -311,9 +307,9 @@ class SecondaryButton extends _PressableButton {
 //  GhostButton
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Completely transparent button — text + optional icon only.
+/// Полностью прозрачная кнопка — только текст и иконка.
 ///
-/// Used for de-emphasised actions such as "Skip", "Later", or inline text-links.
+/// Для неакцентированных действий: «Пропустить», «Позже» и т. п.
 ///
 /// ```dart
 /// GhostButton(label: 'Skip for now', onPressed: _skip)
@@ -360,7 +356,7 @@ class GhostButton extends _PressableButton {
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
-//  _ButtonContent  (shared inner layout)
+//  _ButtonContent  (общая внутренняя вёрстка)
 // ──────────────────────────────────────────────────────────────────────────────
 
 class _ButtonContent extends StatelessWidget {
@@ -422,7 +418,7 @@ class _ButtonContent extends StatelessWidget {
 //  _GradientBorderPainter
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Paints a rounded-rectangle gradient stroke around a widget.
+/// Рисует градиентный скрашенный прямоугольник вокруг виджета.
 class _GradientBorderPainter extends CustomPainter {
   _GradientBorderPainter({
     required this.gradient,

@@ -1,4 +1,4 @@
-/// Domain entity for a leaderboard entry.
+/// Доменная сущность записи таблицы лидеров.
 class LeaderboardEntry {
   const LeaderboardEntry({
     required this.rank,

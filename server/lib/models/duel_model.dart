@@ -1,4 +1,4 @@
-/// Dart model for the `duels` table.
+/// Модель таблицы `duels` базы данных.
 class DuelModel {
   DuelModel({
     required this.id,

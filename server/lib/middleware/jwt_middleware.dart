@@ -1,15 +1,13 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:dotenv/dotenv.dart';
 import 'package:shelf/shelf.dart';
 
-/// Shelf middleware that validates `Authorization: Bearer <jwt>`.
+/// Middleware Shelf \u0434\u043b\u044f \u043f\u0440\u043e\u0432\u0435\u0440\u043a\u0438 Authorization: Bearer <jwt>.
 ///
-/// On success the decoded claims are stored in `request.context` under
-/// keys `userId` and `username` so downstream handlers can access them.
-///
-/// On failure returns 401 immediately.
+/// \u041f\u0440\u0438 \u0443\u0441\u043f\u0435\u0445\u0435 \u0437\u0430\u043f\u0438\u0441\u044b\u0432\u0430\u0435\u0442 `userId`/`username` \u0432 `request.context`.
+/// \u041f\u0440\u0438 \u043e\u0448\u0438\u0431\u043a\u0435 \u2014 401.
 Middleware jwtMiddleware(DotEnv env) {
   final secret = env['JWT_SECRET'] ?? 'default_secret';
 
@@ -25,7 +23,7 @@ Middleware jwtMiddleware(DotEnv env) {
         );
       }
 
-      final token = authHeader.substring(7); // strip "Bearer "
+      final token = authHeader.substring(7); // \u0443\u0431\u0438\u0440\u0430\u0435\u043c "Bearer "
 
       try {
         final jwt = JWT.verify(token, SecretKey(secret));
@@ -42,7 +40,7 @@ Middleware jwtMiddleware(DotEnv env) {
           );
         }
 
-        // Forward decoded claims via request context
+        // Передаём декодированные claims через контекст запроса
         final updatedRequest = request.change(context: {
           'userId': userId,
           'username': username ?? '',

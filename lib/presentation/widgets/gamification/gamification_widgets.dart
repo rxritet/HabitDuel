@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_gradients.dart';
@@ -9,14 +9,13 @@ import '../../../core/theme/app_typography.dart';
 //  StreakBadge
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Displays the current streak count with a fire icon.
+/// Отображает текущую серию с иконкой огня.
 ///
-/// When [streak] ≥ [pulseThreshold] (default 1) the badge enters an infinite
-/// breathing pulse: scale 1.0 → 1.05 and opacity 1.0 → 0.85 over a 2-second
-/// `easeInOut` cycle, matching DESIGN.md §4.2 "Streak Badge Pulse".
+/// При [streak] ≥ [pulseThreshold] (по умолч. 1) значок инициирует
+/// бесконечную пульсацию: масштаб 1.0 → 1.05, прозрачность 1.0 → 0.85
+/// за 2 секунды (`easeInOut`).
 ///
-/// When [streak] is 0 or below [pulseThreshold] the badge is rendered at rest
-/// (no animation, slightly dimmed opacity).
+/// Если [streak] < [pulseThreshold] — значок в покое состояние.
 ///
 /// ```dart
 /// StreakBadge(streak: 7)
@@ -32,13 +31,13 @@ class StreakBadge extends StatefulWidget {
     this.pulseThreshold = 1,
   });
 
-  /// Current streak count. Zero renders the badge as inactive.
+  /// Текущая серия. 0 — значок неактивен.
   final int streak;
 
-  /// Visual size variant.
+  /// Вариант размера.
   final StreakBadgeSize size;
 
-  /// Minimum streak value that activates the pulse animation.
+  /// Минимальное значение серии для активации анимации.
   final int pulseThreshold;
 
   @override
@@ -93,7 +92,7 @@ class _StreakBadgeState extends State<StreakBadge>
     super.dispose();
   }
 
-  // ── Size tokens ───────────────────────────────────────────────────────────
+  // ── Токены размера ───────────────────────────────────────────────────────
 
   double get _iconSize => switch (widget.size) {
     StreakBadgeSize.small  => 14.0,
@@ -151,7 +150,7 @@ class _StreakBadgeState extends State<StreakBadge>
   }
 }
 
-// ── Chrome (static layer, not rebuilt per-tick) ────────────────────────────
+// ── Хром (статический слой, не перестраивается за тик) ─────────────────────
 
 class _StreakBadgeChrome extends StatelessWidget {
   const _StreakBadgeChrome({
@@ -226,14 +225,13 @@ class _StreakBadgeChrome extends StatelessWidget {
 //  NumberCounter
 // ──────────────────────────────────────────────────────────────────────────────
 
-/// Animated number display that cross-fades between old and new values.
+/// Анимированное отображение числа с постепенным заменой старого значения новым.
 ///
-/// When [value] changes:
-/// 1. The old number slides **upward** and fades out.
-/// 2. The new number slides **in from below** and fades in.
+/// При изменении [value]:
+/// 1. Старое число скользит **вверх** и исчезает.
+/// 2. Новое число появляется снизу.
 ///
-/// Both transitions run simultaneously over **400 ms** (`easeOutExpo`),
-/// matching DESIGN.md §4.1 "Number counter change".
+/// Оба перехода за **400 мс** (`easeOutExpo`).
 ///
 /// ```dart
 /// NumberCounter(
@@ -254,16 +252,16 @@ class NumberCounter extends StatefulWidget {
 
   final int value;
 
-  /// Text style for the number. Defaults to [AppTypography.numeralMedium].
+  /// Стиль шрифта. По умолчанию [AppTypography.numeralMedium].
   final TextStyle? style;
 
   final Duration duration;
   final Curve curve;
 
-  /// Optional string prepended to the number (e.g. "#").
+  /// Опциональная строка пред числом (напр., "#").
   final String? prefix;
 
-  /// Optional string appended to the number (e.g. " pts").
+  /// Опциональная строка после числа (напр., " очков").
   final String? suffix;
 
   @override
@@ -335,7 +333,7 @@ class _NumberCounterState extends State<NumberCounter>
             clipBehavior: Clip.hardEdge,
             alignment: Alignment.center,
             children: [
-              // ── Outgoing (old) ─────────────────────────────────────────
+              // ── Уходящее значение (старое) ─────────────────────────────
               if (t < 1.0)
                 Transform.translate(
                   offset: Offset(0, -slideDistance * t),
@@ -345,7 +343,7 @@ class _NumberCounterState extends State<NumberCounter>
                   ),
                 ),
 
-              // ── Incoming (new) ─────────────────────────────────────────
+              // ── Входящее значение (новое) ──────────────────────────────
               Transform.translate(
                 offset: Offset(0, slideDistance * (1.0 - t)),
                 child: Opacity(

@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
 
-/// Premium Glass Design System — Gradient Definitions
+/// Градиенты дизайн-системы Premium Glass.
 ///
-/// Implements the exact gradient tokens from DESIGN.md §2.2.
+/// **Primary** — океан-небо (Day) / небо-циан (Night) → CTA, прогресс.
+/// **Secondary** — коралл-роза (Day) / роза-блаш (Night) → противник, VS.
+/// **Success** — мята-изумруд → выполнение, победа.
+/// **Warning** — янтарь-золото → напоминания.
+/// **Background Night** — глубокий графит → фон страницы в тёмной теме.
 ///
-/// **Primary** — ocean-sky (Day) / sky-cyan (Night)  → identity, CTA, progress
-/// **Secondary** — coral-rose (Day) / rose-blush (Night) → opponent, VS, duels
-/// **Success** — mint-emerald → completion, victory, growth
-/// **Warning** — amber-gold → reminders, streak alerts
-/// **Background Night** — deep charcoal sweep → page background in dark mode
-///
-/// Use the `*Day` / `*Night` suffix for mode-specific gradients.
-/// Utility gradients (gold, streak fire, glass shimmer) are mode-agnostic.
+/// Суффиксы `*Day` / `*Night` — варианты для светлой / тёмной темы.
 abstract final class AppGradients {
   // ══════════════════════════════════════════════════════════════════
-  //  PRIMARY GRADIENT  (Ocean-blue / Sky-blue)
+  //  ОСНОВНОЙ ГРАДИЕНТ  (Океанский / Небесный синий)
   // ══════════════════════════════════════════════════════════════════
 
-  /// Day: #0EA5E9 → #22D3EE at 135°  (CTA, active elements, your progress).
+  /// Светлая: #0EA5E9 → #22D3EE (кнопки CTA, активные элементы).
   static const LinearGradient primaryDay = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [Color(0xFF0EA5E9), Color(0xFF22D3EE)],
   );
 
-  /// Night: #38BDF8 → #22D3EE at 135°  (CTA, active elements, your progress).
+  /// Тёмная: #38BDF8 → #22D3EE (кнопки CTA, активные элементы).
   static const LinearGradient primaryNight = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
@@ -32,17 +29,17 @@ abstract final class AppGradients {
   );
 
   // ══════════════════════════════════════════════════════════════════
-  //  SECONDARY GRADIENT  (Coral / Rose)
+  //  ДОПОЛНИТЕЛЬНЫЙ ГРАДИЕНТ  (Коралл / Роза)
   // ══════════════════════════════════════════════════════════════════
 
-  /// Day: #F43F5E → #FB7185 at 135°  (opponent, VS elements, duels).
+  /// Светлая: #F43F5E → #FB7185 (противник, VS).
   static const LinearGradient secondaryDay = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [Color(0xFFF43F5E), Color(0xFFFB7185)],
   );
 
-  /// Night: #FB7185 → #FDA4AF at 135°  (opponent, VS elements).
+  /// Тёмная: #FB7185 → #FDA4AF (противник, VS).
   static const LinearGradient secondaryNight = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
@@ -50,24 +47,24 @@ abstract final class AppGradients {
   );
 
   // ══════════════════════════════════════════════════════════════════
-  //  UTILITY GRADIENTS  (mode-agnostic)
+  //  ВСПОМОГАТЕЛЬНЫЕ ГРАДИЕНТЫ  (без зависимости от темы)
   // ══════════════════════════════════════════════════════════════════
 
-  /// Success / victory / growth: #10B981 → #34D399 at 135°.
+  /// Успех / победа: #10B981 → #34D399.
   static const LinearGradient success = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [Color(0xFF10B981), Color(0xFF34D399)],
   );
 
-  /// Warning / reminder: #F59E0B → #FBBF24 at 135°.
+  /// Предупреждение / напоминание: #F59E0B → #FBBF24.
   static const LinearGradient warning = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [Color(0xFFF59E0B), Color(0xFFFBBF24)],
   );
 
-  /// Night page background sweep: deep charcoal top & bottom, charcoal mid.
+  /// Фоновый градиент тёмной темы: глубокий графит.
   static const LinearGradient backgroundNight = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
@@ -75,7 +72,7 @@ abstract final class AppGradients {
     stops: [0.0, 0.5, 1.0],
   );
 
-  /// Streak / fire effect: yellow → orange → red-orange (top-to-bottom).
+  /// Огонь серии: жёлтый → оранжевый → красно-оранжевый.
   static const LinearGradient streak = LinearGradient(
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
@@ -83,7 +80,7 @@ abstract final class AppGradients {
     stops: [0.0, 0.5, 1.0],
   );
 
-  /// Gold / achievement shimmer: bright gold → deep gold at 135°.
+  /// Золотой жетон: яркое золото → глубокое золото.
   static const LinearGradient gold = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
@@ -91,27 +88,27 @@ abstract final class AppGradients {
     stops: [0.0, 0.5, 1.0],
   );
 
-  /// Glass shimmer overlay (foreground shimmer inside glass cards).
+  /// Шиммер стеклянной карточки (gloss-налёт).
   static const LinearGradient glassShimmer = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
-      Color(0x33FFFFFF), // white 20 %
-      Color(0x0DFFFFFF), // white  5 %
-      Color(0x1AFFFFFF), // white 10 %
+      Color(0x33FFFFFF), // белый 20%
+      Color(0x0DFFFFFF), // белый  5%
+      Color(0x1AFFFFFF), // белый 10%
     ],
     stops: [0.0, 0.5, 1.0],
   );
 
   // ══════════════════════════════════════════════════════════════════
-  //  CONVENIENCE HELPERS
+  //  ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ
   // ══════════════════════════════════════════════════════════════════
 
-  /// Returns the correct primary gradient for the given brightness.
+  /// Возвращает основной градиент для заданной яркости.
   static LinearGradient primary(Brightness brightness) =>
       brightness == Brightness.dark ? primaryNight : primaryDay;
 
-  /// Returns the correct secondary gradient for the given brightness.
+  /// Возвращает дополнительный градиент для заданной яркости.
   static LinearGradient secondary(Brightness brightness) =>
       brightness == Brightness.dark ? secondaryNight : secondaryDay;
 }

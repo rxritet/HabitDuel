@@ -1,13 +1,13 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+﻿import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/errors/failures.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import 'core_providers.dart';
 
-// ─── Auth state ─────────────────────────────────────────────────────────
+// ─── Состояние аутентификации ───────────────────────────────────────────
 
-/// Represents the global authentication state.
+/// Глобальное состояние аутентификации.
 sealed class AuthState {
   const AuthState();
 }
@@ -30,21 +30,21 @@ class Unauthenticated extends AuthState {
   final String? error;
 }
 
-// ─── Auth notifier ──────────────────────────────────────────────────────
+// ─── Обработчик аутентификации ─────────────────────────────────────────
 
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier(this._repo) : super(const AuthInitial());
 
   final AuthRepository _repo;
 
-  /// Check if user has a persisted session on app start.
+  /// Проверяет наличие сохранённой сессии при запуске.
   Future<void> checkSession() async {
     state = const AuthLoading();
     final hasToken = await _repo.hasToken();
     if (hasToken) {
-      // Token exists — we consider the user authenticated.
-      // A full implementation would validate the token with /users/me,
-      // but for MVP we trust the persisted token.
+      // Токен найден — считаем пользователя аутентифицированным.
+      // Полная версия проверяла бы токен через /users/me,
+      // но в MVP доверяем сохранённому токену.
       state = const Authenticated(User(id: '', username: ''));
     } else {
       state = const Unauthenticated();
@@ -92,7 +92,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 }
 
-// ─── Provider ───────────────────────────────────────────────────────────
+// ─── Провайдер ─────────────────────────────────────────────────────────
 
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   return AuthNotifier(ref.watch(authRepositoryProvider));

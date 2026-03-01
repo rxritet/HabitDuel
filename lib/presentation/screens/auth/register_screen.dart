@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/utils/validators.dart';
@@ -43,7 +43,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final authState = ref.watch(authProvider);
     final isLoading = authState is AuthLoading;
 
-    // Show error snackbar
+    // Показываем snackbar с ошибкой
     ref.listen<AuthState>(authProvider, (prev, next) {
       if (next is Unauthenticated && next.error != null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -65,7 +65,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // ── Logo ──
+                  // ── Логотип ──
                   const Icon(
                     Icons.local_fire_department_rounded,
                     size: 72,
@@ -114,7 +114,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // ── Password ──
+                  // ── Пароль ──
                   TextFormField(
                     controller: _passwordCtrl,
                     obscureText: _obscurePassword,
@@ -177,7 +177,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // ── Navigate to login ──
+                  // ── Переход к входу ──
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

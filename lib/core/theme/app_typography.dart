@@ -1,30 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Premium Glass Design System — Typography
+/// Типографика дизайн-системы Premium Glass.
 ///
-/// Implements the exact type scale from DESIGN.md §2.3.
+/// Шрифт: Inter (400/500/600/700) через `google_fonts`.
 ///
-/// **Font family:** Inter (400 · 500 · 600 · 700) via `google_fonts`.
-///
-/// Named getters (`h1` … `overline`) match the DESIGN.md names directly.
-/// [toTextTheme] maps these onto Flutter's [TextTheme] for [ThemeData].
-///
-/// Letter-spacing values are converted from em to logical pixels:
-///   -0.02em at 32 px → -0.64 lp,  0.02em at 16 px → 0.32 lp, etc.
-///
-/// Usage:
-/// ```dart
-/// Text('Level up', style: AppTypography.h1)
-/// Text('Today's habit', style: AppTypography.subtitle)
-/// ```
+/// Названные геттеры (`h1` … `overline`) соответствуют DESIGN.md §2.3.
+/// [toTextTheme] преобразует их в Flutter [TextTheme].
 abstract final class AppTypography {
   // ══════════════════════════════════════════════════════════════════
-  //  DESIGN SYSTEM NAMED STYLES  (DESIGN.md §2.3)
+  //  НАЗВАННЫЕ СТИЛИ  (DESIGN.md §2.3)
   // ══════════════════════════════════════════════════════════════════
 
-  /// H1 — screen titles, hero labels.
-  /// 32 px · w700 · height 1.2 · ls -0.64 (-0.02 em)
+  /// H1 — заголовки экранов, hero-метки.
+  /// 32 px · w700 · height 1.2 · ls -0.64
   static TextStyle get h1 => GoogleFonts.inter(
     fontSize: 32,
     fontWeight: FontWeight.w700,
@@ -32,8 +21,8 @@ abstract final class AppTypography {
     letterSpacing: -0.64,
   );
 
-  /// H2 — section headings.
-  /// 24 px · w600 · height 1.3 · ls -0.24 (-0.01 em)
+  /// H2 — заголовки секций.
+  /// 24 px · w600 · height 1.3 · ls -0.24
   static TextStyle get h2 => GoogleFonts.inter(
     fontSize: 24,
     fontWeight: FontWeight.w600,
@@ -41,7 +30,7 @@ abstract final class AppTypography {
     letterSpacing: -0.24,
   );
 
-  /// H3 — sub-section labels, card headings.
+  /// H3 — подзаголовки, заголовки карточек.
   /// 20 px · w600 · height 1.4 · ls 0
   static TextStyle get h3 => GoogleFonts.inter(
     fontSize: 20,
@@ -50,7 +39,7 @@ abstract final class AppTypography {
     letterSpacing: 0,
   );
 
-  /// Subtitle — supporting screen title line, list group headers.
+  /// Subtitle — подзаголовок, заголовки групп списка.
   /// 18 px · w500 · height 1.5 · ls 0
   static TextStyle get subtitle => GoogleFonts.inter(
     fontSize: 18,
@@ -59,7 +48,7 @@ abstract final class AppTypography {
     letterSpacing: 0,
   );
 
-  /// Body Large — primary readable content.
+  /// Body Large — основной читаемый контент.
   /// 16 px · w400 · height 1.6 · ls 0
   static TextStyle get bodyLarge => GoogleFonts.inter(
     fontSize: 16,
@@ -68,7 +57,7 @@ abstract final class AppTypography {
     letterSpacing: 0,
   );
 
-  /// Body — standard content text.
+  /// Body — стандартный текст.
   /// 14 px · w400 · height 1.6 · ls 0
   static TextStyle get body => GoogleFonts.inter(
     fontSize: 14,
@@ -77,8 +66,8 @@ abstract final class AppTypography {
     letterSpacing: 0,
   );
 
-  /// Caption — timestamps, metadata, helper text.
-  /// 12 px · w500 · height 1.5 · ls 0.12 (0.01 em)
+  /// Caption — время, метаданные, вспомогательный текст.
+  /// 12 px · w500 · height 1.5 · ls 0.12
   static TextStyle get caption => GoogleFonts.inter(
     fontSize: 12,
     fontWeight: FontWeight.w500,
@@ -86,8 +75,8 @@ abstract final class AppTypography {
     letterSpacing: 0.12,
   );
 
-  /// Button — all button labels.
-  /// 16 px · w600 · height 1.0 · ls 0.32 (0.02 em)
+  /// Button — метка на кнопках.
+  /// 16 px · w600 · height 1.0 · ls 0.32
   static TextStyle get button => GoogleFonts.inter(
     fontSize: 16,
     fontWeight: FontWeight.w600,
@@ -95,8 +84,8 @@ abstract final class AppTypography {
     letterSpacing: 0.32,
   );
 
-  /// Overline — category labels, pill tags, badge text.
-  /// 11 px · w600 · height 1.0 · ls 0.55 (0.05 em)
+  /// Overline — категории, pill-теги, текст значков.
+  /// 11 px · w600 · height 1.0 · ls 0.55
   static TextStyle get overline => GoogleFonts.inter(
     fontSize: 11,
     fontWeight: FontWeight.w600,
@@ -105,10 +94,10 @@ abstract final class AppTypography {
   );
 
   // ══════════════════════════════════════════════════════════════════
-  //  SPECIAL-PURPOSE STYLES  (not in DESIGN.md type scale)
+  //  СПЕЦИАЛЬНЫЕ СТИЛИ
   // ══════════════════════════════════════════════════════════════════
 
-  /// Large hero numeral — streak count, days, big scores.
+  /// Большое hero-число — счётчик серии, дни, крупные числа.
   /// 64 px · w800 · height 1.0 · ls -1.28
   static TextStyle get numeralHero => GoogleFonts.inter(
     fontSize: 64,
@@ -117,7 +106,7 @@ abstract final class AppTypography {
     letterSpacing: -1.28,
   );
 
-  /// Medium stat numeral — badge values, secondary counters.
+  /// Среднее stat-число — значи, вторичные счётчики.
   /// 36 px · w700 · height 1.0 · ls -0.72
   static TextStyle get numeralMedium => GoogleFonts.inter(
     fontSize: 36,
@@ -126,7 +115,7 @@ abstract final class AppTypography {
     letterSpacing: -0.72,
   );
 
-  /// Small button label — secondary / icon-text combos.
+  /// Малая метка кнопки — вторичные действия.
   /// 14 px · w600 · height 1.0 · ls 0.28
   static TextStyle get buttonSmall => GoogleFonts.inter(
     fontSize: 14,
@@ -135,7 +124,7 @@ abstract final class AppTypography {
     letterSpacing: 0.28,
   );
 
-  /// Form input text.
+  /// Текст в полях ввода.
   /// 16 px · w400 · height 1.5 · ls 0
   static TextStyle get input => GoogleFonts.inter(
     fontSize: 16,
@@ -145,30 +134,29 @@ abstract final class AppTypography {
   );
 
   // ══════════════════════════════════════════════════════════════════
-  //  MATERIAL TEXT THEME BUILDER
+  //  ПОСТРОИТЕЛЬ TextTheme
   // ══════════════════════════════════════════════════════════════════
 
-  /// Builds a [TextTheme] for [ThemeData] using the DESIGN.md type scale.
+  /// Создаёт [TextTheme] для [ThemeData].
   ///
-  /// Pass [primaryColor], [secondaryColor], and [mutedColor] to tint text
-  /// appropriately for light or dark mode.
+  /// [primaryColor] — основной текст, [secondaryColor] — вторичный, [mutedColor] — приглушённый.
   static TextTheme toTextTheme({
     required Color primaryColor,
     required Color secondaryColor,
     required Color mutedColor,
   }) {
     return TextTheme(
-      // Display — hero numerals / large stats
+      // Заголовки экранов
       displayLarge: numeralHero.copyWith(color: primaryColor),
       displayMedium: h1.copyWith(color: primaryColor),
       displaySmall: h2.copyWith(color: primaryColor),
 
-      // Headline — screen & section titles
+      // Заголовки секций
       headlineLarge: h1.copyWith(color: primaryColor),
       headlineMedium: h2.copyWith(color: primaryColor),
       headlineSmall: h3.copyWith(color: primaryColor),
 
-      // Title — card heads, list group labels
+      // Названия карточек / групп
       titleLarge: subtitle.copyWith(color: primaryColor),
       titleMedium: bodyLarge.copyWith(
         fontWeight: FontWeight.w500,
@@ -176,12 +164,12 @@ abstract final class AppTypography {
       ),
       titleSmall: body.copyWith(fontWeight: FontWeight.w500, color: primaryColor),
 
-      // Body — readable content
+      // Основной текст
       bodyLarge: bodyLarge.copyWith(color: secondaryColor),
       bodyMedium: body.copyWith(color: secondaryColor),
       bodySmall: caption.copyWith(color: mutedColor),
 
-      // Label — buttons, chips, tags, overlines
+      // Метки, чипсы, теги
       labelLarge: button.copyWith(color: primaryColor),
       labelMedium: caption.copyWith(color: primaryColor),
       labelSmall: overline.copyWith(color: mutedColor),

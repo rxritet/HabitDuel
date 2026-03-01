@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../constants/app_constants.dart';
 import 'jwt_interceptor.dart';
 
-/// Creates and configures the singleton [Dio] instance used across the app.
+/// Создаёт и настраивает синглтон-экземпляр [Dio].
 Dio createDioClient(FlutterSecureStorage storage) {
   final dio = Dio(
     BaseOptions(

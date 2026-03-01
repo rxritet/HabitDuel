@@ -1,145 +1,135 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-/// Premium Glass Design System — Animation Tokens
+/// Токены анимации дизайн-системы Premium Glass.
 ///
-/// Implements the timing and curve constants from DESIGN.md §4.1.
-///
-/// All durations and curves are sourced directly from the design spec.
-/// Use these constants everywhere in the app to guarantee motion consistency.
-///
-/// Usage:
-/// ```dart
-/// AnimatedContainer(
-///   duration: AppAnimations.cardPressDuration,
-///   curve: AppAnimations.cardPressCurve,
-/// )
-/// ```
+/// Длительности и кривые DESIGN.md §4.1.
+/// Используйте эти константы везде для единообразия движения.
 abstract final class AppAnimations {
   // ══════════════════════════════════════════════════════════════════
-  //  DURATIONS  (DESIGN.md §4.1)
+  //  ДЛИТЕЛЬНОСТИ  (DESIGN.md §4.1)
   // ══════════════════════════════════════════════════════════════════
 
-  /// Page transition: slide + fade.  400 ms
+  /// Переход между страницами: слайд + фейд. 400 ms
   static const Duration pageTransitionDuration = Duration(milliseconds: 400);
 
-  /// Button press feedback.  150 ms
+  /// Обратная связь нажатия кнопки. 150 ms
   static const Duration buttonPressDuration = Duration(milliseconds: 150);
 
-  /// Card press / tap feedback.  200 ms
+  /// Обратная связь нажатия карточки. 200 ms
   static const Duration cardPressDuration = Duration(milliseconds: 200);
 
-  /// Modal / bottom-sheet opening.  300 ms
+  /// Открытие модального окна. 300 ms
   static const Duration modalOpenDuration = Duration(milliseconds: 300);
 
-  /// Modal / bottom-sheet closing.  200 ms
+  /// Закрытие модального окна. 200 ms
   static const Duration modalCloseDuration = Duration(milliseconds: 200);
 
-  /// Progress-bar fill animation.  800 ms
+  /// Заполнение индикатора прогресса. 800 ms
   static const Duration progressBarFillDuration = Duration(milliseconds: 800);
 
-  /// Streak badge idle pulse cycle.  2 000 ms (infinite loop)
+  /// Цикл пульсации значка серии. 2 000 ms (бесконечный цикл)
   static const Duration streakBadgePulseDuration = Duration(milliseconds: 2000);
 
-  /// Check-in success full sequence.  600 ms
+  /// Полная последовательность после check-in. 600 ms
   static const Duration checkinSuccessDuration = Duration(milliseconds: 600);
 
-  /// Number / score counter change.  400 ms
+  /// Счётчик очков. 400 ms
   static const Duration numberCounterDuration = Duration(milliseconds: 400);
 
-  /// WebSocket notification slide-in.  250 ms
+  /// WebSocket - слайд уведомления. 250 ms
   static const Duration wsNotificationDuration = Duration(milliseconds: 250);
 
-  /// WebSocket notification auto-dismiss fade.  200 ms
+  /// Фейд автоскрытия уведомления. 200 ms
   static const Duration wsNotificationDismissDuration =
       Duration(milliseconds: 200);
 
-  /// Confetti burst duration.  1 500 ms
+  /// Вспышка конфетти. 1 500 ms
   static const Duration confettiDuration = Duration(milliseconds: 1500);
 
   // ══════════════════════════════════════════════════════════════════
-  //  CURVES  (DESIGN.md §4.1)
+  //  КРИВЫЕ  (DESIGN.md §4.1)
   // ══════════════════════════════════════════════════════════════════
 
-  /// Page transition out — smooth deceleration.
+  /// Переход страницы — плавное замедление.
   static const Curve pageTransitionCurve = Curves.easeOutCubic;
 
-  /// Button press — fast ease-out for snappy feel.
+  /// Нажатие кнопки — быстрый ease-out.
   static const Curve buttonPressCurve = Curves.easeOut;
 
-  /// Card press — gentle ease-out.
+  /// Нажатие карточки — мягкий ease-out.
   static const Curve cardPressCurve = Curves.easeOut;
 
-  /// Modal open — spring-like, damping ≈ 0.8 (approximated with fastOutSlowIn).
+  /// Открытие модального окна — пружинное замедление.
   static const Curve modalOpenCurve = Curves.fastOutSlowIn;
 
-  /// Modal close — simple ease-in.
+  /// Закрытие модального окна — ease-in.
   static const Curve modalCloseCurve = Curves.easeIn;
 
-  /// Progress bar fill — heavy deceleration for satisfying fill.
+  /// Заполнение индикатора — сильное замедление.
   static const Curve progressBarFillCurve = Curves.easeOutQuart;
 
-  /// Streak badge pulse — smooth in-out breathing loop.
+  /// Пульс значка — плавное дыхание.
   static const Curve streakBadgePulseCurve = Curves.easeInOut;
 
-  /// Check-in success spring.
+  /// Check-in — пружинный ease-out.
   static const Curve checkinSuccessCurve = Curves.elasticOut;
 
-  /// Number counter ease-out expo.
+  /// Счётчик — ease-out expo.
   static const Curve numberCounterCurve = Curves.easeOutExpo;
 
-  /// WebSocket notification slide-in.
-  static const Curve wsNotificationCurve = Curves.fastOutSlowIn;
+  /// WebSocket — слайд уведомления. = Curves.fastOutSlowIn;
 
   // ══════════════════════════════════════════════════════════════════
-  //  SPRING PHYSICS  (for Hero / check-in animations)
+  //  ФИЗИКА ПРУЖИН  (для Hero / check-in)
   // ══════════════════════════════════════════════════════════════════
 
-  /// Default spring simulation for modal / check-in success.
+  /// Пружина по умолчанию для модалов / check-in.
   /// damping = 0.8, stiffness = 100.
   static SpringDescription get defaultSpring => const SpringDescription(
     mass: 1.0,
     stiffness: 100.0,
-    damping: 14.0, // ≈ critically damped at 0.8 ratio
+    damping: 14.0, // ≈ критичецкое затухание 0.8
   );
 
   // ══════════════════════════════════════════════════════════════════
-  //  KEYFRAME PROFILES  (DESIGN.md §4.2 — descriptive constants)
+  //  ПРОФИЛИ КЛЮЧЕВЫХ КАДРОВ  (DESIGN.md §4.2)
   // ══════════════════════════════════════════════════════════════════
 
-  // ── Button Press ─────────────────────────────────────────────────────────
-  /// Target scale for button-press-down feedback.
+  // \u2500\u2500 \u041d\u0430\u0436\u0430\u0442\u0438\u0435 \u043a\u043d\u043e\u043f\u043a\u0438
+  /// \u041c\u0430\u0441\u0448\u0442\u0430\u0431 \u043f\u0440\u0438 \u043d\u0430\u0436\u0430\u0442\u0438\u0438 \u043a\u043d\u043e\u043f\u043a\u0438.
   static const double buttonPressScaleDown = 0.96;
 
-  /// Target opacity for button-press-down feedback.
+  /// \u041f\u0440\u043e\u0437\u0440\u0430\u0447\u043d\u043e\u0441\u0442\u044c \u043f\u0440\u0438 \u043d\u0430\u0436\u0430\u0442\u0438\u0438 \u043a\u043d\u043e\u043f\u043a\u0438.
   static const double buttonPressOpacityDown = 0.85;
 
-  // ── Card Press ────────────────────────────────────────────────────────────
-  /// Target scale for card-press feedback.
+  // \u2500\u2500 \u041d\u0430\u0436\u0430\u0442\u0438\u0435 \u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438
+  /// \u041c\u0430\u0441\u0448\u0442\u0430\u0431 \u043f\u0440\u0438 \u043d\u0430\u0436\u0430\u0442\u0438\u0438 \u043a\u0430\u0440\u0442\u043e\u0447\u043a\u0438.
   static const double cardPressScaleDown = 0.98;
 
-  // ── Page Transition ───────────────────────────────────────────────────────
-  /// New screen slides in from this fractional X offset.
-  static const double pageEnterOffsetX = 1.0; // 100 %
+  // \u2500\u2500 \u041f\u0435\u0440\u0435\u0445\u043e\u0434 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b
+  /// \u0421\u043c\u0435\u0449\u0435\u043d\u0438\u0435 \u0432\u044c\u0435\u0437\u0436\u0430\u044e\u0449\u0435\u0433\u043e \u044d\u043a\u0440\u0430\u043d\u0430 \u043f\u043e X.
+  static const double pageEnterOffsetX = 1.0; // 100%
 
-  /// Old screen slides out to this fractional X offset.
-  static const double pageExitOffsetX = -0.3; // -30 %
+  /// \u0421\u043c\u0435\u0449\u0435\u043d\u0438\u0435 \u0443\u0445\u043e\u0434\u044f\u0449\u0435\u0433\u043e \u044d\u043a\u0440\u0430\u043d\u0430 \u043f\u043e X.
+  static const double pageExitOffsetX = -0.3; // -30%
 
-  // ── Check-in Success ─────────────────────────────────────────────────────
-  /// Phase 1 — button shrink.
+  // \u2500\u2500 \u0423\u0441\u043f\u0435\u0448\u043d\u044b\u0439 check-in
+  /// \u0424\u0430\u0437\u0430 1 \u2014 \u0441\u0436\u0430\u0442\u0438\u0435 \u043a\u043d\u043e\u043f\u043a\u0438.
   static const double checkinButtonScaleDown = 0.95;
 
-  /// Phase 2 — button over-shoot expand.
+  /// \u0424\u0430\u0437\u0430 2 \u2014 \u0440\u0430\u0441\u0448\u0438\u0440\u0435\u043d\u0438\u0435 \u0441 \u043f\u0435\u0440\u0435\u043b\u0451\u0442\u043e\u043c.
   static const double checkinButtonScaleUp = 1.1;
 
-  // ── Streak Badge Pulse ────────────────────────────────────────────────────
-  /// Peak scale during idle breathing animation.
+  // \u2500\u2500 \u041f\u0443\u043b\u044c\u0441 \u0437\u043d\u0430\u0447\u043a\u0430 \u0441\u0435\u0440\u0438\u0438
+  /// \u041c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u044b\u0439 \u043c\u0430\u0441\u0448\u0442\u0430\u0431 \u043f\u0443\u043b\u044c\u0441\u0430.
   static const double streakBadgePulseMaxScale = 1.08;
 
-  /// Minimum streak count before pulse engages.
+  /// \u041c\u0438\u043d\u0438\u043c\u0430\u043b\u044c\u043d\u0430\u044f \u0441\u0435\u0440\u0438\u044f \u0434\u043b\u044f \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f \u043f\u0443\u043b\u044c\u0441\u0430.
   static const int streakBadgePulseThreshold = 3;
 
-  // ── WS Notification Snackbar auto-dismiss delay ───────────────────────────
-  /// Time the notification stays visible before starting its fade-out.
+  // \u2500\u2500 WebSocket \u0443\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u0435
+  /// \u0412\u0440\u0435\u043c\u044f \u0432\u0438\u0434\u0438\u043c\u043e\u0441\u0442\u0438 \u0443\u0432\u0435\u0434\u043e\u043c\u043b\u0435\u043d\u0438\u044f \u043f\u0435\u0440\u0435\u0434 \u0444\u0435\u0439\u0434\u043e\u043c.
   static const Duration wsNotificationVisibleDuration =
       Duration(seconds: 4);
 }
+
