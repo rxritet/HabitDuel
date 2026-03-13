@@ -1,0 +1,26 @@
+# Flutter / Dart build artefacts
+build/
+.dart_tool/
+server/.dart_tool/
+
+# Platform folders not needed for the server image
+android/
+ios/
+web/
+lib/
+test/
+pubspec.yaml
+pubspec.lock
+
+# IDE / editor files
+*.iml
+.idea/
+.vscode/
+
+# Secrets – never bake the real .env into the image
+.env
+server/.env
+
+# Git
+.git/
+.gitignore
