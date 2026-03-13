@@ -8,7 +8,7 @@ class DuelRemoteDataSource {
   const DuelRemoteDataSource(this._dio);
   final Dio _dio;
 
-  /// POST /duels — создать дуэль
+  /// POST /duels/ — создать дуэль
   Future<DuelModel> createDuel({
     required String habitName,
     String? description,
@@ -16,7 +16,7 @@ class DuelRemoteDataSource {
     String? opponentUsername,
   }) async {
     try {
-      final response = await _dio.post('/duels', data: {
+      final response = await _dio.post('/duels/', data: {
         'habit_name': habitName,
         if (description != null) 'description': description,
         'duration_days': durationDays,
@@ -50,10 +50,10 @@ class DuelRemoteDataSource {
     }
   }
 
-  /// GET /duels — список дуэлей текущего пользователя
+  /// GET /duels/ — список дуэлей текущего пользователя
   Future<List<DuelModel>> getMyDuels() async {
     try {
-      final response = await _dio.get('/duels');
+      final response = await _dio.get('/duels/');
       final data = response.data as Map<String, dynamic>;
       final list = data['duels'] as List<dynamic>;
       return list

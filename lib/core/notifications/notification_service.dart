@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -26,6 +27,7 @@ class NotificationService {
 
   /// Вызывается один раз при запуске приложения.
   Future<void> init() async {
+    if (kIsWeb) return; // уведомления не поддерживаются на Web
     if (_initialised) return;
     _initialised = true;
 
@@ -46,7 +48,7 @@ class NotificationService {
     await _plugin.initialize(initSettings);
 
     // Запрос разрешения на Android 13+
-    if (Platform.isAndroid) {
+    if (!kIsWeb && Platform.isAndroid) {
       await _plugin
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
@@ -61,6 +63,7 @@ class NotificationService {
     required int hour,
     required int minute,
   }) async {
+    if (kIsWeb) return;
     // Сначала отменяем текущее напоминание.
     await _plugin.cancel(_dailyReminderId);
 
@@ -93,11 +96,13 @@ class NotificationService {
 
   /// Отменить ежедневное напоминание.
   Future<void> cancelDailyReminder() async {
+    if (kIsWeb) return;
     await _plugin.cancel(_dailyReminderId);
   }
 
   /// Восстановить напоминание из сохранённых настроек (при запуске).
   Future<void> restoreReminder() async {
+    if (kIsWeb) return;
     final prefs = await SharedPreferences.getInstance();
     final enabled = prefs.getBool(kReminderEnabledKey) ?? false;
     if (!enabled) return;
@@ -131,6 +136,7 @@ class NotificationService {
     required String opponentUsername,
     required int oldStreak,
   }) async {
+    if (kIsWeb) return;
     await _plugin.show(
       _streakBrokenId,
       'Атакуй! 🎯',

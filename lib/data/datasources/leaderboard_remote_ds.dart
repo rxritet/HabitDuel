@@ -24,7 +24,7 @@ class LeaderboardRemoteDataSource {
   }) async {
     try {
       final response = await _dio.get(
-        '/leaderboard',
+        '/leaderboard/',
         queryParameters: {'limit': limit, 'offset': offset},
       );
       final data = response.data as Map<String, dynamic>;
