@@ -7,6 +7,7 @@ import '../../core/firebase/habitduel_firestore_store.dart';
 import '../../domain/entities/duel.dart';
 import '../../domain/entities/leaderboard_entry.dart';
 import '../../domain/entities/profile.dart';
+import 'leaderboard_remote_ds.dart';
 import '../models/duel_model.dart';
 
 class FirebaseAwareProfileDataSource {

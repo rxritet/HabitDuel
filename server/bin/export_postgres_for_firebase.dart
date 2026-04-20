@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:dotenv/dotenv.dart';
 import 'package:postgres/postgres.dart';
 
-import '../lib/db/database.dart';
+import 'package:habitduel_server/db/database.dart';
 
 Future<void> main() async {
   final env = DotEnv(includePlatformEnvironment: true)..load(['../.env']);
