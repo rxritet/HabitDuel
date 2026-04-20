@@ -8,7 +8,6 @@ import '../../domain/entities/duel.dart';
 import '../../domain/entities/leaderboard_entry.dart';
 import '../../domain/entities/profile.dart';
 import '../models/duel_model.dart';
-import '../models/user_model.dart';
 
 class FirebaseAwareProfileDataSource {
   FirebaseAwareProfileDataSource(this._dio, this._storage, this._store);
