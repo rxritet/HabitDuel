@@ -3,10 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../core/network/dio_client.dart';
+import '../../core/firebase/habitduel_firestore_store.dart';
 import '../../data/datasources/auth_remote_ds.dart';
-import '../../data/datasources/duel_remote_ds.dart';
-import '../../data/datasources/leaderboard_remote_ds.dart';
-import '../../data/datasources/profile_remote_ds.dart';
+import '../../data/datasources/firebase_aware_data_sources.dart';
 import '../../data/repositories/auth_repo_impl.dart';
 import '../../data/repositories/duel_repo_impl.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -30,6 +29,10 @@ final dioProvider = Provider<Dio>((ref) {
   return createDioClient(storage);
 });
 
+final firestoreStoreProvider = Provider<HabitDuelFirestoreStore>((ref) {
+  return HabitDuelFirestoreStore();
+});
+
 // ─── Провайдеры слоя данных ────────────────────────────────────────────
 
 final authRemoteDSProvider = Provider<AuthRemoteDataSource>((ref) {
@@ -40,6 +43,7 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepositoryImpl(
     ref.watch(authRemoteDSProvider),
     ref.watch(secureStorageProvider),
+    ref.watch(firestoreStoreProvider),
   );
 });
 
@@ -55,12 +59,19 @@ final loginUseCaseProvider = Provider<LoginUseCase>((ref) {
 
 // ─── Провайдеры данных дуэлей ──────────────────────────────────────────
 
-final duelRemoteDSProvider = Provider<DuelRemoteDataSource>((ref) {
-  return DuelRemoteDataSource(ref.watch(dioProvider));
+final duelRemoteDSProvider = Provider<FirebaseAwareDuelDataSource>((ref) {
+  return FirebaseAwareDuelDataSource(
+    ref.watch(dioProvider),
+    ref.watch(secureStorageProvider),
+    ref.watch(firestoreStoreProvider),
+  );
 });
 
 final duelRepositoryProvider = Provider<DuelRepository>((ref) {
-  return DuelRepositoryImpl(ref.watch(duelRemoteDSProvider));
+  return DuelRepositoryImpl(
+    ref.watch(duelRemoteDSProvider),
+    ref.watch(firestoreStoreProvider),
+  );
 });
 
 // ─── Провайдеры сценариев дуэлей ───────────────────────────────────────
@@ -87,10 +98,18 @@ final checkInUseCaseProvider = Provider<CheckInUseCase>((ref) {
 
 // ─── Провайдеры данных таблицы лидеров и профиля ───────────────────────
 
-final leaderboardRemoteDSProvider = Provider<LeaderboardRemoteDataSource>((ref) {
-  return LeaderboardRemoteDataSource(ref.watch(dioProvider));
+final leaderboardRemoteDSProvider =
+    Provider<FirebaseAwareLeaderboardDataSource>((ref) {
+  return FirebaseAwareLeaderboardDataSource(
+    ref.watch(dioProvider),
+    ref.watch(firestoreStoreProvider),
+  );
 });
 
-final profileRemoteDSProvider = Provider<ProfileRemoteDataSource>((ref) {
-  return ProfileRemoteDataSource(ref.watch(dioProvider));
+final profileRemoteDSProvider = Provider<FirebaseAwareProfileDataSource>((ref) {
+  return FirebaseAwareProfileDataSource(
+    ref.watch(dioProvider),
+    ref.watch(secureStorageProvider),
+    ref.watch(firestoreStoreProvider),
+  );
 });

@@ -1,6 +1,8 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../core/constants/app_constants.dart';
+import '../../core/firebase/habitduel_firestore_store.dart';
+import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_ds.dart';
 
@@ -9,10 +11,11 @@ import '../datasources/auth_remote_ds.dart';
 /// Вызывает удалённый источник данных и сохраняет/удаляет JWT-токен
 /// через [FlutterSecureStorage].
 class AuthRepositoryImpl implements AuthRepository {
-  const AuthRepositoryImpl(this._remoteDS, this._storage);
+  const AuthRepositoryImpl(this._remoteDS, this._storage, this._store);
 
   final AuthRemoteDataSource _remoteDS;
   final FlutterSecureStorage _storage;
+  final HabitDuelFirestoreStore _store;
 
   @override
   Future<RegisterResult> register({
@@ -30,6 +33,15 @@ class AuthRepositoryImpl implements AuthRepository {
     await _storage.write(key: kTokenKey, value: response.token);
     await _storage.write(key: kUserIdKey, value: response.user.id);
     await _storage.write(key: kUsernameKey, value: response.user.username);
+    await _store.mirrorUserFromAuth(
+      User(
+        id: response.user.id,
+        username: response.user.username,
+        email: response.user.email,
+        wins: response.user.wins,
+        losses: response.user.losses,
+      ),
+    );
 
     return RegisterResult(user: response.user, token: response.token);
   }
@@ -48,6 +60,15 @@ class AuthRepositoryImpl implements AuthRepository {
     await _storage.write(key: kTokenKey, value: response.token);
     await _storage.write(key: kUserIdKey, value: response.user.id);
     await _storage.write(key: kUsernameKey, value: response.user.username);
+    await _store.mirrorUserFromAuth(
+      User(
+        id: response.user.id,
+        username: response.user.username,
+        email: response.user.email,
+        wins: response.user.wins,
+        losses: response.user.losses,
+      ),
+    );
 
     return LoginResult(user: response.user, token: response.token);
   }

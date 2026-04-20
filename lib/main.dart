@@ -4,7 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 import 'core/notifications/notification_service.dart';
+import 'core/theme/app_theme.dart';
 import 'presentation/providers/auth_provider.dart';
+import 'presentation/providers/theme_provider.dart';
 import 'presentation/screens/auth/login_screen.dart';
 import 'presentation/screens/auth/register_screen.dart';
 import 'presentation/screens/duel/create_duel_screen.dart';
@@ -47,6 +49,9 @@ class _HabitDuelAppState extends ConsumerState<HabitDuelApp> {
     Future.microtask(
       () => ref.read(authProvider.notifier).checkSession(),
     );
+    Future.microtask(
+      () => ref.read(themeModeProvider.notifier).load(),
+    );
   }
 
   @override
@@ -70,16 +75,11 @@ class _HabitDuelAppState extends ConsumerState<HabitDuelApp> {
       title: 'HabitDuel',
       debugShowCheckedModeBanner: false,
       navigatorKey: _navigatorKey,
-      theme: ThemeData(
-        colorSchemeSeed: Colors.deepOrange,
-        useMaterial3: true,
-        brightness: Brightness.light,
-      ),
-      darkTheme: ThemeData(
-        colorSchemeSeed: Colors.deepOrange,
-        useMaterial3: true,
-        brightness: Brightness.dark,
-      ),
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      themeMode: ref.watch(themeModeProvider),
+      themeAnimationDuration: const Duration(milliseconds: 350),
+      themeAnimationCurve: Curves.easeOutCubic,
       initialRoute: '/login',
       routes: {
         '/login': (_) => const LoginScreen(),
@@ -123,7 +123,15 @@ class _MainShellState extends State<MainShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _index, children: _screens),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 220),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
+        child: KeyedSubtree(
+          key: ValueKey(_index),
+          child: IndexedStack(index: _index, children: _screens),
+        ),
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),

@@ -21,6 +21,28 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(profileProvider);
+    final body = switch (state) {
+      ProfileInitial() || ProfileLoading() => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      ProfileError(:final message) => Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.error_outline, size: 48, color: Colors.red),
+              const SizedBox(height: 12),
+              Text(message),
+              const SizedBox(height: 12),
+              FilledButton(
+                onPressed: () =>
+                    ref.read(profileProvider.notifier).load(),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      ProfileLoaded(:final profile) => _ProfileBody(profile: profile),
+    };
 
     return Scaffold(
       appBar: AppBar(
@@ -32,28 +54,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ),
         ],
       ),
-      body: switch (state) {
-        ProfileInitial() || ProfileLoading() => const Center(
-            child: CircularProgressIndicator(),
-          ),
-        ProfileError(:final message) => Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.error_outline, size: 48, color: Colors.red),
-                const SizedBox(height: 12),
-                Text(message),
-                const SizedBox(height: 12),
-                FilledButton(
-                  onPressed: () =>
-                      ref.read(profileProvider.notifier).load(),
-                  child: const Text('Retry'),
-                ),
-              ],
-            ),
-          ),
-        ProfileLoaded(:final profile) => _ProfileBody(profile: profile),
-      },
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        child: KeyedSubtree(
+          key: ValueKey(state.runtimeType),
+          child: body,
+        ),
+      ),
     );
   }
 }
@@ -107,11 +114,11 @@ class _ProfileBody extends StatelessWidget {
         // ── Stats cards ──
         Row(
           children: [
-            Expanded(child: _StatCard(label: 'Wins', value: '${profile.wins}', color: Colors.green)),
+            Expanded(child: _StatCard(label: 'Wins', value: profile.wins, color: Colors.green)),
             const SizedBox(width: 12),
-            Expanded(child: _StatCard(label: 'Losses', value: '${profile.losses}', color: Colors.red)),
+            Expanded(child: _StatCard(label: 'Losses', value: profile.losses, color: Colors.red)),
             const SizedBox(width: 12),
-            Expanded(child: _StatCard(label: 'Win Rate', value: '$winRate%', color: Colors.blue)),
+            Expanded(child: _StatCard(label: 'Win Rate', value: double.tryParse(winRate) ?? 0, suffix: '%', color: Colors.blue)),
           ],
         ),
 
@@ -146,10 +153,12 @@ class _StatCard extends StatelessWidget {
     required this.label,
     required this.value,
     required this.color,
+    this.suffix = '',
   });
   final String label;
-  final String value;
+  final num value;
   final Color color;
+  final String suffix;
 
   @override
   Widget build(BuildContext context) {
@@ -158,13 +167,23 @@ class _StatCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
         child: Column(
           children: [
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
+            TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0, end: value.toDouble()),
+              duration: const Duration(milliseconds: 650),
+              curve: Curves.easeOutCubic,
+              builder: (context, animatedValue, _) {
+                final displayValue = value is int
+                    ? animatedValue.round().toString()
+                    : animatedValue.toStringAsFixed(1);
+                return Text(
+                  '$displayValue$suffix',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 4),
             Text(label, style: Theme.of(context).textTheme.bodySmall),

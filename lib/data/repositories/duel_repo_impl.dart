@@ -1,10 +1,12 @@
 import '../../domain/entities/duel.dart';
 import '../../domain/repositories/duel_repository.dart';
-import '../datasources/duel_remote_ds.dart';
+import '../../core/firebase/habitduel_firestore_store.dart';
+import '../datasources/firebase_aware_data_sources.dart';
 
 class DuelRepositoryImpl implements DuelRepository {
-  const DuelRepositoryImpl(this._remoteDS);
-  final DuelRemoteDataSource _remoteDS;
+  const DuelRepositoryImpl(this._remoteDS, this._store);
+  final FirebaseAwareDuelDataSource _remoteDS;
+  final HabitDuelFirestoreStore _store;
 
   @override
   Future<Duel> createDuel({
@@ -12,17 +14,23 @@ class DuelRepositoryImpl implements DuelRepository {
     String? description,
     required int durationDays,
     String? opponentUsername,
-  }) {
-    return _remoteDS.createDuel(
+  }) async {
+    final duel = await _remoteDS.createDuel(
       habitName: habitName,
       description: description,
       durationDays: durationDays,
       opponentUsername: opponentUsername,
     );
+    await _store.upsertDuel(duel);
+    return duel;
   }
 
   @override
-  Future<Duel> acceptDuel(String duelId) => _remoteDS.acceptDuel(duelId);
+  Future<Duel> acceptDuel(String duelId) async {
+    final duel = await _remoteDS.acceptDuel(duelId);
+    await _store.upsertDuel(duel);
+    return duel;
+  }
 
   @override
   Future<List<Duel>> getMyDuels() => _remoteDS.getMyDuels();

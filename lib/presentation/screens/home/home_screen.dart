@@ -22,6 +22,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(duelsListProvider);
+    final body = switch (state) {
+      DuelsListInitial() || DuelsListLoading() => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      DuelsListError(:final message) => _ErrorBody(
+          message: message,
+          onRetry: () => ref.read(duelsListProvider.notifier).load(),
+        ),
+      DuelsListLoaded(:final duels) => duels.isEmpty
+          ? const _EmptyBody()
+          : RefreshIndicator(
+              onRefresh: () => ref.read(duelsListProvider.notifier).load(),
+              child: ListView.separated(
+                padding: const EdgeInsets.all(16),
+                itemCount: duels.length,
+                separatorBuilder: (_, _) => const SizedBox(height: 12),
+                itemBuilder: (context, index) => _AnimatedDuelCard(
+                  duel: duels[index],
+                  index: index,
+                ),
+              ),
+            ),
+    };
 
     return Scaffold(
       appBar: AppBar(
@@ -33,26 +56,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ],
       ),
-      body: switch (state) {
-        DuelsListInitial() || DuelsListLoading() => const Center(
-            child: CircularProgressIndicator(),
-          ),
-        DuelsListError(:final message) => _ErrorBody(
-            message: message,
-            onRetry: () => ref.read(duelsListProvider.notifier).load(),
-          ),
-        DuelsListLoaded(:final duels) => duels.isEmpty
-            ? const _EmptyBody()
-            : RefreshIndicator(
-                onRefresh: () => ref.read(duelsListProvider.notifier).load(),
-                child: ListView.separated(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: duels.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) => _DuelCard(duel: duels[index]),
-                ),
-              ),
-      },
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
+        child: KeyedSubtree(
+          key: ValueKey(state.runtimeType),
+          child: body,
+        ),
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => Navigator.pushNamed(context, '/create-duel'),
         icon: const Icon(Icons.add),
@@ -128,6 +140,32 @@ class _DuelCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _AnimatedDuelCard extends StatelessWidget {
+  const _AnimatedDuelCard({required this.duel, required this.index});
+
+  final Duel duel;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: Duration(milliseconds: 260 + (index * 35)),
+      curve: Curves.easeOutCubic,
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: value,
+          child: Transform.translate(
+            offset: Offset(0, (1 - value) * 16),
+            child: child,
+          ),
+        );
+      },
+      child: _DuelCard(duel: duel),
     );
   }
 }
