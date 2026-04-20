@@ -163,10 +163,22 @@ dart run bin/server.dart
 
 ```bash
 flutter pub get
-flutter run
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080
 ```
 
 > **Важно:** бэкенд должен быть запущен до старта Flutter-приложения.
+
+Для iOS Simulator используй:
+
+```bash
+flutter run --dart-define=API_BASE_URL=http://localhost:8080
+```
+
+Для реального устройства укажи IP/HTTPS-адрес доступного backend-сервера:
+
+```bash
+flutter run --dart-define=API_BASE_URL=http://192.168.1.10:8080
+```
 
 ---
 
@@ -183,6 +195,8 @@ DB_PASSWORD=your_password
 JWT_SECRET=your_jwt_secret
 PORT=8080
 ```
+
+Для мобильного клиента URL API задается через `--dart-define=API_BASE_URL=...`.
 
 ---
 
