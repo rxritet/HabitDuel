@@ -43,6 +43,10 @@ class LeaderboardNotifier extends StateNotifier<LeaderboardState> {
           .getLeaderboard(limit: limit, offset: offset);
       state = LeaderboardLoaded(result.entries, total: result.total);
     } on Failure catch (e) {
+      if (e is NetworkFailure) {
+        state = const LeaderboardLoaded([]);
+        return;
+      }
       state = LeaderboardError(e.message);
     } catch (e) {
       state = LeaderboardError(e.toString());

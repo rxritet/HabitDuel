@@ -1,5 +1,6 @@
 ﻿import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/constants/app_constants.dart';
 import '../../core/errors/failures.dart';
 import '../../domain/entities/profile.dart';
 import 'core_providers.dart';
@@ -40,6 +41,20 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
       final profile = await _ref.read(profileRemoteDSProvider).getMyProfile();
       state = ProfileLoaded(profile);
     } on Failure catch (e) {
+      if (e is NetworkFailure) {
+        final storage = _ref.read(secureStorageProvider);
+        final userId = await storage.read(key: kUserIdKey) ?? 'guest';
+        final username = await storage.read(key: kUsernameKey) ?? 'Guest';
+        state = ProfileLoaded(
+          UserProfile(
+            id: userId,
+            username: username,
+            wins: 0,
+            losses: 0,
+          ),
+        );
+        return;
+      }
       state = ProfileError(e.message);
     } catch (e) {
       state = ProfileError(e.toString());

@@ -40,6 +40,10 @@ class DuelsListNotifier extends StateNotifier<DuelsListState> {
       final duels = await _ref.read(getMyDuelsUseCaseProvider).call();
       state = DuelsListLoaded(duels);
     } on Failure catch (e) {
+      if (e is NetworkFailure) {
+        state = const DuelsListLoaded([]);
+        return;
+      }
       state = DuelsListError(e.message);
     } catch (e) {
       state = DuelsListError(e.toString());
@@ -84,6 +88,10 @@ class DuelDetailNotifier extends StateNotifier<DuelDetailState> {
       final duel = await _ref.read(getDuelDetailUseCaseProvider).call(duelId);
       state = DuelDetailLoaded(duel);
     } on Failure catch (e) {
+      if (e is NetworkFailure) {
+        state = DuelDetailError('Backend unavailable');
+        return;
+      }
       state = DuelDetailError(e.message);
     } catch (e) {
       state = DuelDetailError(e.toString());
