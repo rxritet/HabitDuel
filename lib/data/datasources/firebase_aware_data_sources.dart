@@ -19,9 +19,13 @@ class FirebaseAwareProfileDataSource {
   Future<UserProfile> getMyProfile() async {
     final userId = await _storage.read(key: kUserIdKey);
     if (userId != null && userId.isNotEmpty) {
-      final cached = await _store.readProfile(userId);
-      if (cached != null) {
-        return cached;
+      try {
+        final cached = await _store.readProfile(userId);
+        if (cached != null) {
+          return cached;
+        }
+      } catch (_) {
+        // Firestore cache is best-effort; fall back to REST.
       }
     }
 

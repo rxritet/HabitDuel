@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 
+import 'core/notifications/fcm_service.dart';
 import 'core/notifications/notification_service.dart';
 import 'core/theme/app_theme.dart';
 import 'presentation/providers/auth_provider.dart';
@@ -23,6 +25,10 @@ void main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+    if (FirebaseAuth.instance.currentUser == null) {
+      await FirebaseAuth.instance.signInAnonymously();
+    }
+    await FcmService.instance.init();
   } catch (e) {
     debugPrint('Firebase initialization failed: $e');
   }
@@ -59,6 +65,7 @@ class _HabitDuelAppState extends ConsumerState<HabitDuelApp> {
     // Отслеживаем изменения состояния аутентификации и перенаправляем.
     ref.listen<AuthState>(authProvider, (prev, next) {
       if (next is Authenticated) {
+        Future.microtask(() => FcmService.instance.syncCurrentUserToken());
         _navigatorKey.currentState?.pushNamedAndRemoveUntil(
           '/home',
           (_) => false,

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../domain/entities/duel.dart';
 import '../../domain/entities/profile.dart';
@@ -44,34 +45,38 @@ class HabitDuelFirestoreStore {
   }
 
   Future<void> upsertProfile(UserProfile profile) async {
-    final batch = _firestore.batch();
-    final userRef = _users.doc(profile.id);
+    try {
+      final batch = _firestore.batch();
+      final userRef = _users.doc(profile.id);
 
-    batch.set(
-      userRef,
-      {
-        'id': profile.id,
-        'username': profile.username,
-        if (profile.email != null) 'email': profile.email,
-        'wins': profile.wins,
-        'losses': profile.losses,
-        'updatedAt': FieldValue.serverTimestamp(),
-      },
-      SetOptions(merge: true),
-    );
-
-    for (final badge in profile.badges) {
       batch.set(
-        userRef.collection('badges').doc(badge.badgeType),
+        userRef,
         {
-          'badgeType': badge.badgeType,
-          'earnedAt': Timestamp.fromDate(badge.earnedAt.toUtc()),
+          'id': profile.id,
+          'username': profile.username,
+          if (profile.email != null) 'email': profile.email,
+          'wins': profile.wins,
+          'losses': profile.losses,
+          'updatedAt': FieldValue.serverTimestamp(),
         },
         SetOptions(merge: true),
       );
-    }
 
-    await batch.commit();
+      for (final badge in profile.badges) {
+        batch.set(
+          userRef.collection('badges').doc(badge.badgeType),
+          {
+            'badgeType': badge.badgeType,
+            'earnedAt': Timestamp.fromDate(badge.earnedAt.toUtc()),
+          },
+          SetOptions(merge: true),
+        );
+      }
+
+      await batch.commit();
+    } catch (error) {
+      debugPrint('Firestore profile mirror failed: $error');
+    }
   }
 
   Future<List<Duel>> readMyDuels(String userId) async {
@@ -149,63 +154,67 @@ class HabitDuelFirestoreStore {
   }
 
   Future<void> upsertDuel(Duel duel) async {
-    final duelRef = _duels.doc(duel.id);
-    final batch = _firestore.batch();
-    final participantIds = duel.participants
-        .map((participant) => participant.userId)
-        .where((id) => id.isNotEmpty)
-        .toSet()
-        .toList(growable: false);
+    try {
+      final duelRef = _duels.doc(duel.id);
+      final batch = _firestore.batch();
+      final participantIds = duel.participants
+          .map((participant) => participant.userId)
+          .where((id) => id.isNotEmpty)
+          .toSet()
+          .toList(growable: false);
 
-    batch.set(
-      duelRef,
-      {
-        'id': duel.id,
-        'habitName': duel.habitName,
-        if (duel.description != null) 'description': duel.description,
-        if (duel.creatorId != null) 'creatorId': duel.creatorId,
-        if (duel.opponentId != null) 'opponentId': duel.opponentId,
-        'status': duel.status,
-        'durationDays': duel.durationDays,
-        'myStreak': duel.myStreak,
-        'opponentStreak': duel.opponentStreak,
-        if (duel.startsAt != null) 'startsAt': Timestamp.fromDate(duel.startsAt!.toUtc()),
-        if (duel.endsAt != null) 'endsAt': Timestamp.fromDate(duel.endsAt!.toUtc()),
-        if (duel.createdAt != null) 'createdAt': Timestamp.fromDate(duel.createdAt!.toUtc()),
-        'participantIds': participantIds,
-        'updatedAt': FieldValue.serverTimestamp(),
-      },
-      SetOptions(merge: true),
-    );
-
-    for (final participant in duel.participants) {
       batch.set(
-        duelRef.collection('participants').doc(participant.userId),
+        duelRef,
         {
-          'userId': participant.userId,
-          'username': participant.username,
-          'streak': participant.streak,
-          'lastCheckin': participant.lastCheckin,
+          'id': duel.id,
+          'habitName': duel.habitName,
+          if (duel.description != null) 'description': duel.description,
+          if (duel.creatorId != null) 'creatorId': duel.creatorId,
+          if (duel.opponentId != null) 'opponentId': duel.opponentId,
+          'status': duel.status,
+          'durationDays': duel.durationDays,
+          'myStreak': duel.myStreak,
+          'opponentStreak': duel.opponentStreak,
+          if (duel.startsAt != null) 'startsAt': Timestamp.fromDate(duel.startsAt!.toUtc()),
+          if (duel.endsAt != null) 'endsAt': Timestamp.fromDate(duel.endsAt!.toUtc()),
+          if (duel.createdAt != null) 'createdAt': Timestamp.fromDate(duel.createdAt!.toUtc()),
+          'participantIds': participantIds,
+          'updatedAt': FieldValue.serverTimestamp(),
         },
         SetOptions(merge: true),
       );
-    }
 
-    for (final checkin in duel.checkins) {
-      batch.set(
-        duelRef.collection('checkins').doc(checkin.id),
-        {
-          'id': checkin.id,
-          'userId': checkin.userId,
-          'username': checkin.username,
-          'checkedAt': Timestamp.fromDate(checkin.checkedAt.toUtc()),
-          if (checkin.note != null) 'note': checkin.note,
-        },
-        SetOptions(merge: true),
-      );
-    }
+      for (final participant in duel.participants) {
+        batch.set(
+          duelRef.collection('participants').doc(participant.userId),
+          {
+            'userId': participant.userId,
+            'username': participant.username,
+            'streak': participant.streak,
+            'lastCheckin': participant.lastCheckin,
+          },
+          SetOptions(merge: true),
+        );
+      }
 
-    await batch.commit();
+      for (final checkin in duel.checkins) {
+        batch.set(
+          duelRef.collection('checkins').doc(checkin.id),
+          {
+            'id': checkin.id,
+            'userId': checkin.userId,
+            'username': checkin.username,
+            'checkedAt': Timestamp.fromDate(checkin.checkedAt.toUtc()),
+            if (checkin.note != null) 'note': checkin.note,
+          },
+          SetOptions(merge: true),
+        );
+      }
+
+      await batch.commit();
+    } catch (error) {
+      debugPrint('Firestore duel mirror failed: $error');
+    }
   }
 
   Duel _duelFromSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> snapshot) {
@@ -304,34 +313,61 @@ class HabitDuelFirestoreStore {
   }
 
   Future<void> mirrorUserFromAuth(User user) async {
-    await _users.doc(user.id).set(
-      {
-        'id': user.id,
-        'username': user.username,
-        if (user.email != null) 'email': user.email,
-        'wins': user.wins,
-        'losses': user.losses,
-        'updatedAt': FieldValue.serverTimestamp(),
-      },
-      SetOptions(merge: true),
-    );
-  }
-
-  Future<void> mirrorLeaderboardUsers(Iterable<LeaderboardEntry> entries) async {
-    final batch = _firestore.batch();
-    for (final entry in entries) {
-      batch.set(
-        _users.doc(entry.userId),
+    try {
+      await _users.doc(user.id).set(
         {
-          'id': entry.userId,
-          'username': entry.username,
-          'wins': entry.wins,
-          'losses': entry.losses,
+          'id': user.id,
+          'username': user.username,
+          if (user.email != null) 'email': user.email,
+          'wins': user.wins,
+          'losses': user.losses,
           'updatedAt': FieldValue.serverTimestamp(),
         },
         SetOptions(merge: true),
       );
+    } catch (error) {
+      debugPrint('Firestore auth mirror failed: $error');
     }
-    await batch.commit();
+  }
+
+  Future<void> mirrorLeaderboardUsers(Iterable<LeaderboardEntry> entries) async {
+    try {
+      final batch = _firestore.batch();
+      for (final entry in entries) {
+        batch.set(
+          _users.doc(entry.userId),
+          {
+            'id': entry.userId,
+            'username': entry.username,
+            'wins': entry.wins,
+            'losses': entry.losses,
+            'updatedAt': FieldValue.serverTimestamp(),
+          },
+          SetOptions(merge: true),
+        );
+      }
+      await batch.commit();
+    } catch (error) {
+      debugPrint('Firestore leaderboard mirror failed: $error');
+    }
+  }
+
+  Future<void> registerDeviceToken({
+    required String userId,
+    required String token,
+    required String platform,
+  }) async {
+    try {
+      await _users.doc(userId).collection('devices').doc(token).set(
+        {
+          'token': token,
+          'platform': platform,
+          'updatedAt': FieldValue.serverTimestamp(),
+        },
+        SetOptions(merge: true),
+      );
+    } catch (error) {
+      debugPrint('Firestore device token registration failed: $error');
+    }
   }
 }
