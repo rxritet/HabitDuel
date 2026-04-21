@@ -1,4 +1,5 @@
-﻿import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:async';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/errors/failures.dart';
 import '../../domain/entities/leaderboard_entry.dart';
@@ -34,23 +35,29 @@ class LeaderboardError extends LeaderboardState {
 class LeaderboardNotifier extends StateNotifier<LeaderboardState> {
   LeaderboardNotifier(this._ref) : super(const LeaderboardInitial());
   final Ref _ref;
+  StreamSubscription? _sub;
 
-  Future<void> load({int limit = 50, int offset = 0}) async {
+  void load({int limit = 50, int offset = 0}) {
     state = const LeaderboardLoading();
-    try {
-      final result = await _ref
-          .read(leaderboardRemoteDSProvider)
-          .getLeaderboard(limit: limit, offset: offset);
-      state = LeaderboardLoaded(result.entries, total: result.total);
-    } on Failure catch (e) {
-      if (e is NetworkFailure) {
-        state = const LeaderboardLoaded([]);
-        return;
-      }
-      state = LeaderboardError(e.message);
-    } catch (e) {
-      state = LeaderboardError(e.toString());
-    }
+    _sub?.cancel();
+
+    _sub = _ref
+        .read(leaderboardRemoteDSProvider)
+        .watchLeaderboard(limit: limit, offset: offset)
+        .listen(
+      (result) {
+        state = LeaderboardLoaded(result.entries, total: result.total);
+      },
+      onError: (e) {
+        state = LeaderboardError(e.toString());
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
   }
 }
 

@@ -58,6 +58,15 @@ class FirebaseAwareLeaderboardDataSource {
       return LeaderboardResult(entries: const [], total: 0);
     }
   }
+
+  Stream<LeaderboardResult> watchLeaderboard({
+    int limit = 50,
+    int offset = 0,
+  }) {
+    return _store.watchLeaderboard(limit: limit, offset: offset).map((result) {
+      return LeaderboardResult(entries: result.entries, total: result.total);
+    });
+  }
 }
 
 /// Дуэли — Firestore primary (без REST fallback на старый сервер).

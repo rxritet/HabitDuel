@@ -148,6 +148,40 @@ class HabitDuelFirestoreStore {
     return (entries: entries, total: total);
   }
 
+  Stream<({List<LeaderboardEntry> entries, int total})> watchLeaderboard({
+    int limit = 50,
+    int offset = 0,
+  }) {
+    if (!_isEnabled) return Stream.value((entries: const <LeaderboardEntry>[], total: 0));
+    
+    return _users.orderBy('wins', descending: true).snapshots().map((snapshot) {
+      final docs = snapshot.docs.toList();
+      final total = docs.length;
+      final sliced = docs.skip(offset).take(limit).toList(growable: false);
+      final entries = <LeaderboardEntry>[];
+      var rank = 0;
+      int? previousWins;
+      for (final doc in sliced) {
+        final data = doc.data();
+        final wins = (data['wins'] as num?)?.toInt() ?? 0;
+        if (previousWins == null || wins != previousWins) {
+          rank++;
+          previousWins = wins;
+        }
+        entries.add(
+          LeaderboardEntry(
+            rank: rank,
+            userId: doc.id,
+            username: data['username'] as String? ?? '',
+            wins: wins,
+            losses: (data['losses'] as num?)?.toInt() ?? 0,
+          ),
+        );
+      }
+      return (entries: entries, total: total);
+    });
+  }
+
   Future<void> mirrorLeaderboardUsers(Iterable<LeaderboardEntry> entries) async {
     if (!_isEnabled) return;
     try {
