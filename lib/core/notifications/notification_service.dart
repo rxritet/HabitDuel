@@ -10,12 +10,22 @@ import 'package:timezone/timezone.dart' as tz;
 const kReminderEnabledKey = 'reminder_enabled';
 const kReminderHourKey = 'reminder_hour';
 const kReminderMinuteKey = 'reminder_minute';
+const kSmartReminderEnabledKey = 'smart_reminder_enabled';
 
-/// Идентификаторы канала / уведомлений.
+/// Идентификаторы уведомлений.
 const _dailyReminderId = 0;
 const _streakBrokenId = 1;
+const _opponentCheckinId = 2;
+const _groupLobbyReadyId = 3;
+const _checkInReminderId = 4;
+const _genericId = 5;
+const _eveningDeadlineId = 6;
+
+/// Идентификаторы каналов Android.
 const _channelId = 'habitduel_channel';
 const _channelName = 'HabitDuel';
+const _urgentChannelId = 'habitduel_urgent';
+const _urgentChannelName = 'HabitDuel — Срочно';
 
 /// Сервис уведомлений (синглтон).
 class NotificationService {
@@ -27,7 +37,7 @@ class NotificationService {
 
   /// Вызывается один раз при запуске приложения.
   Future<void> init() async {
-    if (kIsWeb) return; // уведомления не поддерживаются на Web
+    if (kIsWeb) return;
     if (_initialised) return;
     _initialised = true;
 
@@ -47,24 +57,50 @@ class NotificationService {
 
     await _plugin.initialize(initSettings);
 
-    // Запрос разрешения на Android 13+
     if (!kIsWeb && Platform.isAndroid) {
       await _plugin
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
           ?.requestNotificationsPermission();
     }
   }
 
-  // ─── Ежедневное напоминание ─────────────────────────────────────────────────
+  // ─── Вспомогательные детали уведомлений ─────────────────────────────────
 
-  /// Запланировать (перезапланировать) ежедневное напоминание.
+  NotificationDetails _normalDetails({String? payload}) {
+    return const NotificationDetails(
+      android: AndroidNotificationDetails(
+        _channelId,
+        _channelName,
+        importance: Importance.high,
+        priority: Priority.high,
+        icon: '@mipmap/ic_launcher',
+      ),
+      iOS: DarwinNotificationDetails(),
+    );
+  }
+
+  NotificationDetails _urgentDetails() {
+    return const NotificationDetails(
+      android: AndroidNotificationDetails(
+        _urgentChannelId,
+        _urgentChannelName,
+        importance: Importance.max,
+        priority: Priority.max,
+        icon: '@mipmap/ic_launcher',
+        playSound: true,
+        enableVibration: true,
+      ),
+      iOS: DarwinNotificationDetails(sound: 'default'),
+    );
+  }
+
+  // ─── Ежедневное напоминание (ручное) ────────────────────────────────────
+
   Future<void> scheduleDailyReminder({
     required int hour,
     required int minute,
   }) async {
     if (kIsWeb) return;
-    // Сначала отменяем текущее напоминание.
     await _plugin.cancel(_dailyReminderId);
 
     final now = tz.TZDateTime.now(tz.local);
@@ -75,32 +111,22 @@ class NotificationService {
 
     await _plugin.zonedSchedule(
       _dailyReminderId,
-      'HabitDuel',
+      'HabitDuel ⚔️',
       'Не забудь check-in! 🔥',
       scheduled,
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          _channelId,
-          _channelName,
-          importance: Importance.high,
-          priority: Priority.high,
-        ),
-        iOS: DarwinNotificationDetails(),
-      ),
+      _normalDetails(),
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time, // повторяется ежедневно
+      matchDateTimeComponents: DateTimeComponents.time,
     );
   }
 
-  /// Отменить ежедневное напоминание.
   Future<void> cancelDailyReminder() async {
     if (kIsWeb) return;
     await _plugin.cancel(_dailyReminderId);
   }
 
-  /// Восстановить напоминание из сохранённых настроек (при запуске).
   Future<void> restoreReminder() async {
     if (kIsWeb) return;
     final prefs = await SharedPreferences.getInstance();
@@ -111,7 +137,6 @@ class NotificationService {
     await scheduleDailyReminder(hour: hour, minute: minute);
   }
 
-  /// Сохранить настройки и запланировать.
   Future<void> saveAndScheduleReminder({
     required bool enabled,
     required int hour,
@@ -129,9 +154,69 @@ class NotificationService {
     }
   }
 
-  // ─── Мгновенное уведомление «Атака!» ──────────────────────────────────
+  // ─── Smart Reminder (адаптивное) ─────────────────────────────────────────
 
-  /// Показать уведомление при прерыве серии противника.
+  /// Планирует напоминание на предпочтительное время пользователя.
+  /// Дополнительно — «вечерний дедлайн» в 20:00.
+  Future<void> scheduleSmartReminder({
+    required String duelId,
+    required String habitName,
+    required int preferredHour,
+    required int preferredMinute,
+  }) async {
+    if (kIsWeb) return;
+
+    final now = tz.TZDateTime.now(tz.local);
+
+    // --- Основное напоминание в "умное" время ---
+    var smartTime = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      preferredHour,
+      preferredMinute,
+    );
+    if (smartTime.isBefore(now)) {
+      smartTime = smartTime.add(const Duration(days: 1));
+    }
+
+    await _plugin.zonedSchedule(
+      _checkInReminderId,
+      'Время check-in! 💪',
+      '$habitName — держи свою серию!',
+      smartTime,
+      _normalDetails(),
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+      payload: duelId,
+    );
+
+    // --- Вечерний дедлайн в 20:00 (если умное время не вечернее) ---
+    if (preferredHour < 18) {
+      var eveningTime = tz.TZDateTime(tz.local, now.year, now.month, now.day, 20, 0);
+      if (eveningTime.isBefore(now)) {
+        eveningTime = eveningTime.add(const Duration(days: 1));
+      }
+      await _plugin.zonedSchedule(
+        _eveningDeadlineId,
+        'Последний шанс! ⏰',
+        'До конца дня осталось немного. Не пропусти $habitName!',
+        eveningTime,
+        _urgentDetails(),
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.time,
+        payload: duelId,
+      );
+    }
+  }
+
+  // ─── Мгновенные уведомления от событий дуэлей ───────────────────────────
+
   Future<void> showStreakBrokenNotification({
     required String opponentUsername,
     required int oldStreak,
@@ -141,15 +226,66 @@ class NotificationService {
       _streakBrokenId,
       'Атакуй! 🎯',
       '$opponentUsername потерял стрик ($oldStreak дней). Время атаковать!',
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          _channelId,
-          _channelName,
-          importance: Importance.high,
-          priority: Priority.high,
-        ),
-        iOS: DarwinNotificationDetails(),
-      ),
+      _urgentDetails(),
     );
+  }
+
+  Future<void> showOpponentCheckinNotification({
+    required String opponentUsername,
+    required String habitName,
+  }) async {
+    if (kIsWeb) return;
+    await _plugin.show(
+      _opponentCheckinId,
+      'Соперник сделал check-in! 🔥',
+      '$opponentUsername только что отметился в «$habitName». Не отставай!',
+      _normalDetails(),
+    );
+  }
+
+  Future<void> showCheckInReminder({required String habitName}) async {
+    if (kIsWeb) return;
+    await _plugin.show(
+      _checkInReminderId,
+      'HabitDuel напоминает 🕐',
+      'Не забудь сделать check-in в «$habitName»!',
+      _normalDetails(),
+    );
+  }
+
+  Future<void> showGroupLobbyReadyNotification({
+    required String duelId,
+    required String habitName,
+  }) async {
+    if (kIsWeb) return;
+    await _plugin.show(
+      _groupLobbyReadyId,
+      'Дуэль начинается! ⚔️',
+      'Групповая дуэль «$habitName» готова. Все участники на борту!',
+      _urgentDetails(),
+      payload: duelId,
+    );
+  }
+
+  Future<void> showGenericNotification({
+    required String title,
+    required String body,
+    String? payload,
+  }) async {
+    if (kIsWeb) return;
+    await _plugin.show(
+      _genericId,
+      title,
+      body,
+      _normalDetails(),
+      payload: payload,
+    );
+  }
+
+  /// Отмена запланированных напоминаний при успешном чекине.
+  Future<void> cancelDuelReminders() async {
+    if (kIsWeb) return;
+    await _plugin.cancel(_checkInReminderId);
+    await _plugin.cancel(_eveningDeadlineId);
   }
 }
