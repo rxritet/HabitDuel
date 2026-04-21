@@ -124,14 +124,31 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   int _index = 0;
 
-  static const _screens = <Widget>[
-    HomeScreen(),
-    LeaderboardScreen(),
-    ProfileScreen(),
-  ];
+  final List<Widget?> _screens = [const HomeScreen(), null, null];
+
+  Widget _buildScreen(int index) {
+    return switch (index) {
+      0 => const HomeScreen(),
+      1 => const LeaderboardScreen(),
+      2 => const ProfileScreen(),
+      _ => const SizedBox.shrink(),
+    };
+  }
+
+  void _selectTab(int index) {
+    setState(() {
+      _index = index;
+      _screens[index] ??= _buildScreen(index);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final children = List<Widget>.generate(
+      _screens.length,
+      (index) => _screens[index] ?? const SizedBox.shrink(),
+    );
+
     return Scaffold(
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 220),
@@ -139,12 +156,12 @@ class _MainShellState extends State<MainShell> {
         switchOutCurve: Curves.easeInCubic,
         child: KeyedSubtree(
           key: ValueKey(_index),
-          child: IndexedStack(index: _index, children: _screens),
+          child: IndexedStack(index: _index, children: children),
         ),
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() => _index = i),
+        onDestinationSelected: _selectTab,
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.local_fire_department_outlined),

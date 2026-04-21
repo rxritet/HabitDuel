@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../../domain/entities/duel.dart';
 import '../../domain/repositories/duel_repository.dart';
 import '../../core/firebase/habitduel_firestore_store.dart';
@@ -21,14 +23,14 @@ class DuelRepositoryImpl implements DuelRepository {
       durationDays: durationDays,
       opponentUsername: opponentUsername,
     );
-    await _store.upsertDuel(duel);
+    unawaited(_store.upsertDuel(duel));
     return duel;
   }
 
   @override
   Future<Duel> acceptDuel(String duelId) async {
     final duel = await _remoteDS.acceptDuel(duelId);
-    await _store.upsertDuel(duel);
+    unawaited(_store.upsertDuel(duel));
     return duel;
   }
 

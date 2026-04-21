@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -51,7 +53,7 @@ class FirebaseAwareProfileDataSource {
         badges: badges,
       );
 
-      await _store.upsertProfile(profile);
+      unawaited(_store.upsertProfile(profile));
       return profile;
     } on DioException catch (e) {
       throw _mapError(e);
@@ -108,7 +110,7 @@ class FirebaseAwareLeaderboardDataSource {
           losses: m['losses'] as int,
         );
       }).toList();
-      await _store.mirrorLeaderboardUsers(entries);
+      unawaited(_store.mirrorLeaderboardUsers(entries));
       return LeaderboardResult(
         entries: entries,
         total: data['total'] as int,
@@ -153,7 +155,9 @@ class FirebaseAwareDuelDataSource {
         if (opponentUsername != null) 'opponent_username': opponentUsername,
       });
       final duel = DuelModel.fromCreateJson(response.data as Map<String, dynamic>);
-      await _mirrorCreateResponse(response.data as Map<String, dynamic>, duel);
+      unawaited(
+        _mirrorCreateResponse(response.data as Map<String, dynamic>, duel),
+      );
       return duel;
     } on DioException catch (e) {
       throw _mapError(e);
@@ -176,7 +180,7 @@ class FirebaseAwareDuelDataSource {
             ? DateTime.parse(data['ends_at'] as String)
             : null,
       );
-      await _mirrorFullDuel(duelId);
+      unawaited(_mirrorFullDuel(duelId));
       return duel;
     } on DioException catch (e) {
       throw _mapError(e);
@@ -203,7 +207,7 @@ class FirebaseAwareDuelDataSource {
       final result = list
           .map((j) => DuelModel.fromListJson(j as Map<String, dynamic>))
           .toList();
-      await _mirrorMyDuelsFromRest();
+      unawaited(_mirrorMyDuelsFromRest());
       return result;
     } on DioException catch (e) {
       throw _mapError(e);
@@ -223,7 +227,7 @@ class FirebaseAwareDuelDataSource {
     try {
       final response = await _dio.get('/duels/$duelId');
       final duel = DuelModel.fromDetailJson(response.data as Map<String, dynamic>);
-      await _store.upsertDuel(duel);
+      unawaited(_store.upsertDuel(duel));
       return duel;
     } on DioException catch (e) {
       throw _mapError(e);
@@ -236,7 +240,7 @@ class FirebaseAwareDuelDataSource {
         '/duels/$duelId/checkin',
         data: {if (note != null) 'note': note},
       );
-      await _mirrorFullDuel(duelId);
+      unawaited(_mirrorFullDuel(duelId));
       return response.data as Map<String, dynamic>;
     } on DioException catch (e) {
       throw _mapError(e);
@@ -268,7 +272,7 @@ class FirebaseAwareDuelDataSource {
       );
     }
 
-    await _store.upsertDuel(
+    unawaited(_store.upsertDuel(
       Duel(
         id: duel.id,
         habitName: duel.habitName,
@@ -280,13 +284,13 @@ class FirebaseAwareDuelDataSource {
         createdAt: duel.createdAt,
         participants: participants,
       ),
-    );
+    ));
   }
 
   Future<void> _mirrorFullDuel(String duelId) async {
     final response = await _dio.get('/duels/$duelId');
     final duel = DuelModel.fromDetailJson(response.data as Map<String, dynamic>);
-    await _store.upsertDuel(duel);
+    unawaited(_store.upsertDuel(duel));
   }
 
   Future<void> _mirrorMyDuelsFromRest() async {
@@ -295,7 +299,7 @@ class FirebaseAwareDuelDataSource {
     final list = data['duels'] as List<dynamic>;
     for (final item in list) {
       final duel = DuelModel.fromListJson(item as Map<String, dynamic>);
-      await _store.upsertDuel(
+      unawaited(_store.upsertDuel(
         Duel(
           id: duel.id,
           habitName: duel.habitName,
@@ -310,7 +314,7 @@ class FirebaseAwareDuelDataSource {
           endsAt: duel.endsAt,
           createdAt: duel.createdAt,
         ),
-      );
+      ));
     }
   }
 

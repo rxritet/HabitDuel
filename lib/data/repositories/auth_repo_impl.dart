@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../core/constants/app_constants.dart';
@@ -33,7 +35,7 @@ class AuthRepositoryImpl implements AuthRepository {
     await _storage.write(key: kTokenKey, value: response.token);
     await _storage.write(key: kUserIdKey, value: response.user.id);
     await _storage.write(key: kUsernameKey, value: response.user.username);
-    await _store.mirrorUserFromAuth(
+    unawaited(_store.mirrorUserFromAuth(
       User(
         id: response.user.id,
         username: response.user.username,
@@ -41,7 +43,7 @@ class AuthRepositoryImpl implements AuthRepository {
         wins: response.user.wins,
         losses: response.user.losses,
       ),
-    );
+    ));
 
     return RegisterResult(user: response.user, token: response.token);
   }
@@ -60,7 +62,7 @@ class AuthRepositoryImpl implements AuthRepository {
     await _storage.write(key: kTokenKey, value: response.token);
     await _storage.write(key: kUserIdKey, value: response.user.id);
     await _storage.write(key: kUsernameKey, value: response.user.username);
-    await _store.mirrorUserFromAuth(
+    unawaited(_store.mirrorUserFromAuth(
       User(
         id: response.user.id,
         username: response.user.username,
@@ -68,7 +70,7 @@ class AuthRepositoryImpl implements AuthRepository {
         wins: response.user.wins,
         losses: response.user.losses,
       ),
-    );
+    ));
 
     return LoginResult(user: response.user, token: response.token);
   }
