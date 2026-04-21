@@ -357,6 +357,16 @@ class HabitDuelFirestoreStore {
     final inviteCode = type == DuelType.group ? _generateInviteCode() : null;
     final now = DateTime.now().toUtc();
 
+    String? actualOpponentId;
+    if (type == DuelType.duel && opponentUsername != null && opponentUsername.isNotEmpty) {
+      final querySnap = await _users.where('username', isEqualTo: opponentUsername).limit(1).get();
+      if (querySnap.docs.isNotEmpty) {
+        actualOpponentId = querySnap.docs.first.id;
+      } else {
+        throw Exception('User "$opponentUsername" not found. They must login first.');
+      }
+    }
+
     final duel = Duel(
       id: duelRef.id,
       habitName: habitName,
@@ -365,6 +375,7 @@ class HabitDuelFirestoreStore {
       durationDays: durationDays,
       type: type,
       creatorId: creatorId,
+      opponentId: actualOpponentId,
       maxParticipants: maxParticipants,
       inviteCode: inviteCode,
       habitCategory: habitCategory,
@@ -374,6 +385,8 @@ class HabitDuelFirestoreStore {
       createdAt: now,
       participants: [
         DuelParticipant(userId: creatorId, username: creatorUsername),
+        if (actualOpponentId != null)
+          DuelParticipant(userId: actualOpponentId, username: opponentUsername!),
       ],
     );
 
