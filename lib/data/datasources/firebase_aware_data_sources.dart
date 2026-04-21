@@ -189,6 +189,11 @@ class FirebaseAwareDuelDataSource {
     return _store.watchMyDuels(userId).map((list) => list.map(_toDuelModel).toList());
   }
 
+  /// Real-time stream открытых групповых дуэлей.
+  Stream<List<DuelModel>> watchOpenGroupDuels() {
+    return _store.watchOpenGroupDuels().map((list) => list.map(_toDuelModel).toList());
+  }
+
   DuelModel _toDuelModel(Duel duel) {
     return DuelModel(
       id: duel.id,

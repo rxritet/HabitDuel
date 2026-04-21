@@ -36,6 +36,9 @@ abstract class DuelRepository {
 
   /// Real-time stream списка дуэлей пользователя.
   Stream<List<Duel>> watchMyDuels(String userId);
+
+  /// Real-time stream списка открытых групповых дуэлей.
+  Stream<List<Duel>> watchOpenGroupDuels();
 }
 
 class CheckInResult {

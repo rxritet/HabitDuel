@@ -111,23 +111,38 @@ class _DuelCard extends StatelessWidget {
               if (!isPending)
                 Row(
                   children: [
-                    _StreakIndicator(
-                      label: 'You',
-                      streak: duel.myStreak,
-                      color: theme.colorScheme.primary,
-                    ),
-                    const SizedBox(width: 24),
-                    _StreakIndicator(
-                      label: 'Opponent',
-                      streak: duel.opponentStreak,
-                      color: theme.colorScheme.secondary,
-                    ),
+                    if (duel.status == 'open')
+                      _InfoChip(
+                        icon: Icons.people,
+                        label: '${duel.participants.length}/${duel.maxParticipants}',
+                      )
+                    else ...[
+                      _StreakIndicator(
+                        label: 'You',
+                        streak: duel.myStreak,
+                        color: theme.colorScheme.primary,
+                      ),
+                      const SizedBox(width: 24),
+                      _StreakIndicator(
+                        label: 'Opponent',
+                        streak: duel.opponentStreak,
+                        color: theme.colorScheme.secondary,
+                      ),
+                    ],
                     const Spacer(),
                     Text(
                       '${duel.durationDays} days',
                       style: theme.textTheme.bodySmall,
                     ),
                   ],
+                )
+              else if (duel.status == 'open')
+                Text(
+                  'Join this lobby to start!',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
                 )
               else
                 Text(
@@ -140,6 +155,23 @@ class _DuelCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _InfoChip extends StatelessWidget {
+  const _InfoChip({required this.icon, required this.label});
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      avatar: Icon(icon, size: 14),
+      label: Text(label, style: const TextStyle(fontSize: 11)),
+      visualDensity: VisualDensity.compact,
+      side: BorderSide.none,
+      padding: EdgeInsets.zero,
     );
   }
 }
@@ -179,6 +211,7 @@ class _StatusChip extends StatelessWidget {
     final (label, color) = switch (status) {
       'active' => ('Active', Colors.green),
       'pending' => ('Pending', Colors.orange),
+      'open' => ('Open Lobby', Colors.blue),
       'completed' => ('Done', Colors.blue),
       'cancelled' => ('Cancelled', Colors.grey),
       _ => (status, Colors.grey),

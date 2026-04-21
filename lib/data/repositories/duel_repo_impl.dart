@@ -63,4 +63,7 @@ class DuelRepositoryImpl implements DuelRepository {
 
   @override
   Stream<List<Duel>> watchMyDuels(String userId) => _remoteDS.watchMyDuels(userId);
+
+  @override
+  Stream<List<Duel>> watchOpenGroupDuels() => _remoteDS.watchOpenGroupDuels();
 }

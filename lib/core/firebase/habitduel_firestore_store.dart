@@ -249,12 +249,33 @@ class HabitDuelFirestoreStore {
     });
   }
 
-  /// Stream для real-time обновлений списка дуэлей пользователя.
+  /// Stream для real-time обновлений списка дуэлей пользователя (мои + открытые группы).
   Stream<List<Duel>> watchMyDuels(String userId) {
     if (!_isEnabled) return const Stream.empty();
     return _duels
-        .where('participantIds', arrayContains: userId)
-        .orderBy('createdAt', descending: true)
+        .where(Filter.or(
+          Filter('participantIds', arrayContains: userId),
+          Filter.and(
+            Filter('type', isEqualTo: 'group'),
+            Filter('status', isEqualTo: 'open'),
+          ),
+        ))
+        // .orderBy('createdAt', descending: true) // Внимание: OR-фильтр с orderBy требует составных индексов или может не работать напрямую без них
+        .snapshots()
+        .map((snap) {
+          final list = snap.docs.map(_duelFromSnapshot).toList();
+          // Сортируем вручную на клиенте, чтобы не требовать сложных индексов Firestore для OR-запроса
+          list.sort((a, b) => (b.createdAt ?? DateTime(0)).compareTo(a.createdAt ?? DateTime(0)));
+          return list;
+        });
+  }
+
+  /// Stream для открытых групповых дуэлей.
+  Stream<List<Duel>> watchOpenGroupDuels() {
+    if (!_isEnabled) return const Stream.empty();
+    return _duels
+        .where('type', isEqualTo: 'group')
+        .where('status', isEqualTo: 'open')
         .snapshots()
         .map((snap) => snap.docs.map(_duelFromSnapshot).toList());
   }
@@ -528,6 +549,51 @@ class HabitDuelFirestoreStore {
     await batch.commit();
 
     return readDuel(duelId);
+  }
+
+  /// Вступить в открытую дуэль (лобби) без инвайт-кода.
+  Future<void> joinOpenDuel({
+    required String duelId,
+    required String userId,
+    required String username,
+  }) async {
+    if (!_isEnabled) return;
+
+    final duelRef = _duels.doc(duelId);
+    final duelDoc = await duelRef.get();
+    if (!duelDoc.exists) throw Exception('Дуэль не найдена');
+
+    final duelData = duelDoc.data()!;
+    final participantIds = (duelData['participantIds'] as List<dynamic>? ?? []).cast<String>();
+    final maxParticipants = (duelData['maxParticipants'] as num?)?.toInt() ?? 10;
+    final status = duelData['status'] as String? ?? '';
+
+    if (status != 'open') {
+      throw Exception('Эта дуэль уже в процессе или закрыта');
+    }
+
+    if (participantIds.contains(userId)) return;
+
+    if (participantIds.length >= maxParticipants) {
+      throw Exception('Лобби заполнено');
+    }
+
+    final batch = _db.batch();
+    batch.update(duelRef, {
+      'participantIds': FieldValue.arrayUnion([userId]),
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+    batch.set(
+      duelRef.collection('participants').doc(userId),
+      {
+        'userId': userId,
+        'username': username,
+        'streak': 0,
+        'isEliminated': false,
+      },
+      SetOptions(merge: true),
+    );
+    await batch.commit();
   }
 
   // ═══════════════════════════════════════════════════════════════════
