@@ -143,6 +143,17 @@ class _ProfileBody extends StatelessWidget {
             runSpacing: 8,
             children: profile.badges.map((b) => _BadgeChip(badge: b)).toList(),
           ),
+
+        const SizedBox(height: 32),
+        FilledButton.tonalIcon(
+          onPressed: () => Navigator.pushNamed(context, '/xp-progress'),
+          icon: const Icon(Icons.star_rounded),
+          label: const Text('XP & Gamification'),
+          style: FilledButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            textStyle: theme.textTheme.titleMedium,
+          ),
+        ),
       ],
     );
   }

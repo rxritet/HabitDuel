@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/errors/failures.dart';
 import '../../domain/entities/duel.dart';
+import 'auth_provider.dart';
 import 'core_providers.dart';
 
 // ─── Состояние списка дуэлей ───────────────────────────────────────────
@@ -33,21 +35,29 @@ class DuelsListError extends DuelsListState {
 class DuelsListNotifier extends StateNotifier<DuelsListState> {
   DuelsListNotifier(this._ref) : super(const DuelsListInitial());
   final Ref _ref;
+  StreamSubscription<List<Duel>>? _sub;
 
-  Future<void> load() async {
+  void load() {
     state = const DuelsListLoading();
-    try {
-      final duels = await _ref.read(getMyDuelsUseCaseProvider).call();
-      state = DuelsListLoaded(duels);
-    } on Failure catch (e) {
-      if (e is NetworkFailure) {
-        state = const DuelsListLoaded([]);
-        return;
-      }
-      state = DuelsListError(e.message);
-    } catch (e) {
-      state = DuelsListError(e.toString());
+    _sub?.cancel();
+
+    final authState = _ref.read(authProvider);
+    if (authState is Authenticated) {
+      final repo = _ref.read(duelRepositoryProvider);
+      _sub = repo.watchMyDuels(authState.user.id).listen((duels) {
+        state = DuelsListLoaded(duels);
+      }, onError: (e) {
+        state = DuelsListError(e.toString());
+      });
+    } else {
+      state = const DuelsListError('User is not authenticated');
     }
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
   }
 }
 
