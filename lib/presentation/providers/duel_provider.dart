@@ -91,27 +91,41 @@ class DuelDetailError extends DuelDetailState {
 class DuelDetailNotifier extends StateNotifier<DuelDetailState> {
   DuelDetailNotifier(this._ref) : super(const DuelDetailLoading());
   final Ref _ref;
+  StreamSubscription? _sub;
 
-  Future<void> load(String duelId) async {
+  void load(String duelId) {
     state = const DuelDetailLoading();
+    _sub?.cancel();
+
     try {
-      final duel = await _ref.read(getDuelDetailUseCaseProvider).call(duelId);
-      state = DuelDetailLoaded(duel);
-    } on Failure catch (e) {
-      if (e is NetworkFailure) {
-        state = DuelDetailError('Ошибка сети');
-        return;
-      }
-      state = DuelDetailError(e.message);
+      final repo = _ref.read(duelRepositoryProvider);
+      _sub = repo.watchDuel(duelId).listen(
+        (duel) {
+          if (duel != null) {
+            state = DuelDetailLoaded(duel);
+          } else {
+            state = const DuelDetailError('Duel not found');
+          }
+        },
+        onError: (e) {
+          state = DuelDetailError(e.toString());
+        },
+      );
     } catch (e) {
       state = DuelDetailError(e.toString());
     }
   }
 
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
+
   Future<bool> checkIn(String duelId, {String? note}) async {
     try {
       await _ref.read(checkInUseCaseProvider).call(duelId, note: note);
-      await load(duelId);
+      // Stream automatically updates the UI
       return true;
     } on Failure {
       return false;
@@ -121,7 +135,7 @@ class DuelDetailNotifier extends StateNotifier<DuelDetailState> {
   Future<bool> accept(String duelId) async {
     try {
       await _ref.read(acceptDuelUseCaseProvider).call(duelId);
-      await load(duelId);
+      // Stream automatically updates the UI
       return true;
     } on Failure {
       return false;
