@@ -31,9 +31,15 @@ String get kBaseUrl {
   );
 }
 
-/// Тайм-ауты.
-const Duration kConnectTimeout = Duration(seconds: 10);
-const Duration kReceiveTimeout = Duration(seconds: 10);
+/// Тайм-ауты HTTP.
+///
+/// В debug делаем fail-fast, чтобы UI не подвисал долго,
+/// если локальный backend не запущен.
+Duration get kConnectTimeout =>
+  kDebugMode ? const Duration(seconds: 3) : const Duration(seconds: 10);
+
+Duration get kReceiveTimeout =>
+  kDebugMode ? const Duration(seconds: 5) : const Duration(seconds: 10);
 
 /// Ключи защищённого хранилища.
 const String kTokenKey = 'jwt_token';

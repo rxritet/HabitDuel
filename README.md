@@ -168,6 +168,20 @@ flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8080
 
 > **Важно:** бэкенд должен быть запущен до старта Flutter-приложения.
 
+Для Web в локальной разработке запускай клиент и сервер на разных портах:
+
+```bash
+# backend (server/) — 8080
+dart run bin/server.dart
+
+# frontend (корень проекта) — 8081
+flutter run -d web-server --web-hostname 0.0.0.0 --web-port 8081 \
+  --dart-define=API_BASE_URL=http://localhost:8080
+```
+
+Это устраняет конфликт с DWDS (`/$dwdsSseHandler`) и ошибки вида
+`WebSocket connection ... failed` при открытии неверного порта.
+
 Для iOS Simulator используй:
 
 ```bash

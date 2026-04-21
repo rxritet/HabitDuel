@@ -12,6 +12,30 @@ import '../../domain/entities/profile.dart';
 import 'leaderboard_remote_ds.dart';
 import '../models/duel_model.dart';
 
+DateTime? _apiUnavailableUntil;
+const _apiRetryCooldown = Duration(seconds: 30);
+
+bool get _shouldSkipApiCalls {
+  final until = _apiUnavailableUntil;
+  if (until == null) return false;
+  return DateTime.now().isBefore(until);
+}
+
+void _markApiUnavailable() {
+  _apiUnavailableUntil = DateTime.now().add(_apiRetryCooldown);
+}
+
+void _markApiAvailable() {
+  _apiUnavailableUntil = null;
+}
+
+bool _isNetworkError(DioException e) {
+  return e.type == DioExceptionType.connectionTimeout ||
+      e.type == DioExceptionType.connectionError ||
+      e.type == DioExceptionType.receiveTimeout ||
+      e.type == DioExceptionType.sendTimeout;
+}
+
 class FirebaseAwareProfileDataSource {
   FirebaseAwareProfileDataSource(this._dio, this._storage, this._store);
 
@@ -21,19 +45,36 @@ class FirebaseAwareProfileDataSource {
 
   Future<UserProfile> getMyProfile() async {
     final userId = await _storage.read(key: kUserIdKey);
+    final username = await _storage.read(key: kUsernameKey);
+
+    UserProfile? cachedProfile;
     if (userId != null && userId.isNotEmpty) {
       try {
-        final cached = await _store.readProfile(userId);
-        if (cached != null) {
-          return cached;
+        cachedProfile = await _store.readProfile(userId);
+        if (cachedProfile != null) {
+          return cachedProfile;
         }
       } catch (_) {
         // Firestore cache is best-effort; fall back to REST.
       }
     }
 
+    if (_shouldSkipApiCalls) {
+      if (userId != null && userId.isNotEmpty) {
+        return UserProfile(
+          id: userId,
+          username: username ?? '',
+          wins: 0,
+          losses: 0,
+          badges: const [],
+        );
+      }
+      throw const NetworkFailure();
+    }
+
     try {
       final response = await _dio.get('/users/me');
+      _markApiAvailable();
       final data = response.data as Map<String, dynamic>;
       final badgesRaw = data['badges'] as List<dynamic>? ?? [];
       final badges = badgesRaw.map((b) {
@@ -56,6 +97,21 @@ class FirebaseAwareProfileDataSource {
       unawaited(_store.upsertProfile(profile));
       return profile;
     } on DioException catch (e) {
+      if (_isNetworkError(e)) {
+        _markApiUnavailable();
+        if (cachedProfile != null) {
+          return cachedProfile;
+        }
+        if (userId != null && userId.isNotEmpty) {
+          return UserProfile(
+            id: userId,
+            username: username ?? '',
+            wins: 0,
+            losses: 0,
+            badges: const [],
+          );
+        }
+      }
       throw _mapError(e);
     }
   }
@@ -84,13 +140,19 @@ class FirebaseAwareLeaderboardDataSource {
     int limit = 50,
     int offset = 0,
   }) async {
+    LeaderboardResult? cachedResult;
     try {
       final cached = await _store.readLeaderboard(limit: limit, offset: offset);
+      cachedResult = LeaderboardResult(entries: cached.entries, total: cached.total);
       if (cached.entries.isNotEmpty) {
-        return LeaderboardResult(entries: cached.entries, total: cached.total);
+        return cachedResult;
       }
     } catch (_) {
       // Firestore cache is best-effort; fall back to REST.
+    }
+
+    if (_shouldSkipApiCalls) {
+      return cachedResult ?? const LeaderboardResult(entries: [], total: 0);
     }
 
     try {
@@ -98,6 +160,7 @@ class FirebaseAwareLeaderboardDataSource {
         '/leaderboard/',
         queryParameters: {'limit': limit, 'offset': offset},
       );
+      _markApiAvailable();
       final data = response.data as Map<String, dynamic>;
       final list = data['leaderboard'] as List<dynamic>;
       final entries = list.map((j) {
@@ -116,6 +179,10 @@ class FirebaseAwareLeaderboardDataSource {
         total: data['total'] as int,
       );
     } on DioException catch (e) {
+      if (_isNetworkError(e)) {
+        _markApiUnavailable();
+        return cachedResult ?? const LeaderboardResult(entries: [], total: 0);
+      }
       throw _mapError(e);
     }
   }
@@ -147,6 +214,10 @@ class FirebaseAwareDuelDataSource {
     required int durationDays,
     String? opponentUsername,
   }) async {
+    if (_shouldSkipApiCalls) {
+      throw const NetworkFailure('Backend is temporarily unavailable');
+    }
+
     try {
       final response = await _dio.post('/duels/', data: {
         'habit_name': habitName,
@@ -154,19 +225,28 @@ class FirebaseAwareDuelDataSource {
         'duration_days': durationDays,
         if (opponentUsername != null) 'opponent_username': opponentUsername,
       });
+      _markApiAvailable();
       final duel = DuelModel.fromCreateJson(response.data as Map<String, dynamic>);
       unawaited(
         _mirrorCreateResponse(response.data as Map<String, dynamic>, duel),
       );
       return duel;
     } on DioException catch (e) {
+      if (_isNetworkError(e)) {
+        _markApiUnavailable();
+      }
       throw _mapError(e);
     }
   }
 
   Future<DuelModel> acceptDuel(String duelId) async {
+    if (_shouldSkipApiCalls) {
+      throw const NetworkFailure('Backend is temporarily unavailable');
+    }
+
     try {
       final response = await _dio.post('/duels/$duelId/accept');
+      _markApiAvailable();
       final data = response.data as Map<String, dynamic>;
       final duel = DuelModel(
         id: data['id'] as String,
@@ -183,25 +263,35 @@ class FirebaseAwareDuelDataSource {
       unawaited(_mirrorFullDuel(duelId));
       return duel;
     } on DioException catch (e) {
+      if (_isNetworkError(e)) {
+        _markApiUnavailable();
+      }
       throw _mapError(e);
     }
   }
 
   Future<List<DuelModel>> getMyDuels() async {
     final userId = await _storage.read(key: kUserIdKey);
+    List<DuelModel>? cachedDuels;
     if (userId != null && userId.isNotEmpty) {
       try {
         final cached = await _store.readMyDuels(userId);
+        cachedDuels = cached.map(_toDuelModel).toList();
         if (cached.isNotEmpty) {
-          return cached.map(_toDuelModel).toList();
+          return cachedDuels;
         }
       } catch (_) {
         // Firestore cache is best-effort; fall back to REST.
       }
     }
 
+    if (_shouldSkipApiCalls) {
+      return cachedDuels ?? const <DuelModel>[];
+    }
+
     try {
       final response = await _dio.get('/duels/');
+      _markApiAvailable();
       final data = response.data as Map<String, dynamic>;
       final list = data['duels'] as List<dynamic>;
       final result = list
@@ -210,39 +300,64 @@ class FirebaseAwareDuelDataSource {
       unawaited(_mirrorMyDuelsFromRest());
       return result;
     } on DioException catch (e) {
+      if (_isNetworkError(e)) {
+        _markApiUnavailable();
+        return cachedDuels ?? const <DuelModel>[];
+      }
       throw _mapError(e);
     }
   }
 
   Future<DuelModel> getDuelDetail(String duelId) async {
+    DuelModel? cachedDuel;
     try {
       final cached = await _store.readDuel(duelId);
       if (cached != null) {
-        return _toDuelModel(cached);
+        cachedDuel = _toDuelModel(cached);
+        return cachedDuel;
       }
     } catch (_) {
       // fall through to REST
     }
 
+    if (_shouldSkipApiCalls) {
+      throw const NetworkFailure('Backend is temporarily unavailable');
+    }
+
     try {
       final response = await _dio.get('/duels/$duelId');
+      _markApiAvailable();
       final duel = DuelModel.fromDetailJson(response.data as Map<String, dynamic>);
       unawaited(_store.upsertDuel(duel));
       return duel;
     } on DioException catch (e) {
+      if (_isNetworkError(e)) {
+        _markApiUnavailable();
+        if (cachedDuel != null) {
+          return cachedDuel;
+        }
+      }
       throw _mapError(e);
     }
   }
 
   Future<Map<String, dynamic>> checkIn(String duelId, {String? note}) async {
+    if (_shouldSkipApiCalls) {
+      throw const NetworkFailure('Backend is temporarily unavailable');
+    }
+
     try {
       final response = await _dio.post(
         '/duels/$duelId/checkin',
         data: {if (note != null) 'note': note},
       );
+      _markApiAvailable();
       unawaited(_mirrorFullDuel(duelId));
       return response.data as Map<String, dynamic>;
     } on DioException catch (e) {
+      if (_isNetworkError(e)) {
+        _markApiUnavailable();
+      }
       throw _mapError(e);
     }
   }
