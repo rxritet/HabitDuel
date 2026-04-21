@@ -21,6 +21,11 @@ class AuthRemoteDataSource {
   const AuthRemoteDataSource(this._dio);
   final Dio _dio;
 
+  bool _isLocalApi(Uri uri) {
+    final isLocalHost = uri.host == 'localhost' || uri.host == '127.0.0.1';
+    return isLocalHost && uri.port == 8080;
+  }
+
   /// POST /auth/register — регистрация пользователя
   Future<RegisterResponse> register({
     required String username,
@@ -93,6 +98,12 @@ class AuthRemoteDataSource {
         if (e.type == DioExceptionType.connectionTimeout ||
             e.type == DioExceptionType.receiveTimeout ||
             e.type == DioExceptionType.connectionError) {
+          final requestUri = e.requestOptions.uri;
+          if (_isLocalApi(requestUri)) {
+            throw const NetworkFailure(
+              'Backend unavailable on localhost:8080. Start API server and retry.',
+            );
+          }
           throw const NetworkFailure();
         }
         throw ServerFailure(message, statusCode: statusCode);

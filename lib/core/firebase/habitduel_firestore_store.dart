@@ -7,18 +7,30 @@ import '../../domain/entities/user.dart';
 import '../../domain/entities/leaderboard_entry.dart';
 
 class HabitDuelFirestoreStore {
-  HabitDuelFirestoreStore([FirebaseFirestore? firestore])
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+  static const _enableFirebaseWeb = bool.fromEnvironment(
+    'ENABLE_FIREBASE_WEB',
+    defaultValue: false,
+  );
 
-  final FirebaseFirestore _firestore;
+  HabitDuelFirestoreStore([FirebaseFirestore? firestore])
+      : _firestore = kIsWeb && !_enableFirebaseWeb
+            ? null
+            : (firestore ?? FirebaseFirestore.instance);
+
+  final FirebaseFirestore? _firestore;
+
+  bool get _isEnabled => _firestore != null;
+
+  FirebaseFirestore get _db => _firestore!;
 
   CollectionReference<Map<String, dynamic>> get _users =>
-      _firestore.collection('users');
+      _db.collection('users');
 
   CollectionReference<Map<String, dynamic>> get _duels =>
-      _firestore.collection('duels');
+      _db.collection('duels');
 
   Future<UserProfile?> readProfile(String userId) async {
+    if (!_isEnabled) return null;
     final userDoc = await _users.doc(userId).get();
     if (!userDoc.exists) {
       return null;
@@ -45,8 +57,9 @@ class HabitDuelFirestoreStore {
   }
 
   Future<void> upsertProfile(UserProfile profile) async {
+    if (!_isEnabled) return;
     try {
-      final batch = _firestore.batch();
+      final batch = _db.batch();
       final userRef = _users.doc(profile.id);
 
       batch.set(
@@ -80,6 +93,7 @@ class HabitDuelFirestoreStore {
   }
 
   Future<List<Duel>> readMyDuels(String userId) async {
+    if (!_isEnabled) return const [];
     final snapshot = await _duels
         .where('participantIds', arrayContains: userId)
         .get();
@@ -93,6 +107,7 @@ class HabitDuelFirestoreStore {
   }
 
   Future<Duel?> readDuel(String duelId) async {
+    if (!_isEnabled) return null;
     final duelDoc = await _duels.doc(duelId).get();
     if (!duelDoc.exists) {
       return null;
@@ -112,6 +127,9 @@ class HabitDuelFirestoreStore {
     int limit = 50,
     int offset = 0,
   }) async {
+    if (!_isEnabled) {
+      return (entries: const <LeaderboardEntry>[], total: 0);
+    }
     final snapshot = await _users.get();
     final docs = snapshot.docs.toList();
     docs.sort((a, b) {
@@ -154,9 +172,10 @@ class HabitDuelFirestoreStore {
   }
 
   Future<void> upsertDuel(Duel duel) async {
+    if (!_isEnabled) return;
     try {
       final duelRef = _duels.doc(duel.id);
-      final batch = _firestore.batch();
+      final batch = _db.batch();
       final participantIds = duel.participants
           .map((participant) => participant.userId)
           .where((id) => id.isNotEmpty)
@@ -313,6 +332,7 @@ class HabitDuelFirestoreStore {
   }
 
   Future<void> mirrorUserFromAuth(User user) async {
+    if (!_isEnabled) return;
     try {
       await _users.doc(user.id).set(
         {
@@ -331,8 +351,9 @@ class HabitDuelFirestoreStore {
   }
 
   Future<void> mirrorLeaderboardUsers(Iterable<LeaderboardEntry> entries) async {
+    if (!_isEnabled) return;
     try {
-      final batch = _firestore.batch();
+      final batch = _db.batch();
       for (final entry in entries) {
         batch.set(
           _users.doc(entry.userId),
@@ -357,6 +378,7 @@ class HabitDuelFirestoreStore {
     required String token,
     required String platform,
   }) async {
+    if (!_isEnabled) return;
     try {
       await _users.doc(userId).collection('devices').doc(token).set(
         {

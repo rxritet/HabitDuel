@@ -36,6 +36,11 @@ bool _isNetworkError(DioException e) {
       e.type == DioExceptionType.sendTimeout;
 }
 
+bool _isLocalApi(Uri uri) {
+  final isLocalHost = uri.host == 'localhost' || uri.host == '127.0.0.1';
+  return isLocalHost && uri.port == 8080;
+}
+
 class FirebaseAwareProfileDataSource {
   FirebaseAwareProfileDataSource(this._dio, this._storage, this._store);
 
@@ -124,6 +129,11 @@ class FirebaseAwareProfileDataSource {
     }
     if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.connectionError) {
+      if (_isLocalApi(e.requestOptions.uri)) {
+        return const NetworkFailure(
+          'Backend unavailable on localhost:8080. Start API server and retry.',
+        );
+      }
       return const NetworkFailure();
     }
     return ServerFailure(message, statusCode: e.response?.statusCode);
@@ -195,6 +205,11 @@ class FirebaseAwareLeaderboardDataSource {
     }
     if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.connectionError) {
+      if (_isLocalApi(e.requestOptions.uri)) {
+        return const NetworkFailure(
+          'Backend unavailable on localhost:8080. Start API server and retry.',
+        );
+      }
       return const NetworkFailure();
     }
     return ServerFailure(message, statusCode: e.response?.statusCode);
@@ -460,6 +475,11 @@ class FirebaseAwareDuelDataSource {
     }
     if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.connectionError) {
+      if (_isLocalApi(e.requestOptions.uri)) {
+        return const NetworkFailure(
+          'Backend unavailable on localhost:8080. Start API server and retry.',
+        );
+      }
       return const NetworkFailure();
     }
     return ServerFailure(message, statusCode: e.response?.statusCode);

@@ -179,6 +179,16 @@ flutter run -d web-server --web-hostname 0.0.0.0 --web-port 8081 \
   --dart-define=API_BASE_URL=http://localhost:8080
 ```
 
+По умолчанию Firebase для Web отключен (чтобы не ловить
+`CONFIGURATION_NOT_FOUND` в локальной среде без валидного web-конфига).
+Если нужен Firebase Web, запусти с флагом:
+
+```bash
+flutter run -d web-server --web-hostname 0.0.0.0 --web-port 8081 \
+  --dart-define=API_BASE_URL=http://localhost:8080 \
+  --dart-define=ENABLE_FIREBASE_WEB=true
+```
+
 Это устраняет конфликт с DWDS (`/$dwdsSseHandler`) и ошибки вида
 `WebSocket connection ... failed` при открытии неверного порта.
 
