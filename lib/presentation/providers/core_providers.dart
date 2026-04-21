@@ -55,10 +55,7 @@ final duelRemoteDSProvider = Provider<FirebaseAwareDuelDataSource>((ref) {
 });
 
 final duelRepositoryProvider = Provider<DuelRepository>((ref) {
-  return DuelRepositoryImpl(
-    ref.watch(duelRemoteDSProvider),
-    ref.watch(firestoreStoreProvider),
-  );
+  return DuelRepositoryImpl(ref.watch(duelRemoteDSProvider));
 });
 
 // ─── Use cases дуэлей ──────────────────────────────────────────────────

@@ -43,7 +43,6 @@ class _XpProgressScreenState extends ConsumerState<XpProgressScreen>
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(userXpProvider);
-    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Прогресс и уровни')),

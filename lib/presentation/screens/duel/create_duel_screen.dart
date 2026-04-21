@@ -27,7 +27,6 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
   double _healthTarget = 8000;
 
   static const _durations = [7, 14, 21, 30];
-  static const _groupSizes = [3, 5, 7, 10];
 
   late TabController _tabController;
 

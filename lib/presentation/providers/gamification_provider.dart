@@ -50,11 +50,12 @@ class UserXpNotifier extends StateNotifier<XpState> {
       // Генерируем новое сообщение коуча если нет за эту неделю
       AiCoachMessage? finalCoachMessage = coachMessage;
       if (coachMessage == null) {
-        final bestStreakApprox = (xp?.totalXp ?? 0) > 0 ? ((xp!.totalXp) ~/ 10) : 0;
+        final totalXp = xp?.totalXp ?? 0;
+        final bestStreakApprox = totalXp > 0 ? (totalXp ~/ 10) : 0;
         finalCoachMessage = AiCoachService.instance.generateWeeklyMessage(
           userId: userId,
           checkinsThisWeek: 0,
-          bestStreak: xp?.totalXp ?? 0 > 0 ? (xp!.totalXp ~/ 10) : 0,
+          bestStreak: bestStreakApprox,
           totalDuels: 0,
           wins: 0,
           losses: 0,

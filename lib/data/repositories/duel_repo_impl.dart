@@ -1,8 +1,5 @@
-import 'dart:async';
-
 import '../../domain/entities/duel.dart';
 import '../../domain/repositories/duel_repository.dart';
-import '../../core/firebase/habitduel_firestore_store.dart';
 import '../datasources/firebase_aware_data_sources.dart';
 
 class DuelRepositoryImpl implements DuelRepository {
