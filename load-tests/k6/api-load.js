@@ -72,10 +72,9 @@ export default function () {
       description: 'k6 smoke duel',
       duration_days: 7,
     }),
-    {
-      ...authHeaders(token),
+    Object.assign(authHeaders(token), {
       tags: { name: 'duels_create' },
-    },
+    }),
   );
   check(createDuelResponse, {
     'create duel status is 201': (r) => r.status === 201,
