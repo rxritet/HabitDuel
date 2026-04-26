@@ -43,6 +43,7 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
         _duelType = _tabController.index == 0 ? DuelType.duel : DuelType.group;
         _isTrustedCheckin = false;
         _selectedHealthMetric = null;
+        _healthTarget = 8000;
       });
     });
   }
@@ -75,6 +76,36 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
         );
   }
 
+  double _defaultTargetForMetric(HealthMetric metric) {
+    return switch (metric) {
+      HealthMetric.steps => 8000,
+      HealthMetric.sleepHours => 8,
+      HealthMetric.activeMinutes => 30,
+      HealthMetric.heartRateAvg => 70,
+      HealthMetric.waterMl => 2000,
+      HealthMetric.caloriesBurned => 500,
+    };
+  }
+
+  void _setTrustedCheckin(bool enabled) {
+    setState(() {
+      _isTrustedCheckin = enabled;
+      if (!enabled) {
+        _selectedHealthMetric = null;
+        _healthTarget = 8000;
+      }
+    });
+  }
+
+  void _setHealthMetric(HealthMetric? metric) {
+    setState(() {
+      _selectedHealthMetric = metric;
+      if (metric != null) {
+        _healthTarget = _defaultTargetForMetric(metric);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -83,12 +114,11 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
     ref.listen<CreateDuelState>(createDuelProvider, (prev, next) {
       if (next is CreateDuelSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Дуэль создана! ⚔️')),
+          const SnackBar(content: Text('Дуэль создана!')),
         );
         ref.read(createDuelProvider.notifier).reset();
         ref.read(duelsListProvider.notifier).load();
 
-        // Если групповая — переходим в лобби
         if (next.duel.isGroup && next.duel.inviteCode != null) {
           Navigator.pushReplacementNamed(
             context,
@@ -124,12 +154,11 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            // ── Habit Name ────────────────────────────────────────────────
             TextFormField(
               controller: _habitCtrl,
               decoration: const InputDecoration(
                 labelText: 'Привычка *',
-                hintText: 'напр. Утренняя медитация',
+                hintText: 'например, Утренняя медитация',
                 prefixIcon: Icon(Icons.local_fire_department_outlined),
               ),
               textInputAction: TextInputAction.next,
@@ -146,8 +175,6 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
               textInputAction: TextInputAction.next,
             ),
             const SizedBox(height: 16),
-
-            // ── Type-specific fields ──────────────────────────────────────
             AnimatedSize(
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeOutCubic,
@@ -158,10 +185,7 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
                       onSizeChanged: (v) => setState(() => _maxParticipants = v),
                     ),
             ),
-
             const SizedBox(height: 24),
-
-            // ── Duration ──────────────────────────────────────────────────
             Text('Длительность', style: theme.textTheme.titleSmall),
             const SizedBox(height: 8),
             Wrap(
@@ -175,24 +199,16 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
                 );
               }).toList(),
             ),
-
             const SizedBox(height: 24),
-
-            // ── Trusted Check-in ──────────────────────────────────────────
             _TrustedCheckinSection(
               enabled: _isTrustedCheckin,
               selectedMetric: _selectedHealthMetric,
               targetValue: _healthTarget,
-              onToggle: (v) => setState(() {
-                _isTrustedCheckin = v;
-                if (!v) _selectedHealthMetric = null;
-              }),
-              onMetricChanged: (m) => setState(() => _selectedHealthMetric = m),
+              onToggle: _setTrustedCheckin,
+              onMetricChanged: _setHealthMetric,
               onTargetChanged: (v) => setState(() => _healthTarget = v),
             ),
-
             const SizedBox(height: 24),
-
             _EntryFeeSection(
               enabled: _hasEntryFee,
               amount: _entryFee,
@@ -202,10 +218,7 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
               onAmountChanged: (value) => setState(() => _entryFee = value),
               onCurrencyChanged: (value) => setState(() => _currency = value),
             ),
-
             const SizedBox(height: 32),
-
-            // ── Submit button ─────────────────────────────────────────────
             FilledButton.icon(
               onPressed: isLoading ? null : _submit,
               icon: isLoading
@@ -215,11 +228,13 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
                       child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                     )
                   : const Icon(Icons.add),
-              label: Text(isLoading
-                  ? 'Создаём...'
-                  : _duelType == DuelType.group
-                      ? 'Создать лобби'
-                      : 'Создать дуэль'),
+              label: Text(
+                isLoading
+                    ? 'Создаем...'
+                    : _duelType == DuelType.group
+                        ? 'Создать лобби'
+                        : 'Создать дуэль',
+              ),
             ),
           ],
         ),
@@ -227,8 +242,6 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
     );
   }
 }
-
-// ─── Поля для 1v1 ──────────────────────────────────────────────────────────
 
 class _OneVsOneFields extends StatelessWidget {
   const _OneVsOneFields({required this.controller});
@@ -247,8 +260,6 @@ class _OneVsOneFields extends StatelessWidget {
     );
   }
 }
-
-// ─── Поля для группы ───────────────────────────────────────────────────────
 
 class _GroupFields extends StatelessWidget {
   const _GroupFields({
@@ -303,8 +314,6 @@ class _GroupFields extends StatelessWidget {
     );
   }
 }
-
-// ─── Trusted Check-in Section ──────────────────────────────────────────────
 
 class _TrustedCheckinSection extends StatelessWidget {
   const _TrustedCheckinSection({
@@ -375,10 +384,12 @@ class _TrustedCheckinSection extends StatelessWidget {
                 prefixIcon: Icon(Icons.monitor_heart_outlined),
               ),
               items: HealthMetric.values
-                  .map((m) => DropdownMenuItem(
-                        value: m,
-                        child: Text('${m.emoji} ${m.label}'),
-                      ))
+                  .map(
+                    (m) => DropdownMenuItem(
+                      value: m,
+                      child: Text('${m.emoji} ${m.label}'),
+                    ),
+                  )
                   .toList(),
               onChanged: onMetricChanged,
               validator: (_) => enabled && selectedMetric == null ? 'Выберите метрику' : null,
@@ -386,15 +397,15 @@ class _TrustedCheckinSection extends StatelessWidget {
             if (selectedMetric != null) ...[
               const SizedBox(height: 16),
               Text(
-                'Цель в день: ${targetValue.toInt()} ${_unitForMetric(selectedMetric!)}',
+                'Цель в день: ${_normalizedTargetValue(selectedMetric!, targetValue).toInt()} ${_unitForMetric(selectedMetric!)}',
                 style: theme.textTheme.bodyMedium,
               ),
               Slider(
-                value: targetValue,
+                value: _normalizedTargetValue(selectedMetric!, targetValue),
                 min: _minTarget(selectedMetric!),
                 max: _maxTarget(selectedMetric!),
                 divisions: 10,
-                label: '${targetValue.toInt()}',
+                label: '${_normalizedTargetValue(selectedMetric!, targetValue).toInt()}',
                 onChanged: onTargetChanged,
               ),
             ],
@@ -435,6 +446,12 @@ class _TrustedCheckinSection extends StatelessWidget {
       HealthMetric.waterMl => 4000,
       HealthMetric.caloriesBurned => 1500,
     };
+  }
+
+  double _normalizedTargetValue(HealthMetric metric, double currentValue) {
+    final min = _minTarget(metric);
+    final max = _maxTarget(metric);
+    return currentValue.clamp(min, max).toDouble();
   }
 }
 
