@@ -34,13 +34,15 @@ class _ShopScreenState extends ConsumerState<ShopScreen>
       context: context,
       isScrollControlled: true,
       backgroundColor: Theme.of(context).colorScheme.surface,
-      builder: (context) => const _TopUpSheet(),
+      builder: (_) => const _TopUpSheet(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(shopProvider);
+    final loadedState = state is ShopLoaded ? state : null;
+
     ref.listen<ShopState>(shopProvider, (_, next) {
       if (next is ShopError) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -55,13 +57,15 @@ class _ShopScreenState extends ConsumerState<ShopScreen>
         bottom: TabBar(
           controller: _tabController,
           isScrollable: true,
-          tabs: ShopCategory.values.map((category) => Tab(text: category.label)).toList(),
+          tabs: ShopCategory.values
+              .map((category) => Tab(text: category.label))
+              .toList(growable: false),
         ),
         actions: [
-          if (state case ShopLoaded(:final currency)) ...[
+          if (loadedState != null) ...[
             _BalanceChip(
               icon: '₸',
-              label: _formatAmount(currency.tenge),
+              label: _formatAmount(loadedState.currency.tenge),
             ),
             const SizedBox(width: 8),
             IconButton(
@@ -97,11 +101,13 @@ class _ShopScreenState extends ConsumerState<ShopScreen>
             ],
           ),
       },
-      floatingActionButton: state case ShopLoaded() ? FloatingActionButton.extended(
-        onPressed: _showTopUpSheet,
-        icon: const Icon(Icons.account_balance_wallet_outlined),
-        label: const Text('Пополнить'),
-      ) : null,
+      floatingActionButton: loadedState != null
+          ? FloatingActionButton.extended(
+              onPressed: _showTopUpSheet,
+              icon: const Icon(Icons.account_balance_wallet_outlined),
+              label: const Text('Пополнить'),
+            )
+          : null,
     );
   }
 }
@@ -177,19 +183,18 @@ class _TopUpSheetState extends ConsumerState<_TopUpSheet> {
 
     setState(() => _submitting = true);
     await ref.read(shopProvider.notifier).topUpBalance(amount: amount);
-    if (mounted) {
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Баланс пополнен на ${_formatAmount(amount)} ₸')),
-      );
-    }
+
+    if (!mounted) return;
+    Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Баланс пополнен на ${_formatAmount(amount)} ₸')),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final cardNumber = _numberCtrl.text;
-    final scheme = PaymentCardUtils.detectScheme(cardNumber);
+    final scheme = PaymentCardUtils.detectScheme(_numberCtrl.text);
 
     return Padding(
       padding: EdgeInsets.only(
@@ -202,8 +207,8 @@ class _TopUpSheetState extends ConsumerState<_TopUpSheet> {
         key: _formKey,
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Пополнение баланса',
@@ -238,7 +243,7 @@ class _TopUpSheetState extends ConsumerState<_TopUpSheet> {
                   }
                 },
                 validator: (value) {
-                  if (!PaymentCardUtils.isValidNumber(value)) {
+                  if (!PaymentCardUtils.isValidNumber(value ?? '')) {
                     return 'Введите корректный номер карты';
                   }
                   return null;
@@ -253,7 +258,7 @@ class _TopUpSheetState extends ConsumerState<_TopUpSheet> {
                   prefixIcon: Icon(Icons.badge_outlined),
                 ),
                 validator: (value) {
-                  if (!PaymentCardUtils.isValidHolder(value)) {
+                  if (!PaymentCardUtils.isValidHolder(value ?? '')) {
                     return 'Введите имя как на карте';
                   }
                   return null;
@@ -281,7 +286,7 @@ class _TopUpSheetState extends ConsumerState<_TopUpSheet> {
                         }
                       },
                       validator: (value) {
-                        if (!PaymentCardUtils.isValidExpiry(value)) {
+                        if (!PaymentCardUtils.isValidExpiry(value ?? '')) {
                           return 'Некорректный срок';
                         }
                         return null;
@@ -299,7 +304,7 @@ class _TopUpSheetState extends ConsumerState<_TopUpSheet> {
                         prefixIcon: Icon(Icons.lock_outline),
                       ),
                       validator: (value) {
-                        if (!PaymentCardUtils.isValidCvv(value)) {
+                        if (!PaymentCardUtils.isValidCvv(value ?? '')) {
                           return 'Некорректный CVV';
                         }
                         return null;
@@ -332,9 +337,7 @@ class _TopUpSheetState extends ConsumerState<_TopUpSheet> {
               Wrap(
                 spacing: 8,
                 children: const [1000, 3000, 5000, 10000]
-                    .map(
-                      (amount) => _QuickAmountChip(amount: amount),
-                    )
+                    .map((amount) => _QuickAmountChip(amount: amount))
                     .toList(growable: false),
               ),
               const SizedBox(height: 20),
@@ -608,10 +611,7 @@ class _ShopItemCard extends ConsumerWidget {
             else
               Row(
                 children: [
-                  Text(
-                    item.currency.symbol,
-                    style: const TextStyle(fontSize: 14),
-                  ),
+                  Text(item.currency.symbol, style: const TextStyle(fontSize: 14)),
                   const SizedBox(width: 4),
                   Text(
                     item.currency == ShopCurrency.tenge

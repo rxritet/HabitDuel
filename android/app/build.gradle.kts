@@ -1,4 +1,4 @@
-import com.android.build.api.variant.ApplicationAndroidComponentsExtension
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("com.android.application")
@@ -18,10 +18,6 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-
     defaultConfig {
         applicationId = "com.rxritet.habitduel"
         minSdk = flutter.minSdkVersion
@@ -38,15 +34,9 @@ android {
     }
 }
 
-extensions.configure<ApplicationAndroidComponentsExtension>("androidComponents") {
-    onVariants(selector().all()) { variant ->
-        variant.outputs.forEach { output ->
-            val versionName = variant.versionName.orNull ?: "0.0.0"
-            val versionCode = variant.versionCode.orNull ?: 0
-            output.outputFileName.set(
-                "HabitDuel-v${versionName}+${versionCode}-${variant.buildType}.apk",
-            )
-        }
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
     }
 }
 
