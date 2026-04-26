@@ -433,7 +433,7 @@ class _ProfileAvatar extends StatelessWidget {
                 width: 84,
                 height: 84,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Center(
+                errorBuilder: (_, _, _) => Center(
                   child: Text(
                     profile.avatarEmoji,
                     style: const TextStyle(fontSize: 34),
