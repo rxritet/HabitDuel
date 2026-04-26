@@ -22,46 +22,21 @@ var authVus = Number(__ENV.K6_AUTH_VUS || 8);
 var duelVus = Number(__ENV.K6_DUEL_VUS || 20);
 var browseRate = Number(__ENV.K6_BROWSE_RATE || 25);
 var browseVus = Number(__ENV.K6_BROWSE_VUS || 40);
+var defaultVus = Number(__ENV.K6_VUS || 20);
+var defaultDuration = __ENV.K6_DURATION || '30s';
 var rampUp = __ENV.K6_RAMP_UP || '1m';
 var steady = __ENV.K6_STEADY || '4m';
 var rampDown = __ENV.K6_RAMP_DOWN || '1m';
 var pairCount = Number(__ENV.K6_PAIR_COUNT || Math.max(duelVus * 3, 60));
+var totalRunDuration = sumDurations([rampUp, steady, rampDown]);
+var authWeight = Number(__ENV.K6_AUTH_WEIGHT || 20);
+var lifecycleWeight = Number(__ENV.K6_LIFECYCLE_WEIGHT || 50);
+var browseWeight = Number(__ENV.K6_BROWSE_WEIGHT || 30);
 
-export var options = {
+export const options = {
   discardResponseBodies: false,
-  scenarios: {
-    auth_churn: {
-      executor: 'ramping-vus',
-      exec: 'authChurn',
-      startVUs: 1,
-      stages: [
-        { duration: rampUp, target: authVus },
-        { duration: steady, target: authVus },
-        { duration: rampDown, target: 0 },
-      ],
-      gracefulRampDown: '10s',
-    },
-    duel_lifecycle: {
-      executor: 'ramping-vus',
-      exec: 'duelLifecycle',
-      startVUs: 1,
-      stages: [
-        { duration: rampUp, target: duelVus },
-        { duration: steady, target: duelVus },
-        { duration: rampDown, target: 0 },
-      ],
-      gracefulRampDown: '15s',
-    },
-    browse_api: {
-      executor: 'constant-arrival-rate',
-      exec: 'browseApi',
-      rate: browseRate,
-      timeUnit: '1s',
-      duration: totalDuration(),
-      preAllocatedVUs: browseVus,
-      maxVUs: browseVus * 2,
-    },
-  },
+  vus: defaultVus,
+  duration: defaultDuration,
   thresholds: {
     http_req_failed: ['rate<0.03'],
     http_req_duration: ['p(95)<1200', 'p(99)<2500'],
@@ -371,11 +346,20 @@ export function browseApi(data) {
 }
 
 export default function (data) {
-  duelLifecycle(data);
-}
+  var totalWeight = authWeight + lifecycleWeight + browseWeight;
+  var roll = Math.random() * totalWeight;
 
-function totalDuration() {
-  return sumDurations([rampUp, steady, rampDown]);
+  if (roll < authWeight) {
+    authChurn();
+    return;
+  }
+
+  if (roll < authWeight + lifecycleWeight) {
+    duelLifecycle(data);
+    return;
+  }
+
+  browseApi(data);
 }
 
 function sumDurations(parts) {
