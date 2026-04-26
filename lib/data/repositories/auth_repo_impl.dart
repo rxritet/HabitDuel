@@ -119,8 +119,10 @@ class AuthRepositoryImpl implements AuthRepository {
       }
       return true;
     }
-    final token = await _storage.read(key: kTokenKey);
-    return token != null && token.isNotEmpty;
+    await _storage.delete(key: kTokenKey);
+    await _storage.delete(key: kUserIdKey);
+    await _storage.delete(key: kUsernameKey);
+    return false;
   }
 
   @override
