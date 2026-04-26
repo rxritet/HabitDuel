@@ -12,13 +12,15 @@ class AchievementsScreen extends ConsumerStatefulWidget {
   ConsumerState<AchievementsScreen> createState() => _AchievementsScreenState();
 }
 
-class _AchievementsScreenState extends ConsumerState<AchievementsScreen> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class _AchievementsScreenState extends ConsumerState<AchievementsScreen>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: AchievementCategory.values.length, vsync: this);
+    _tabController =
+        TabController(length: AchievementCategory.values.length, vsync: this);
     Future.microtask(() => ref.read(achievementsProvider.notifier).load());
   }
 
@@ -38,8 +40,11 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> with Si
         title: const Text('Достижения'),
         bottom: TabBar(
           controller: _tabController,
-          isScrollable: true,
-          tabs: AchievementCategory.values.map((cat) => Tab(text: cat.label)).toList(),
+          isScrollable: false,
+          tabAlignment: TabAlignment.fill,
+          tabs: AchievementCategory.values
+              .map((cat) => Tab(text: cat.label))
+              .toList(),
         ),
         actions: [
           PopupMenuButton<AchievementFilter>(
@@ -47,10 +52,19 @@ class _AchievementsScreenState extends ConsumerState<AchievementsScreen> with Si
             onSelected: (value) {
               ref.read(achievementFilterProvider.notifier).state = value;
             },
-            itemBuilder: (context) => [
-              const PopupMenuItem(value: AchievementFilter.all, child: Text('Все')),
-              const PopupMenuItem(value: AchievementFilter.unlocked, child: Text('Разблокированы')),
-              const PopupMenuItem(value: AchievementFilter.locked, child: Text('Заблокированы')),
+            itemBuilder: (context) => const [
+              PopupMenuItem(
+                value: AchievementFilter.all,
+                child: Text('Все'),
+              ),
+              PopupMenuItem(
+                value: AchievementFilter.unlocked,
+                child: Text('Разблокированы'),
+              ),
+              PopupMenuItem(
+                value: AchievementFilter.locked,
+                child: Text('Заблокированы'),
+              ),
             ],
           ),
         ],
@@ -93,12 +107,22 @@ class _AchievementsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Column(
       children: [
-        // Stats summary
         Container(
           padding: const EdgeInsets.all(16),
-          color: Theme.of(context).colorScheme.surfaceContainer,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                theme.colorScheme.primaryContainer,
+                theme.colorScheme.surface,
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
           child: Row(
             children: [
               Expanded(
@@ -110,10 +134,10 @@ class _AchievementsBody extends StatelessWidget {
               ),
               Expanded(
                 child: _StatItem(
-                  label: 'Разблокировано',
+                  label: 'Открыто',
                   value: achievements.where((a) => a.isUnlocked).length.toString(),
                   icon: Icons.check_circle,
-                  color: Colors.green,
+                  color: const Color(0xFF16A34A),
                 ),
               ),
               Expanded(
@@ -124,27 +148,29 @@ class _AchievementsBody extends StatelessWidget {
                       .fold(0, (sum, a) => sum + a.xpReward)
                       .toString(),
                   icon: Icons.star,
-                  color: Colors.amber,
+                  color: const Color(0xFFF59E0B),
                 ),
               ),
             ],
           ),
         ),
-        // Trees overview
         SizedBox(
-          height: 160,
+          height: 176,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.all(16),
             itemCount: trees.length,
             itemBuilder: (context, index) {
               final tree = trees[index];
-              return SizedBox(
-                width: 200,
-                child: AchievementTreeCard(
-                  tree: tree,
-                  onTap: () => tabController.animateTo(
-                    AchievementCategory.values.indexOf(tree.category),
+              return Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: SizedBox(
+                  width: 220,
+                  child: AchievementTreeCard(
+                    tree: tree,
+                    onTap: () => tabController.animateTo(
+                      AchievementCategory.values.indexOf(tree.category),
+                    ),
                   ),
                 ),
               );
@@ -152,17 +178,18 @@ class _AchievementsBody extends StatelessWidget {
           ),
         ),
         const Divider(height: 1),
-        // Achievements list
         Expanded(
           child: TabBarView(
             controller: tabController,
             children: AchievementCategory.values.map((category) {
               var filtered = achievements.where((a) => a.category == category).toList();
-              
+
               filtered = switch (filter) {
                 AchievementFilter.all => filtered,
-                AchievementFilter.unlocked => filtered.where((a) => a.isUnlocked).toList(),
-                AchievementFilter.locked => filtered.where((a) => !a.isUnlocked).toList(),
+                AchievementFilter.unlocked =>
+                  filtered.where((a) => a.isUnlocked).toList(),
+                AchievementFilter.locked =>
+                  filtered.where((a) => !a.isUnlocked).toList(),
                 AchievementFilter.byCategory => filtered,
               };
 
@@ -173,9 +200,7 @@ class _AchievementsBody extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return AchievementCard(
                     achievement: filtered[index],
-                    onClaim: filtered[index].isUnlocked
-                        ? null
-                        : () => _showAchievementDetail(context, filtered[index]),
+                    onClaim: () => _showAchievementDetail(context, filtered[index]),
                   );
                 },
               );
@@ -190,45 +215,46 @@ class _AchievementsBody extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      showDragHandle: true,
       builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.5,
-        minChildSize: 0.3,
+        initialChildSize: 0.56,
+        minChildSize: 0.36,
         maxChildSize: 0.9,
         expand: false,
         builder: (context, scrollController) => Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
           child: ListView(
             controller: scrollController,
             children: [
               Center(
                 child: Container(
-                  width: 80,
-                  height: 80,
+                  width: 84,
+                  height: 84,
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.primaryContainer,
                     shape: BoxShape.circle,
                   ),
-                  child: Center(
-                    child: Text(
-                      achievement.icon,
-                      style: const TextStyle(fontSize: 40),
-                    ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    achievement.icon,
+                    style: const TextStyle(fontSize: 42),
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
               Center(
                 child: Text(
                   achievement.title,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ),
               const SizedBox(height: 8),
               Center(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.secondary,
                     borderRadius: BorderRadius.circular(16),
@@ -236,9 +262,9 @@ class _AchievementsBody extends StatelessWidget {
                   child: Text(
                     '+${achievement.xpReward} XP',
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                 ),
               ),
@@ -248,7 +274,7 @@ class _AchievementsBody extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 28),
               if (!achievement.isUnlocked) ...[
                 Text(
                   'Прогресс',
@@ -273,8 +299,8 @@ class _AchievementsBody extends StatelessWidget {
                     Text(
                       'Разблокировано',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Colors.green,
-                      ),
+                            color: Colors.green,
+                          ),
                     ),
                   ],
                 ),
@@ -282,6 +308,7 @@ class _AchievementsBody extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     '${achievement.unlockedAt!.day}.${achievement.unlockedAt!.month}.${achievement.unlockedAt!.year}',
+                    textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -316,15 +343,15 @@ class _StatItem extends StatelessWidget {
         Text(
           value,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 4),
         Text(
           label,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.outline,
-          ),
+                color: Theme.of(context).colorScheme.outline,
+              ),
         ),
       ],
     );

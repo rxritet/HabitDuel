@@ -1,11 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../core/firebase/habitduel_firestore_store.dart';
 import '../../domain/entities/shop.dart';
 import 'core_providers.dart';
-
-// ─── State ─────────────────────────────────────────────────────────────────
 
 sealed class ShopState {
   const ShopState();
@@ -22,6 +22,7 @@ class ShopLoaded extends ShopState {
     required this.currency,
     required this.avatars,
   });
+
   final List<ShopItem> items;
   final List<Booster> boosters;
   final UserCurrency currency;
@@ -36,108 +37,333 @@ class ShopError extends ShopState {
   final String message;
 }
 
-// ─── Notifier ──────────────────────────────────────────────────────────────
-
 class ShopNotifier extends StateNotifier<ShopState> {
   ShopNotifier(this._store, this._storage) : super(const ShopLoading());
 
   final HabitDuelFirestoreStore _store;
   final FlutterSecureStorage _storage;
 
+  static const _purchasedItemsKey = 'demo_shop_purchased_items';
+  static const _equippedItemKey = 'demo_shop_equipped_item';
+  static const _activeBoosterIdsKey = 'demo_shop_active_boosters';
+  static const _equippedAvatarIdKey = 'demo_shop_equipped_avatar';
+  static const _currencyKey = 'demo_shop_currency';
+
   Future<void> load() async {
     state = const ShopLoading();
     try {
       final userId = await _storage.read(key: 'user_id');
-      if (userId == null || userId.isEmpty) {
-        state = const ShopLoaded(
-          items: [],
-          boosters: [],
-          currency: UserCurrency(),
-          avatars: [],
-        );
-        return;
-      }
 
-      final items = await _store.readShopItems();
-      final boosters = await _store.readUserBoosters(userId);
-      final currency = await _store.readUserCurrency(userId);
-      final avatars = await _store.readUserAvatars(userId);
+      final remoteItems = userId == null ? null : await _store.readShopItems();
+      final remoteBoosters =
+          userId == null ? null : await _store.readUserBoosters(userId);
+      final remoteCurrency =
+          userId == null ? null : await _store.readUserCurrency(userId);
+      final remoteAvatars =
+          userId == null ? null : await _store.readUserAvatars(userId);
+
+      final items = _applyItemState(remoteItems?.isNotEmpty == true ? remoteItems! : _demoItems);
+      final boosters = _applyBoosterState(
+        remoteBoosters?.isNotEmpty == true ? remoteBoosters! : _demoBoosters,
+      );
+      final avatars = _applyAvatarState(
+        remoteAvatars?.isNotEmpty == true ? remoteAvatars! : _demoAvatars,
+      );
 
       state = ShopLoaded(
-        items: items ?? [],
-        boosters: boosters ?? [],
-        currency: currency ?? const UserCurrency(),
-        avatars: avatars ?? [],
+        items: items,
+        boosters: boosters,
+        currency: await _readCurrency(remoteCurrency),
+        avatars: avatars,
       );
     } catch (e) {
-      state = ShopError(e.toString());
+      state = ShopLoaded(
+        items: _applyItemState(_demoItems),
+        boosters: _applyBoosterState(_demoBoosters),
+        currency: await _readCurrency(null),
+        avatars: _applyAvatarState(_demoAvatars),
+      );
     }
   }
 
   Future<void> purchaseItem(String itemId) async {
-    final userId = await _storage.read(key: 'user_id');
-    if (userId == null) return;
-
     final currentState = state;
     if (currentState is! ShopLoaded) return;
 
     final item = currentState.items.firstWhere((i) => i.id == itemId);
-    
-    // Проверка достаточности средств
+    if (item.isPurchased) return;
+
     if (item.currency == ShopCurrency.xp && currentState.currency.xp < item.price) {
-      state = const ShopError('Недостаточно XP');
+      state = const ShopError('Недостаточно XP для покупки');
+      state = currentState;
       return;
     }
 
-    try {
-      await _store.purchaseItem(userId: userId, itemId: itemId);
-      
-      // Списание средств
-      if (item.currency == ShopCurrency.xp) {
-        await _store.spendXp(userId: userId, amount: item.price);
-      }
+    final purchasedIds = await _readIdSet(_purchasedItemsKey)..add(itemId);
+    final newCurrency = currentState.currency.copyWith(
+      xp: item.currency == ShopCurrency.xp
+          ? currentState.currency.xp - item.price
+          : currentState.currency.xp,
+    );
 
-      await load();
-    } catch (e) {
-      state = ShopError(e.toString());
-    }
+    await _writeIdSet(_purchasedItemsKey, purchasedIds);
+    await _writeCurrency(newCurrency);
+
+    state = ShopLoaded(
+      items: currentState.items
+          .map((candidate) => candidate.id == itemId
+              ? candidate.copyWith(isPurchased: true)
+              : candidate)
+          .toList(growable: false),
+      boosters: currentState.boosters,
+      currency: newCurrency,
+      avatars: currentState.avatars,
+    );
   }
 
   Future<void> equipItem(String itemId) async {
-    final userId = await _storage.read(key: 'user_id');
-    if (userId == null) return;
+    final currentState = state;
+    if (currentState is! ShopLoaded) return;
 
-    try {
-      await _store.equipItem(userId: userId, itemId: itemId);
-      await load();
-    } catch (e) {
-      state = ShopError(e.toString());
-    }
+    await _storage.write(key: _equippedItemKey, value: itemId);
+    state = ShopLoaded(
+      items: currentState.items
+          .map((item) => item.copyWith(
+                isEquipped: item.id == itemId,
+              ))
+          .toList(growable: false),
+      boosters: currentState.boosters,
+      currency: currentState.currency,
+      avatars: currentState.avatars,
+    );
   }
 
   Future<void> activateBooster(String boosterId) async {
-    final userId = await _storage.read(key: 'user_id');
-    if (userId == null) return;
+    final currentState = state;
+    if (currentState is! ShopLoaded) return;
 
-    try {
-      await _store.activateBooster(userId: userId, boosterId: boosterId);
-      await load();
-    } catch (e) {
-      state = ShopError(e.toString());
-    }
+    final activeIds = await _readIdSet(_activeBoosterIdsKey)..add(boosterId);
+    await _writeIdSet(_activeBoosterIdsKey, activeIds);
+
+    state = ShopLoaded(
+      items: currentState.items,
+      boosters: currentState.boosters.map((booster) {
+        if (booster.id != boosterId) return booster;
+        return booster.copyWith(
+          isActive: true,
+          expiresAt: DateTime.now().add(
+            Duration(minutes: booster.durationMinutes),
+          ),
+        );
+      }).toList(growable: false),
+      currency: currentState.currency,
+      avatars: currentState.avatars,
+    );
   }
 
   Future<void> equipAvatar(String avatarId) async {
-    final userId = await _storage.read(key: 'user_id');
-    if (userId == null) return;
+    final currentState = state;
+    if (currentState is! ShopLoaded) return;
 
-    try {
-      await _store.equipAvatar(userId: userId, avatarId: avatarId);
-      await load();
-    } catch (e) {
-      state = ShopError(e.toString());
-    }
+    await _storage.write(key: _equippedAvatarIdKey, value: avatarId);
+    state = ShopLoaded(
+      items: currentState.items,
+      boosters: currentState.boosters,
+      currency: currentState.currency,
+      avatars: currentState.avatars
+          .map((avatar) => avatar.copyWith(
+                isEquipped: avatar.id == avatarId,
+              ))
+          .toList(growable: false),
+    );
   }
+
+  Future<List<ShopItem>> _applyItemState(List<ShopItem> items) async {
+    final purchasedIds = await _readIdSet(_purchasedItemsKey);
+    final equippedItemId = await _storage.read(key: _equippedItemKey);
+    return items.map((item) {
+      final isPurchased = item.isPurchased || purchasedIds.contains(item.id);
+      return item.copyWith(
+        isPurchased: isPurchased,
+        isEquipped: equippedItemId == item.id,
+      );
+    }).toList(growable: false);
+  }
+
+  Future<List<Booster>> _applyBoosterState(List<Booster> boosters) async {
+    final activeIds = await _readIdSet(_activeBoosterIdsKey);
+    return boosters.map((booster) {
+      if (!activeIds.contains(booster.id)) return booster;
+      final expiresAt =
+          booster.expiresAt ?? DateTime.now().add(Duration(minutes: booster.durationMinutes));
+      return booster.copyWith(
+        isActive: expiresAt.isAfter(DateTime.now()),
+        expiresAt: expiresAt,
+      );
+    }).toList(growable: false);
+  }
+
+  Future<List<UserAvatar>> _applyAvatarState(List<UserAvatar> avatars) async {
+    final equippedAvatarId = await _storage.read(key: _equippedAvatarIdKey);
+    return avatars.map((avatar) {
+      return avatar.copyWith(
+        isEquipped: avatar.id == equippedAvatarId,
+      );
+    }).toList(growable: false);
+  }
+
+  Future<UserCurrency> _readCurrency(UserCurrency? remote) async {
+    final raw = await _storage.read(key: _currencyKey);
+    if (raw == null || raw.isEmpty) {
+      final base = remote ?? const UserCurrency(xp: 1350, gems: 45, coins: 900);
+      await _writeCurrency(base);
+      return base;
+    }
+
+    final data = jsonDecode(raw) as Map<String, dynamic>;
+    return UserCurrency(
+      xp: data['xp'] as int? ?? remote?.xp ?? 0,
+      gems: data['gems'] as int? ?? remote?.gems ?? 0,
+      coins: data['coins'] as int? ?? remote?.coins ?? 0,
+    );
+  }
+
+  Future<void> _writeCurrency(UserCurrency currency) async {
+    await _storage.write(
+      key: _currencyKey,
+      value: jsonEncode({
+        'xp': currency.xp,
+        'gems': currency.gems,
+        'coins': currency.coins,
+      }),
+    );
+  }
+
+  Future<Set<String>> _readIdSet(String key) async {
+    final raw = await _storage.read(key: key);
+    if (raw == null || raw.isEmpty) return <String>{};
+    return raw
+        .split(',')
+        .where((value) => value.trim().isNotEmpty)
+        .map((value) => value.trim())
+        .toSet();
+  }
+
+  Future<void> _writeIdSet(String key, Set<String> values) async {
+    await _storage.write(key: key, value: values.join(','));
+  }
+
+  List<ShopItem> get _demoItems => [
+        const ShopItem(
+          id: 'avatar_neon_fox',
+          type: ShopItemType.avatar,
+          name: 'Neon Fox',
+          description: 'Яркий аватар для тех, кто любит побеждать красиво.',
+          icon: '🦊',
+          price: 180,
+          category: ShopCategory.avatars,
+        ),
+        const ShopItem(
+          id: 'theme_sunrise',
+          type: ShopItemType.theme,
+          name: 'Sunrise Arena',
+          description: 'Теплая тема с акцентами рассвета и турнирным настроением.',
+          icon: '🌅',
+          price: 320,
+          category: ShopCategory.themes,
+        ),
+        const ShopItem(
+          id: 'theme_cybermint',
+          type: ShopItemType.theme,
+          name: 'Cyber Mint',
+          description: 'Свежая неоновая тема для вечерних сессий.',
+          icon: '💠',
+          price: 420,
+          category: ShopCategory.themes,
+        ),
+        const ShopItem(
+          id: 'booster_double_xp',
+          type: ShopItemType.booster,
+          name: 'Double XP',
+          description: 'Удваивает награду за активность на 30 минут.',
+          icon: '⚡',
+          price: 150,
+          category: ShopCategory.boosters,
+        ),
+        const ShopItem(
+          id: 'booster_freeze',
+          type: ShopItemType.booster,
+          name: 'Streak Shield',
+          description: 'Спасает серию от одного пропуска.',
+          icon: '🧊',
+          price: 240,
+          category: ShopCategory.boosters,
+        ),
+        ShopItem(
+          id: 'effect_confetti',
+          type: ShopItemType.effect,
+          name: 'Victory Confetti',
+          description: 'Конфетти после победы в дуэли.',
+          icon: '🎉',
+          price: 260,
+          category: ShopCategory.effects,
+          isLimited: true,
+          limitedUntil: DateTime.now().add(const Duration(days: 14)),
+        ),
+        const ShopItem(
+          id: 'effect_fire_trail',
+          type: ShopItemType.effect,
+          name: 'Fire Trail',
+          description: 'След из огня для чемпионских серий.',
+          icon: '🔥',
+          price: 300,
+          category: ShopCategory.effects,
+        ),
+      ];
+
+  List<Booster> get _demoBoosters => const [
+        Booster(
+          id: 'booster_double_xp',
+          type: BoosterType.doubleXp,
+          name: 'Double XP',
+          description: 'Ускоряет прокачку на 30 минут.',
+          icon: '⚡',
+          durationMinutes: 30,
+        ),
+        Booster(
+          id: 'booster_freeze',
+          type: BoosterType.freezeStreak,
+          name: 'Streak Shield',
+          description: 'Сохраняет серию при одном пропуске.',
+          icon: '🧊',
+          durationMinutes: 1440,
+        ),
+      ];
+
+  List<UserAvatar> get _demoAvatars => const [
+        UserAvatar(
+          id: 'avatar_default_blaze',
+          name: 'Blaze',
+          icon: '🔥',
+          backgroundColor: 0xFFEA580C,
+          isUnlocked: true,
+        ),
+        UserAvatar(
+          id: 'avatar_default_wave',
+          name: 'Wave',
+          icon: '🌊',
+          backgroundColor: 0xFF0F766E,
+          isUnlocked: true,
+        ),
+        UserAvatar(
+          id: 'avatar_owl',
+          name: 'Night Owl',
+          icon: '🦉',
+          backgroundColor: 0xFF4338CA,
+          isUnlocked: true,
+          source: AvatarSource.purchased,
+        ),
+      ];
 }
 
 final shopProvider = StateNotifierProvider<ShopNotifier, ShopState>((ref) {
@@ -147,8 +373,6 @@ final shopProvider = StateNotifierProvider<ShopNotifier, ShopState>((ref) {
   );
 });
 
-// ─── Filter Provider ───────────────────────────────────────────────────────
-
 final shopCategoryFilterProvider = StateProvider<ShopCategory>((_) => ShopCategory.all);
 
 final filteredShopItemsProvider = Provider<List<ShopItem>>((ref) {
@@ -156,9 +380,8 @@ final filteredShopItemsProvider = Provider<List<ShopItem>>((ref) {
   final category = ref.watch(shopCategoryFilterProvider);
 
   if (state is! ShopLoaded) return [];
-
   if (category == ShopCategory.all) return state.items;
-  
+
   return state.items.where((item) {
     return switch (category) {
       ShopCategory.avatars => item.type == ShopItemType.avatar,

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../domain/entities/user_stats.dart';
 import '../../providers/stats_provider.dart';
 import '../../widgets/heat_map_widget.dart';
-import '../../../domain/entities/user_stats.dart';
 
 class StatsScreen extends ConsumerStatefulWidget {
   const StatsScreen({super.key});
@@ -12,8 +12,9 @@ class StatsScreen extends ConsumerStatefulWidget {
   ConsumerState<StatsScreen> createState() => _StatsScreenState();
 }
 
-class _StatsScreenState extends ConsumerState<StatsScreen> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class _StatsScreenState extends ConsumerState<StatsScreen>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
 
   @override
   void initState() {
@@ -35,11 +36,12 @@ class _StatsScreenState extends ConsumerState<StatsScreen> with SingleTickerProv
     return Scaffold(
       appBar: AppBar(
         title: const Text('Статистика'),
-        bottom: const TabBar(
-          tabs: [
-            Tab(text: 'Обзор', icon: Icon(Icons.analytics)),
-            Tab(text: 'Активность', icon: Icon(Icons.calendar_month)),
-            Tab(text: 'Соперники', icon: Icon(Icons.people)),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: 'Обзор', icon: Icon(Icons.analytics_outlined)),
+            Tab(text: 'Активность', icon: Icon(Icons.calendar_month_outlined)),
+            Tab(text: 'Соперники', icon: Icon(Icons.people_outline)),
           ],
         ),
         actions: [
@@ -74,10 +76,6 @@ class _StatsScreenState extends ConsumerState<StatsScreen> with SingleTickerProv
   }
 }
 
-// ────────────────────────────────────────────────────────────────────────────
-// OVERVIEW TAB
-// ────────────────────────────────────────────────────────────────────────────
-
 class _OverviewTab extends StatelessWidget {
   const _OverviewTab({required this.stats});
 
@@ -90,44 +88,41 @@ class _OverviewTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        // Main stats grid
         GridView.count(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           crossAxisCount: 2,
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
-          childAspectRatio: 1.5,
+          childAspectRatio: 1.35,
           children: [
             _StatCard(
               title: 'Всего дуэлей',
               value: stats.totalDuels.toString(),
               icon: Icons.sports_martial_arts,
-              color: Colors.orange,
+              color: const Color(0xFFEA580C),
             ),
             _StatCard(
               title: 'Победы',
               value: stats.totalWins.toString(),
               icon: Icons.emoji_events,
-              color: Colors.green,
+              color: const Color(0xFF16A34A),
             ),
             _StatCard(
               title: 'Поражения',
               value: stats.totalLosses.toString(),
-              icon: Icons.cancel,
-              color: Colors.red,
+              icon: Icons.cancel_outlined,
+              color: const Color(0xFFDC2626),
             ),
             _StatCard(
               title: 'Win Rate',
               value: '${stats.winRate.toStringAsFixed(1)}%',
-              icon: Icons.trending_up,
-              color: Colors.blue,
+              icon: Icons.show_chart,
+              color: const Color(0xFF2563EB),
             ),
           ],
         ),
         const SizedBox(height: 24),
-
-        // Streak cards
         Row(
           children: [
             Expanded(
@@ -143,18 +138,16 @@ class _OverviewTab extends StatelessWidget {
               child: _StreakCard(
                 label: 'Лучшая серия',
                 streak: stats.bestStreak,
-                icon: Icons.whatshot,
-                color: Colors.orange,
+                icon: Icons.bolt,
+                color: const Color(0xFFF59E0B),
               ),
             ),
           ],
         ),
         const SizedBox(height: 24),
-
-        // Time of day
         Card(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(18),
             child: Row(
               children: [
                 Container(
@@ -162,13 +155,12 @@ class _OverviewTab extends StatelessWidget {
                   height: 64,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(18),
                   ),
-                  child: Center(
-                    child: Text(
-                      _getTimeEmoji(stats.averageCheckinHour),
-                      style: const TextStyle(fontSize: 32),
-                    ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    _getTimeEmoji(stats.averageCheckinHour),
+                    style: const TextStyle(fontSize: 30),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -182,10 +174,11 @@ class _OverviewTab extends StatelessWidget {
                           color: theme.colorScheme.outline,
                         ),
                       ),
+                      const SizedBox(height: 4),
                       Text(
                         stats.timeOfDayLabel,
                         style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                       Text(
@@ -200,8 +193,6 @@ class _OverviewTab extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-
-        // Total checkins
         Card(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -213,11 +204,11 @@ class _OverviewTab extends StatelessWidget {
                     color: theme.colorScheme.outline,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 Text(
                   stats.totalCheckins.toString(),
-                  style: theme.textTheme.displayLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+                  style: theme.textTheme.displaySmall?.copyWith(
+                    fontWeight: FontWeight.w900,
                     color: theme.colorScheme.primary,
                   ),
                 ),
@@ -252,26 +243,38 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
-      child: Padding(
+      clipBehavior: Clip.antiAlias,
+      child: Container(
         padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              color.withValues(alpha: 0.18),
+              theme.colorScheme.surface,
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: color, size: 28),
-            const SizedBox(height: 12),
+            Icon(icon, color: color, size: 26),
+            const SizedBox(height: 14),
             Text(
               value,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w900,
               ),
             ),
             const SizedBox(height: 4),
             Text(
               title,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.outline,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.outline,
               ),
             ),
           ],
@@ -301,14 +304,14 @@ class _StreakCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Icon(icon, color: color, size: 40),
+            Icon(icon, color: color, size: 38),
             const SizedBox(height: 8),
             Text(
-              '$streak 🔥',
+              '$streak',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
+                    fontWeight: FontWeight.w900,
+                    color: color,
+                  ),
             ),
             const SizedBox(height: 4),
             Text(
@@ -322,10 +325,6 @@ class _StreakCard extends StatelessWidget {
     );
   }
 }
-
-// ────────────────────────────────────────────────────────────────────────────
-// ACTIVITY TAB
-// ────────────────────────────────────────────────────────────────────────────
 
 class _ActivityTab extends StatelessWidget {
   const _ActivityTab({required this.stats});
@@ -362,7 +361,6 @@ class _ActivityTab extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        // Mini stats
         Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -385,10 +383,6 @@ class _ActivityTab extends StatelessWidget {
     );
   }
 }
-
-// ────────────────────────────────────────────────────────────────────────────
-// OPPONENTS TAB
-// ────────────────────────────────────────────────────────────────────────────
 
 class _OpponentsTab extends StatelessWidget {
   const _OpponentsTab({required this.stats});
@@ -483,10 +477,10 @@ class _HeadToHeadCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: winRate > 50
-                        ? Colors.green.withValues(alpha: 0.2)
+                        ? Colors.green.withValues(alpha: 0.18)
                         : winRate < 50
-                            ? Colors.red.withValues(alpha: 0.2)
-                            : Colors.grey.withValues(alpha: 0.2),
+                            ? Colors.red.withValues(alpha: 0.18)
+                            : Colors.grey.withValues(alpha: 0.18),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
@@ -554,9 +548,9 @@ class _H2HStat extends StatelessWidget {
         Text(
           value,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
         ),
         Text(
           label,

@@ -1,11 +1,9 @@
-﻿import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/constants/app_constants.dart';
 import '../../core/errors/failures.dart';
 import '../../domain/entities/profile.dart';
 import 'core_providers.dart';
-
-// ─── Состояние ─────────────────────────────────────────────────────────
 
 sealed class ProfileState {
   const ProfileState();
@@ -29,30 +27,32 @@ class ProfileError extends ProfileState {
   final String message;
 }
 
-// ─── Обработчик ────────────────────────────────────────────────────────
-
 class ProfileNotifier extends StateNotifier<ProfileState> {
   ProfileNotifier(this._ref) : super(const ProfileInitial());
+
   final Ref _ref;
+
+  static const _bioKey = 'profile_bio';
+  static const _favoriteHabitKey = 'profile_favorite_habit';
+  static const _avatarEmojiKey = 'profile_avatar_emoji';
 
   Future<void> load() async {
     state = const ProfileLoading();
     try {
-      final profile = await _ref.read(profileRemoteDSProvider).getMyProfile();
-      state = ProfileLoaded(profile);
+      final remoteProfile = await _ref.read(profileRemoteDSProvider).getMyProfile();
+      state = ProfileLoaded(await _mergeWithLocalOverrides(remoteProfile));
     } on Failure catch (e) {
       if (e is NetworkFailure) {
         final storage = _ref.read(secureStorageProvider);
         final userId = await storage.read(key: kUserIdKey) ?? 'guest';
         final username = await storage.read(key: kUsernameKey) ?? 'Guest';
-        state = ProfileLoaded(
-          UserProfile(
-            id: userId,
-            username: username,
-            wins: 0,
-            losses: 0,
-          ),
+        final fallback = UserProfile(
+          id: userId,
+          username: username,
+          wins: 0,
+          losses: 0,
         );
+        state = ProfileLoaded(await _mergeWithLocalOverrides(fallback));
         return;
       }
       state = ProfileError(e.message);
@@ -60,9 +60,49 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
       state = ProfileError(e.toString());
     }
   }
+
+  Future<void> saveEdits({
+    required String username,
+    required String bio,
+    required String favoriteHabit,
+    required String avatarEmoji,
+  }) async {
+    final current = state;
+    if (current is! ProfileLoaded) return;
+
+    final storage = _ref.read(secureStorageProvider);
+    final updatedProfile = current.profile.copyWith(
+      username: username.trim().isEmpty ? current.profile.username : username.trim(),
+      bio: bio.trim().isEmpty ? null : bio.trim(),
+      favoriteHabit: favoriteHabit.trim().isEmpty ? null : favoriteHabit.trim(),
+      avatarEmoji: avatarEmoji.trim().isEmpty ? current.profile.avatarEmoji : avatarEmoji.trim(),
+    );
+
+    await storage.write(key: kUsernameKey, value: updatedProfile.username);
+    await storage.write(key: _bioKey, value: updatedProfile.bio);
+    await storage.write(key: _favoriteHabitKey, value: updatedProfile.favoriteHabit);
+    await storage.write(key: _avatarEmojiKey, value: updatedProfile.avatarEmoji);
+
+    state = ProfileLoaded(updatedProfile);
+
+    try {
+      await _ref.read(firestoreStoreProvider).upsertProfile(updatedProfile);
+    } catch (_) {
+      // Local edits remain available even if mirror sync is unavailable.
+    }
+  }
+
+  Future<UserProfile> _mergeWithLocalOverrides(UserProfile profile) async {
+    final storage = _ref.read(secureStorageProvider);
+    return profile.copyWith(
+      username: await storage.read(key: kUsernameKey) ?? profile.username,
+      bio: await storage.read(key: _bioKey) ?? profile.bio,
+      favoriteHabit: await storage.read(key: _favoriteHabitKey) ?? profile.favoriteHabit,
+      avatarEmoji: await storage.read(key: _avatarEmojiKey) ?? profile.avatarEmoji,
+    );
+  }
 }
 
-final profileProvider =
-    StateNotifierProvider<ProfileNotifier, ProfileState>((ref) {
+final profileProvider = StateNotifierProvider<ProfileNotifier, ProfileState>((ref) {
   return ProfileNotifier(ref);
 });

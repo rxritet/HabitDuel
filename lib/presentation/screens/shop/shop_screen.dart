@@ -11,8 +11,9 @@ class ShopScreen extends ConsumerStatefulWidget {
   ConsumerState<ShopScreen> createState() => _ShopScreenState();
 }
 
-class _ShopScreenState extends ConsumerState<ShopScreen> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class _ShopScreenState extends ConsumerState<ShopScreen>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
 
   @override
   void initState() {
@@ -30,6 +31,13 @@ class _ShopScreenState extends ConsumerState<ShopScreen> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(shopProvider);
+    ref.listen<ShopState>(shopProvider, (previous, next) {
+      if (next is ShopError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next.message)),
+        );
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -40,7 +48,6 @@ class _ShopScreenState extends ConsumerState<ShopScreen> with SingleTickerProvid
           tabs: ShopCategory.values.map((cat) => Tab(text: cat.label)).toList(),
         ),
         actions: [
-          // Currency display
           Container(
             margin: const EdgeInsets.only(right: 16),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -57,9 +64,9 @@ class _ShopScreenState extends ConsumerState<ShopScreen> with SingleTickerProvid
                     Text(
                       '${currency.xp}',
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                     ),
                   ],
                 ),
@@ -70,24 +77,25 @@ class _ShopScreenState extends ConsumerState<ShopScreen> with SingleTickerProvid
       ),
       body: switch (state) {
         ShopLoading() => const Center(child: CircularProgressIndicator()),
-        ShopError(:final message) => Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.error_outline, size: 48, color: Colors.red),
-                const SizedBox(height: 12),
-                Text(message),
-              ],
-            ),
-          ),
+        ShopError() => const Center(child: CircularProgressIndicator()),
         ShopLoaded(:final items, :final boosters, :final avatars) => TabBarView(
             controller: _tabController,
             children: [
               _AllShop(items: items),
-              _AvatarsShop(avatars: avatars, items: items.where((i) => i.type == ShopItemType.avatar).toList()),
-              _ThemesShop(items: items.where((i) => i.type == ShopItemType.theme).toList()),
-              _BoostersShop(boosters: boosters, items: items.where((i) => i.type == ShopItemType.booster).toList()),
-              _EffectsShop(items: items.where((i) => i.type == ShopItemType.effect).toList()),
+              _AvatarsShop(
+                avatars: avatars,
+                items: items.where((i) => i.type == ShopItemType.avatar).toList(),
+              ),
+              _ThemesShop(
+                items: items.where((i) => i.type == ShopItemType.theme).toList(),
+              ),
+              _BoostersShop(
+                boosters: boosters,
+                items: items.where((i) => i.type == ShopItemType.booster).toList(),
+              ),
+              _EffectsShop(
+                items: items.where((i) => i.type == ShopItemType.effect).toList(),
+              ),
             ],
           ),
       },
@@ -95,27 +103,20 @@ class _ShopScreenState extends ConsumerState<ShopScreen> with SingleTickerProvid
   }
 }
 
-// ────────────────────────────────────────────────────────────────────────────
-// SHOP TABS
-// ────────────────────────────────────────────────────────────────────────────
-
 class _AllShop extends StatelessWidget {
   const _AllShop({required this.items});
+
   final List<ShopItem> items;
 
   @override
   Widget build(BuildContext context) {
-    if (items.isEmpty) {
-      return const Center(child: Text('Товары загружаются...'));
-    }
-
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
-        childAspectRatio: 0.85,
+        childAspectRatio: 0.82,
       ),
       itemCount: items.length,
       itemBuilder: (context, index) => _ShopItemCard(item: items[index]),
@@ -125,6 +126,7 @@ class _AllShop extends StatelessWidget {
 
 class _AvatarsShop extends StatelessWidget {
   const _AvatarsShop({required this.avatars, required this.items});
+
   final List<UserAvatar> avatars;
   final List<ShopItem> items;
 
@@ -136,7 +138,7 @@ class _AvatarsShop extends StatelessWidget {
         crossAxisCount: 3,
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
-        childAspectRatio: 1,
+        childAspectRatio: 0.92,
       ),
       itemCount: avatars.length + items.length,
       itemBuilder: (context, index) {
@@ -151,19 +153,11 @@ class _AvatarsShop extends StatelessWidget {
 
 class _ThemesShop extends StatelessWidget {
   const _ThemesShop({required this.items});
+
   final List<ShopItem> items;
 
   @override
   Widget build(BuildContext context) {
-    if (items.isEmpty) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(32),
-          child: Text('Темы скоро появятся!', textAlign: TextAlign.center),
-        ),
-      );
-    }
-
     return ListView.separated(
       padding: const EdgeInsets.all(16),
       itemCount: items.length,
@@ -175,6 +169,7 @@ class _ThemesShop extends StatelessWidget {
 
 class _BoostersShop extends StatelessWidget {
   const _BoostersShop({required this.boosters, required this.items});
+
   final List<Booster> boosters;
   final List<ShopItem> items;
 
@@ -183,27 +178,35 @@ class _BoostersShop extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        // Active boosters
         if (boosters.any((b) => b.isActive)) ...[
           Text(
             'Активные бустеры',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 12),
-          ...boosters.where((b) => b.isActive).map((b) => _ActiveBoosterCard(booster: b)),
-          const SizedBox(height: 24),
+          ...boosters
+              .where((b) => b.isActive)
+              .map((b) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: _ActiveBoosterCard(booster: b),
+                  )),
+          const SizedBox(height: 16),
         ],
-        // Available boosters
         Text(
           'Магазин бустеров',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 12),
-        ...items.map((item) => _ShopItemCard(item: item)),
+        ...items.map(
+          (item) => Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: _ShopItemCard(item: item),
+          ),
+        ),
       ],
     );
   }
@@ -211,26 +214,18 @@ class _BoostersShop extends StatelessWidget {
 
 class _EffectsShop extends StatelessWidget {
   const _EffectsShop({required this.items});
+
   final List<ShopItem> items;
 
   @override
   Widget build(BuildContext context) {
-    if (items.isEmpty) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(32),
-          child: Text('Эффекты скоро появятся!', textAlign: TextAlign.center),
-        ),
-      );
-    }
-
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
-        childAspectRatio: 0.85,
+        childAspectRatio: 0.82,
       ),
       itemCount: items.length,
       itemBuilder: (context, index) => _ShopItemCard(item: items[index]),
@@ -238,143 +233,168 @@ class _EffectsShop extends StatelessWidget {
   }
 }
 
-// ────────────────────────────────────────────────────────────────────────────
-// ITEM CARDS
-// ────────────────────────────────────────────────────────────────────────────
-
-class _ShopItemCard extends StatelessWidget {
+class _ShopItemCard extends ConsumerWidget {
   const _ShopItemCard({required this.item});
+
   final ShopItem item;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final isPurchased = item.isPurchased;
-    final isEquipped = item.isEquipped;
+    final canEquip = item.isPurchased && !item.isEquipped;
+    final canBuy = !item.isPurchased;
+    final isBooster = item.type == ShopItemType.booster;
 
     return Card(
       clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: isPurchased && !isEquipped ? () => _showEquipDialog(context, item) : null,
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: isPurchased
-                  ? [theme.colorScheme.primaryContainer, theme.colorScheme.secondaryContainer]
-                  : [theme.colorScheme.surfaceContainer, theme.colorScheme.surfaceContainerHighest],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: item.isPurchased
+                ? [
+                    theme.colorScheme.primaryContainer,
+                    theme.colorScheme.secondaryContainer,
+                  ]
+                : [
+                    theme.colorScheme.surfaceContainer,
+                    theme.colorScheme.surfaceContainerHighest,
+                  ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            children: [
-              Container(
-                width: 64,
-                height: 64,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surface,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Center(
+        ),
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surface,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  alignment: Alignment.center,
                   child: Text(
                     item.icon,
-                    style: const TextStyle(fontSize: 32),
+                    style: const TextStyle(fontSize: 28),
                   ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                item.name,
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 4),
-              if (isPurchased)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: isEquipped ? Colors.green : Colors.grey,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    isEquipped ? 'Экипировано' : 'Куплено',
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      color: Colors.white,
+                const Spacer(),
+                if (item.isLimited)
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withValues(alpha: 0.14),
+                      borderRadius: BorderRadius.circular(999),
                     ),
-                  ),
-                )
-              else
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      item.currency == ShopCurrency.xp ? '⚡' : '💎',
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${item.price}',
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
+                    child: const Text(
+                      'LIMITED',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
-                  ],
+                  ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            Text(
+              item.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Expanded(
+              child: Text(
+                item.description,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.outline,
                 ),
-              if (item.isLimited) ...[
-                const SizedBox(height: 8),
-                Text(
-                  'До ${item.limitedUntil != null ? "${item.limitedUntil!.day}.${item.limitedUntil!.month}" : ''}',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: Colors.red,
+              ),
+            ),
+            const SizedBox(height: 12),
+            if (item.isPurchased)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: item.isEquipped ? Colors.green : Colors.black12,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  item.isEquipped ? 'Экипировано' : 'Куплено',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: item.isEquipped ? Colors.white : theme.colorScheme.onSurface,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              ],
-            ],
-          ),
+              )
+            else
+              Row(
+                children: [
+                  Text(
+                    item.currency == ShopCurrency.xp ? '⚡' : '💎',
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${item.price}',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.tonal(
+                onPressed: canBuy
+                    ? () => ref.read(shopProvider.notifier).purchaseItem(item.id)
+                    : canEquip
+                        ? () => isBooster
+                            ? ref.read(shopProvider.notifier).activateBooster(item.id)
+                            : ref.read(shopProvider.notifier).equipItem(item.id)
+                        : null,
+                child: Text(
+                  canBuy
+                      ? 'Купить'
+                      : canEquip
+                          ? (isBooster ? 'Активировать' : 'Экипировать')
+                          : 'Используется',
+                ),
+              ),
+            ),
+          ],
         ),
-      ),
-    );
-  }
-
-  void _showEquipDialog(BuildContext context, ShopItem item) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(item.name),
-        content: Text('Экипировать ${item.name}?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          FilledButton(
-            onPressed: () {
-              // Equip item
-              Navigator.pop(context);
-            },
-            child: const Text('Экипировать'),
-          ),
-        ],
       ),
     );
   }
 }
 
-class _AvatarCard extends StatelessWidget {
+class _AvatarCard extends ConsumerWidget {
   const _AvatarCard({required this.avatar});
+
   final UserAvatar avatar;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Card(
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: avatar.isUnlocked ? () {} : null,
+        onTap: avatar.isUnlocked
+            ? () => ref.read(shopProvider.notifier).equipAvatar(avatar.id)
+            : null,
         child: Container(
           decoration: BoxDecoration(
             color: Color(avatar.backgroundColor),
@@ -383,11 +403,29 @@ class _AvatarCard extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Center(
-                child: Text(
-                  avatar.icon,
-                  style: const TextStyle(fontSize: 40),
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    avatar.icon,
+                    style: const TextStyle(fontSize: 38),
+                  ),
+                  const SizedBox(height: 6),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    child: Text(
+                      avatar.name,
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               if (!avatar.isUnlocked)
                 Container(
@@ -397,24 +435,20 @@ class _AvatarCard extends StatelessWidget {
                   ),
                   child: const Icon(Icons.lock, color: Colors.white, size: 28),
                 ),
-              if (avatar.isUnlocked)
+              if (avatar.isEquipped)
                 Positioned(
-                  top: 4,
-                  right: 4,
+                  top: 6,
+                  right: 6,
                   child: Container(
                     padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: avatar.source == AvatarSource.achievement
-                          ? Colors.amber
-                          : Colors.green,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
-                      avatar.source == AvatarSource.achievement
-                          ? Icons.emoji_events
-                          : Icons.check,
-                      size: 12,
-                      color: Colors.white,
+                    child: const Icon(
+                      Icons.check,
+                      color: Colors.green,
+                      size: 14,
                     ),
                   ),
                 ),
@@ -426,12 +460,13 @@ class _AvatarCard extends StatelessWidget {
   }
 }
 
-class _ThemeCard extends StatelessWidget {
+class _ThemeCard extends ConsumerWidget {
   const _ThemeCard({required this.item});
+
   final ShopItem item;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
     return Card(
@@ -440,8 +475,8 @@ class _ThemeCard extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 80,
-              height: 60,
+              width: 84,
+              height: 64,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
@@ -451,7 +486,7 @@ class _ThemeCard extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(14),
               ),
             ),
             const SizedBox(width: 16),
@@ -475,17 +510,16 @@ class _ThemeCard extends StatelessWidget {
                 ],
               ),
             ),
-            if (item.isPurchased)
-              const Icon(Icons.check_circle, color: Colors.green)
-            else
+            const SizedBox(width: 12),
             FilledButton(
-              onPressed: () {
-                // Purchase
-              },
+              onPressed: item.isPurchased
+                  ? () => ref.read(shopProvider.notifier).equipItem(item.id)
+                  : () => ref.read(shopProvider.notifier).purchaseItem(item.id),
               style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               ),
-              child: Text('${item.price} ⚡'),
+              child: Text(item.isPurchased ? 'Надеть' : '${item.price} ⚡'),
             ),
           ],
         ),
@@ -496,6 +530,7 @@ class _ThemeCard extends StatelessWidget {
 
 class _ActiveBoosterCard extends StatelessWidget {
   const _ActiveBoosterCard({required this.booster});
+
   final Booster booster;
 
   @override
@@ -528,14 +563,14 @@ class _ActiveBoosterCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Осталось: ${hours > 0 ? '$hours ч ' : ''}${minutes} мин',
+                    'Осталось: ${hours > 0 ? '$hours ч ' : ''}$minutes мин',
                     style: theme.textTheme.bodySmall,
                   ),
                 ],
               ),
             ),
             Icon(
-              Icons.timer,
+              Icons.timer_outlined,
               color: theme.colorScheme.primary,
               size: 28,
             ),

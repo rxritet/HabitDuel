@@ -1276,6 +1276,7 @@ class HabitDuelFirestoreStore {
           icon: data['icon'] as String? ?? '',
           backgroundColor: (data['backgroundColor'] as num?)?.toInt() ?? 0xFFEA580C,
           isUnlocked: data['isUnlocked'] as bool? ?? false,
+          isEquipped: data['isEquipped'] as bool? ?? false,
           unlockedAt: _readDateTime(data['unlockedAt']),
           source: AvatarSource.values.firstWhere((s) => s.name == data['source'], orElse: () => AvatarSource.defaultAvatar),
         );

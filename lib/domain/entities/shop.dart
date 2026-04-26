@@ -30,8 +30,42 @@ class ShopItem {
   final int requiredLevel;
   final ShopCategory category;
 
-  bool get isAvailable => !isLimited || (limitedUntil != null && limitedUntil!.isAfter(DateTime.now()));
-  bool get canAfford => currency == ShopCurrency.xp; // Упрощённая проверка
+  bool get isAvailable =>
+      !isLimited || (limitedUntil != null && limitedUntil!.isAfter(DateTime.now()));
+
+  bool get canAfford => currency == ShopCurrency.xp;
+
+  ShopItem copyWith({
+    String? id,
+    ShopItemType? type,
+    String? name,
+    String? description,
+    String? icon,
+    int? price,
+    ShopCurrency? currency,
+    bool? isPurchased,
+    bool? isEquipped,
+    bool? isLimited,
+    DateTime? limitedUntil,
+    int? requiredLevel,
+    ShopCategory? category,
+  }) {
+    return ShopItem(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      icon: icon ?? this.icon,
+      price: price ?? this.price,
+      currency: currency ?? this.currency,
+      isPurchased: isPurchased ?? this.isPurchased,
+      isEquipped: isEquipped ?? this.isEquipped,
+      isLimited: isLimited ?? this.isLimited,
+      limitedUntil: limitedUntil ?? this.limitedUntil,
+      requiredLevel: requiredLevel ?? this.requiredLevel,
+      category: category ?? this.category,
+    );
+  }
 }
 
 enum ShopItemType {
@@ -87,10 +121,35 @@ class Booster {
   final DateTime? expiresAt;
 
   bool get isExpired => expiresAt != null && expiresAt!.isBefore(DateTime.now());
-  
+
   int get remainingMinutes {
     if (expiresAt == null) return 0;
-    return expiresAt!.difference(DateTime.now()).inMinutes.clamp(0, durationMinutes);
+    return expiresAt!
+        .difference(DateTime.now())
+        .inMinutes
+        .clamp(0, durationMinutes);
+  }
+
+  Booster copyWith({
+    String? id,
+    BoosterType? type,
+    String? name,
+    String? description,
+    String? icon,
+    int? durationMinutes,
+    bool? isActive,
+    DateTime? expiresAt,
+  }) {
+    return Booster(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      icon: icon ?? this.icon,
+      durationMinutes: durationMinutes ?? this.durationMinutes,
+      isActive: isActive ?? this.isActive,
+      expiresAt: expiresAt ?? this.expiresAt,
+    );
   }
 }
 
@@ -135,6 +194,7 @@ class UserAvatar {
     required this.icon,
     required this.backgroundColor,
     this.isUnlocked = false,
+    this.isEquipped = false,
     this.unlockedAt,
     this.source = AvatarSource.defaultAvatar,
   });
@@ -144,8 +204,31 @@ class UserAvatar {
   final String icon;
   final int backgroundColor;
   final bool isUnlocked;
+  final bool isEquipped;
   final DateTime? unlockedAt;
   final AvatarSource source;
+
+  UserAvatar copyWith({
+    String? id,
+    String? name,
+    String? icon,
+    int? backgroundColor,
+    bool? isUnlocked,
+    bool? isEquipped,
+    DateTime? unlockedAt,
+    AvatarSource? source,
+  }) {
+    return UserAvatar(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      icon: icon ?? this.icon,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      isUnlocked: isUnlocked ?? this.isUnlocked,
+      isEquipped: isEquipped ?? this.isEquipped,
+      unlockedAt: unlockedAt ?? this.unlockedAt,
+      source: source ?? this.source,
+    );
+  }
 }
 
 enum AvatarSource {
