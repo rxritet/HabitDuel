@@ -70,6 +70,34 @@ android_update
 C:\flutter\bin\flutter.bat build apk --release --dart-define=API_BASE_URL=http://192.168.123.9:8080
 ```
 
+## Publish script
+
+В проекте есть helper-скрипт:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\publish-firebase-update.ps1 `
+  -ApiBaseUrl "http://192.168.123.9:8080" `
+  -PublicApkUrl "https://firebasestorage.googleapis.com/..." `
+  -Changelog "Новый рейтинг" "Редактирование профиля"
+```
+
+Что он делает:
+
+1. Собирает release APK.
+2. Копирует его в `build/releases/`.
+3. Даёт файлу имя вида `HabitDuel-v1.0.0+1-release.apk`.
+4. Генерирует JSON для документа `app_config/android_update`.
+
+Если на машине установлен `gsutil`, можно ещё передать bucket:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\publish-firebase-update.ps1 `
+  -StorageBucket "your-project.firebasestorage.app" `
+  -Changelog "UI polish" "Bug fixes"
+```
+
+После этого останется взять public download URL и записать его в Firestore.
+
 ## Замечание по ссылке
 
 Лучше всего использовать ссылку, которая сразу отдаёт APK-файл, а не страницу

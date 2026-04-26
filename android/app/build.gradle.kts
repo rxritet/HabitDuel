@@ -1,3 +1,5 @@
+import com.android.build.api.variant.ApplicationAndroidComponentsExtension
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -36,6 +38,18 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+        }
+    }
+}
+
+extensions.configure<ApplicationAndroidComponentsExtension>("androidComponents") {
+    onVariants(selector().all()) { variant ->
+        variant.outputs.forEach { output ->
+            val versionName = variant.versionName.orNull ?: "0.0.0"
+            val versionCode = variant.versionCode.orNull ?: 0
+            output.outputFileName.set(
+                "HabitDuel-v${versionName}+${versionCode}-${variant.buildType}.apk",
+            )
         }
     }
 }
