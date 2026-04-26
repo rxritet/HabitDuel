@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../core/firebase/habitduel_firestore_store.dart';
+import '../../core/updates/app_update_service.dart';
 import '../../data/datasources/firebase_aware_data_sources.dart';
 import '../../data/repositories/auth_repo_impl.dart';
 import '../../data/repositories/duel_repo_impl.dart';
@@ -23,6 +24,10 @@ final secureStorageProvider = Provider<FlutterSecureStorage>(
 
 final firestoreStoreProvider = Provider<HabitDuelFirestoreStore>((ref) {
   return HabitDuelFirestoreStore();
+});
+
+final appUpdateServiceProvider = Provider<AppUpdateService>((ref) {
+  return AppUpdateService(ref.watch(firestoreStoreProvider));
 });
 
 // ─── Auth — теперь полностью Firebase Auth ─────────────────────────────
