@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "90854589504",
+    "firebase_url": "https://habitduel-28b8f-default-rtdb.firebaseio.com",
     "project_id": "habitduel-28b8f",
     "storage_bucket": "habitduel-28b8f.firebasestorage.app"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.rxritet.habitduel"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "90854589504-vo5d2au40ekclcchpkl97csk9qd8chn0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rxritet.habitduel",
+            "certificate_hash": "d1272801fd0a10edcaa94419ba1337cfb46ecde0"
+          }
+        },
+        {
+          "client_id": "90854589504-k90vrqlvfl8cbobkeceljibudfofn59m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC_qwzf1jw3OUfDZ4MWQHCe35o1FNAyS8A"
@@ -20,7 +34,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "90854589504-k90vrqlvfl8cbobkeceljibudfofn59m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "90854589504-j43viehd30s0dolpnoi0s6b82gi9mj5n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rxritet.habitduel"
+              }
+            }
+          ]
         }
       }
     }
