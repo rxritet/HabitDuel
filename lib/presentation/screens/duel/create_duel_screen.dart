@@ -25,8 +25,12 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
   bool _isTrustedCheckin = false;
   HealthMetric? _selectedHealthMetric;
   double _healthTarget = 8000;
+  bool _hasEntryFee = false;
+  int _entryFee = 100;
+  DuelCurrency _currency = DuelCurrency.coins;
 
   static const _durations = [7, 14, 21, 30];
+  static const _entryFeeOptions = [100, 250, 500, 1000];
 
   late TabController _tabController;
 
@@ -66,6 +70,8 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
           isTrustedCheckin: _isTrustedCheckin,
           healthMetric: _isTrustedCheckin ? _selectedHealthMetric?.key : null,
           healthTargetValue: _isTrustedCheckin ? _healthTarget : null,
+          entryFee: _hasEntryFee ? _entryFee : 0,
+          currency: _currency,
         );
   }
 
@@ -183,6 +189,18 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
               }),
               onMetricChanged: (m) => setState(() => _selectedHealthMetric = m),
               onTargetChanged: (v) => setState(() => _healthTarget = v),
+            ),
+
+            const SizedBox(height: 24),
+
+            _EntryFeeSection(
+              enabled: _hasEntryFee,
+              amount: _entryFee,
+              currency: _currency,
+              options: _entryFeeOptions,
+              onToggle: (value) => setState(() => _hasEntryFee = value),
+              onAmountChanged: (value) => setState(() => _entryFee = value),
+              onCurrencyChanged: (value) => setState(() => _currency = value),
             ),
 
             const SizedBox(height: 32),
@@ -417,5 +435,113 @@ class _TrustedCheckinSection extends StatelessWidget {
       HealthMetric.waterMl => 4000,
       HealthMetric.caloriesBurned => 1500,
     };
+  }
+}
+
+class _EntryFeeSection extends StatelessWidget {
+  const _EntryFeeSection({
+    required this.enabled,
+    required this.amount,
+    required this.currency,
+    required this.options,
+    required this.onToggle,
+    required this.onAmountChanged,
+    required this.onCurrencyChanged,
+  });
+
+  final bool enabled;
+  final int amount;
+  final DuelCurrency currency;
+  final List<int> options;
+  final ValueChanged<bool> onToggle;
+  final ValueChanged<int> onAmountChanged;
+  final ValueChanged<DuelCurrency> onCurrencyChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primary.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: enabled
+              ? theme.colorScheme.primary.withValues(alpha: 0.24)
+              : Colors.transparent,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Text('💸', style: TextStyle(fontSize: 20)),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Дуэль на ставку',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Каждый участник делает одинаковую ставку для дополнительной мотивации.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Switch(value: enabled, onChanged: onToggle),
+            ],
+          ),
+          if (enabled) ...[
+            const SizedBox(height: 16),
+            DropdownButtonFormField<DuelCurrency>(
+              initialValue: currency,
+              decoration: const InputDecoration(
+                labelText: 'Валюта ставки',
+                prefixIcon: Icon(Icons.payments_outlined),
+              ),
+              items: DuelCurrency.values
+                  .map(
+                    (value) => DropdownMenuItem(
+                      value: value,
+                      child: Text('${value.symbol} ${value.label}'),
+                    ),
+                  )
+                  .toList(growable: false),
+              onChanged: (value) {
+                if (value != null) onCurrencyChanged(value);
+              },
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Размер ставки с участника',
+              style: theme.textTheme.titleSmall,
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: options
+                  .map(
+                    (value) => ChoiceChip(
+                      label: Text('${currency.symbol} $value'),
+                      selected: amount == value,
+                      onSelected: (_) => onAmountChanged(value),
+                    ),
+                  )
+                  .toList(growable: false),
+            ),
+          ],
+        ],
+      ),
+    );
   }
 }

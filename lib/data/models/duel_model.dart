@@ -16,6 +16,8 @@ class DuelModel extends Duel {
     super.isTrustedCheckin,
     super.healthMetric,
     super.healthTargetValue,
+    super.entryFee,
+    super.currency,
     super.myStreak,
     super.opponentStreak,
     super.startsAt,

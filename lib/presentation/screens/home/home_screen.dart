@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../providers/auth_provider.dart';
-import '../../providers/core_providers.dart';
-import '../../providers/duel_provider.dart';
-import '../../widgets/app_update_dialog.dart';
 import '../../../domain/entities/duel.dart';
+import '../../providers/auth_provider.dart';
+import '../../providers/duel_provider.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -15,39 +13,10 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  bool _checkedForUpdate = false;
-
   @override
   void initState() {
     super.initState();
     Future.microtask(() => ref.read(duelsListProvider.notifier).load());
-    WidgetsBinding.instance.addPostFrameCallback((_) => _checkForUpdate());
-  }
-
-  Future<void> _checkForUpdate() async {
-    if (_checkedForUpdate || !mounted) return;
-    _checkedForUpdate = true;
-
-    final result = await ref.read(appUpdateServiceProvider).checkForUpdate();
-    if (!mounted || !result.updateAvailable || !result.shouldPrompt) return;
-
-    await showAppUpdateDialog(
-      context,
-      result: result,
-      onDownload: () async {
-        final opened = await ref.read(appUpdateServiceProvider).openDownload(
-              result.remote!,
-            );
-        if (!opened && mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Не удалось открыть ссылку на обновление')),
-          );
-        }
-      },
-      onLater: () => ref
-          .read(appUpdateServiceProvider)
-          .dismissVersion(result.remote!.versionCode),
-    );
   }
 
   @override
@@ -105,10 +74,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 }
 
-// ─── Duel card ──────────────────────────────────────────────────────────
-
 class _DuelCard extends StatelessWidget {
   const _DuelCard({required this.duel});
+
   final Duel duel;
 
   @override
@@ -116,7 +84,6 @@ class _DuelCard extends StatelessWidget {
     final theme = Theme.of(context);
     final isPending = duel.status == 'pending';
 
-    // Градиент в зависимости от статуса
     final gradient = switch (duel.status) {
       'active' => LinearGradient(
           colors: [
@@ -182,13 +149,32 @@ class _DuelCard extends StatelessWidget {
                 ],
                 const SizedBox(height: 12),
                 if (!isPending) ...[
-                  if (duel.status == 'open')
-                    _InfoChip(
-                      icon: Icons.people,
-                      label: '${duel.participants.length}/${duel.maxParticipants}',
-                    )
-                  else ...[
-                    // Progress bars for streaks
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      if (duel.status == 'open')
+                        _InfoChip(
+                          icon: Icons.people,
+                          label:
+                              '${duel.participants.length}/${duel.maxParticipants}',
+                        ),
+                      if (duel.hasEntryFee)
+                        _InfoChip(
+                          icon: Icons.payments_outlined,
+                          label:
+                              '${duel.entryFee} ${duel.currency.symbol} с игрока',
+                        ),
+                      if (duel.hasEntryFee)
+                        _InfoChip(
+                          icon: Icons.workspace_premium_outlined,
+                          label:
+                              'Банк ${duel.prizePool} ${duel.currency.symbol}',
+                        ),
+                    ],
+                  ),
+                  if (duel.status != 'open') ...[
+                    const SizedBox(height: 12),
                     Row(
                       children: [
                         Expanded(
@@ -203,10 +189,7 @@ class _DuelCard extends StatelessWidget {
                                     color: theme.colorScheme.primary,
                                   ),
                                   const SizedBox(width: 4),
-                                  Text(
-                                    'Вы',
-                                    style: theme.textTheme.bodySmall,
-                                  ),
+                                  Text('Вы', style: theme.textTheme.bodySmall),
                                   const Spacer(),
                                   Text(
                                     '${duel.myStreak}🔥',
@@ -223,7 +206,8 @@ class _DuelCard extends StatelessWidget {
                                 child: LinearProgressIndicator(
                                   value: (duel.myStreak / duel.durationDays).clamp(0, 1),
                                   minHeight: 6,
-                                  backgroundColor: theme.colorScheme.outline.withValues(alpha: 0.2),
+                                  backgroundColor:
+                                      theme.colorScheme.outline.withValues(alpha: 0.2),
                                   valueColor: AlwaysStoppedAnimation<Color>(
                                     theme.colorScheme.primary,
                                   ),
@@ -263,9 +247,11 @@ class _DuelCard extends StatelessWidget {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(4),
                                 child: LinearProgressIndicator(
-                                  value: (duel.opponentStreak / duel.durationDays).clamp(0, 1),
+                                  value: (duel.opponentStreak / duel.durationDays)
+                                      .clamp(0, 1),
                                   minHeight: 6,
-                                  backgroundColor: theme.colorScheme.outline.withValues(alpha: 0.2),
+                                  backgroundColor:
+                                      theme.colorScheme.outline.withValues(alpha: 0.2),
                                   valueColor: AlwaysStoppedAnimation<Color>(
                                     theme.colorScheme.secondary,
                                   ),
@@ -303,16 +289,7 @@ class _DuelCard extends StatelessWidget {
                       ],
                     ],
                   ),
-                ]
-                else if (duel.status == 'open')
-                  Text(
-                    'Join this lobby to start!',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                else
+                ] else
                   Text(
                     'Waiting for opponent…',
                     style: theme.textTheme.bodyMedium?.copyWith(
@@ -330,6 +307,7 @@ class _DuelCard extends StatelessWidget {
 
 class _InfoChip extends StatelessWidget {
   const _InfoChip({required this.icon, required this.label});
+
   final IconData icon;
   final String label;
 
@@ -373,6 +351,7 @@ class _AnimatedDuelCard extends StatelessWidget {
 
 class _StatusChip extends StatelessWidget {
   const _StatusChip({required this.status});
+
   final String status;
 
   @override
@@ -394,8 +373,6 @@ class _StatusChip extends StatelessWidget {
     );
   }
 }
-
-// ─── Empty / Error helpers ──────────────────────────────────────────────
 
 class _EmptyBody extends StatelessWidget {
   const _EmptyBody();
@@ -424,6 +401,7 @@ class _EmptyBody extends StatelessWidget {
 
 class _ErrorBody extends StatelessWidget {
   const _ErrorBody({required this.message, required this.onRetry});
+
   final String message;
   final VoidCallback onRetry;
 

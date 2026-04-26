@@ -187,13 +187,17 @@ class AchievementTreeCard extends StatelessWidget {
                     size: 28,
                   ),
                   const SizedBox(width: 12),
-                  Text(
-                    tree.category.label,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Text(
+                      tree.category.label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  const Spacer(),
+                  const SizedBox(width: 12),
                   Text(
                     '${tree.unlockedCount}/${tree.totalCount}',
                     style: theme.textTheme.bodyMedium?.copyWith(

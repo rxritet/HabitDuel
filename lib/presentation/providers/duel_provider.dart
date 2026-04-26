@@ -238,6 +238,8 @@ class CreateDuelNotifier extends StateNotifier<CreateDuelState> {
     bool isTrustedCheckin = false,
     String? healthMetric,
     double? healthTargetValue,
+    int entryFee = 0,
+    DuelCurrency currency = DuelCurrency.coins,
   }) async {
     state = const CreateDuelLoading();
     try {
@@ -252,6 +254,8 @@ class CreateDuelNotifier extends StateNotifier<CreateDuelState> {
             isTrustedCheckin: isTrustedCheckin,
             healthMetric: healthMetric,
             healthTargetValue: healthTargetValue,
+            entryFee: entryFee,
+            currency: currency,
           );
       state = CreateDuelSuccess(duel);
     } on Failure catch (e) {

@@ -16,6 +16,8 @@ class CreateDuelUseCase {
     bool isTrustedCheckin = false,
     String? healthMetric,
     double? healthTargetValue,
+    int entryFee = 0,
+    DuelCurrency currency = DuelCurrency.coins,
   }) {
     return _repo.createDuel(
       habitName: habitName,
@@ -28,6 +30,8 @@ class CreateDuelUseCase {
       isTrustedCheckin: isTrustedCheckin,
       healthMetric: healthMetric,
       healthTargetValue: healthTargetValue,
+      entryFee: entryFee,
+      currency: currency,
     );
   }
 }

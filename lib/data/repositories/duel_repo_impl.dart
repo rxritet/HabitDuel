@@ -18,6 +18,8 @@ class DuelRepositoryImpl implements DuelRepository {
     bool isTrustedCheckin = false,
     String? healthMetric,
     double? healthTargetValue,
+    int entryFee = 0,
+    DuelCurrency currency = DuelCurrency.coins,
   }) async {
     return _remoteDS.createDuel(
       habitName: habitName,
@@ -30,6 +32,8 @@ class DuelRepositoryImpl implements DuelRepository {
       isTrustedCheckin: isTrustedCheckin,
       healthMetric: healthMetric,
       healthTargetValue: healthTargetValue,
+      entryFee: entryFee,
+      currency: currency,
     );
   }
 

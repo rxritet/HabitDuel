@@ -34,6 +34,7 @@ class FirebaseAwareProfileDataSource {
         wins: 0,
         losses: 0,
         badges: const [],
+        avatarEmoji: '🔥',
       );
     }
 
@@ -87,6 +88,8 @@ class FirebaseAwareDuelDataSource {
     bool isTrustedCheckin = false,
     String? healthMetric,
     double? healthTargetValue,
+    int entryFee = 0,
+    DuelCurrency currency = DuelCurrency.coins,
   }) async {
     final userId = await _storage.read(key: kUserIdKey);
     final username = await _storage.read(key: kUsernameKey);
@@ -108,6 +111,8 @@ class FirebaseAwareDuelDataSource {
       isTrustedCheckin: isTrustedCheckin,
       healthMetric: healthMetric,
       healthTargetValue: healthTargetValue,
+      entryFee: entryFee,
+      currency: currency,
     );
 
     return _toDuelModel(duel);
@@ -223,6 +228,8 @@ class FirebaseAwareDuelDataSource {
       isTrustedCheckin: duel.isTrustedCheckin,
       healthMetric: duel.healthMetric,
       healthTargetValue: duel.healthTargetValue,
+      entryFee: duel.entryFee,
+      currency: duel.currency,
       myStreak: duel.myStreak,
       opponentStreak: duel.opponentStreak,
       startsAt: duel.startsAt,

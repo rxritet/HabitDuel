@@ -174,6 +174,24 @@ class _DuelBody extends StatelessWidget {
                     ],
                   ],
                 ),
+                if (duel.hasEntryFee) ...[
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      _InfoChip(
+                        icon: Icons.payments_outlined,
+                        label:
+                            '${duel.entryFee} ${duel.currency.symbol} с участника',
+                      ),
+                      _InfoChip(
+                        icon: Icons.workspace_premium_outlined,
+                        label: 'Банк ${duel.prizePool} ${duel.currency.symbol}',
+                      ),
+                    ],
+                  ),
+                ],
                 if (duel.startsAt != null) ...[
                   const SizedBox(height: 8),
                   Text(

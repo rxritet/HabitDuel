@@ -14,6 +14,8 @@ abstract class DuelRepository {
     bool isTrustedCheckin = false,
     String? healthMetric,
     double? healthTargetValue,
+    int entryFee = 0,
+    DuelCurrency currency = DuelCurrency.coins,
   });
 
   /// Принять ожидающую дуэль.

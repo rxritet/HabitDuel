@@ -35,6 +35,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
   static const _bioKey = 'profile_bio';
   static const _favoriteHabitKey = 'profile_favorite_habit';
   static const _avatarEmojiKey = 'profile_avatar_emoji';
+  static const _avatarUrlKey = 'profile_avatar_url';
 
   Future<void> load() async {
     state = const ProfileLoading();
@@ -66,6 +67,7 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
     required String bio,
     required String favoriteHabit,
     required String avatarEmoji,
+    required String avatarUrl,
   }) async {
     final current = state;
     if (current is! ProfileLoaded) return;
@@ -76,12 +78,17 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
       bio: bio.trim().isEmpty ? null : bio.trim(),
       favoriteHabit: favoriteHabit.trim().isEmpty ? null : favoriteHabit.trim(),
       avatarEmoji: avatarEmoji.trim().isEmpty ? current.profile.avatarEmoji : avatarEmoji.trim(),
+      avatarUrl: avatarUrl.trim().isEmpty ? null : avatarUrl.trim(),
     );
 
     await storage.write(key: kUsernameKey, value: updatedProfile.username);
-    await storage.write(key: _bioKey, value: updatedProfile.bio);
-    await storage.write(key: _favoriteHabitKey, value: updatedProfile.favoriteHabit);
+    await storage.write(key: _bioKey, value: updatedProfile.bio ?? '');
+    await storage.write(
+      key: _favoriteHabitKey,
+      value: updatedProfile.favoriteHabit ?? '',
+    );
     await storage.write(key: _avatarEmojiKey, value: updatedProfile.avatarEmoji);
+    await storage.write(key: _avatarUrlKey, value: updatedProfile.avatarUrl ?? '');
 
     state = ProfileLoaded(updatedProfile);
 
@@ -96,10 +103,20 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
     final storage = _ref.read(secureStorageProvider);
     return profile.copyWith(
       username: await storage.read(key: kUsernameKey) ?? profile.username,
-      bio: await storage.read(key: _bioKey) ?? profile.bio,
-      favoriteHabit: await storage.read(key: _favoriteHabitKey) ?? profile.favoriteHabit,
+      bio: _readOptionalOverride(await storage.read(key: _bioKey)) ?? profile.bio,
+      favoriteHabit:
+          _readOptionalOverride(await storage.read(key: _favoriteHabitKey)) ??
+              profile.favoriteHabit,
       avatarEmoji: await storage.read(key: _avatarEmojiKey) ?? profile.avatarEmoji,
+      avatarUrl:
+          _readOptionalOverride(await storage.read(key: _avatarUrlKey)) ??
+              profile.avatarUrl,
     );
+  }
+
+  String? _readOptionalOverride(String? value) {
+    if (value == null || value.trim().isEmpty) return null;
+    return value;
   }
 }
 

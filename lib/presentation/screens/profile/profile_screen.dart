@@ -73,97 +73,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Future<void> _openEditSheet(BuildContext context, UserProfile profile) async {
-    final usernameController = TextEditingController(text: profile.username);
-    final bioController = TextEditingController(text: profile.bio ?? '');
-    final habitController =
-        TextEditingController(text: profile.favoriteHabit ?? '');
-    final emojiController = TextEditingController(text: profile.avatarEmoji);
-
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       showDragHandle: true,
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.fromLTRB(
-            20,
-            12,
-            20,
-            20 + MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Редактирование профиля',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: usernameController,
-                decoration: const InputDecoration(
-                  labelText: 'Имя игрока',
-                  prefixIcon: Icon(Icons.person_outline),
-                ),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: emojiController,
-                maxLength: 2,
-                decoration: const InputDecoration(
-                  labelText: 'Эмодзи аватара',
-                  prefixIcon: Icon(Icons.emoji_emotions_outlined),
-                ),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: habitController,
-                decoration: const InputDecoration(
-                  labelText: 'Любимая привычка',
-                  prefixIcon: Icon(Icons.flag_outlined),
-                ),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: bioController,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'О себе',
-                  alignLabelWithHint: true,
-                  prefixIcon: Icon(Icons.edit_note_outlined),
-                ),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: FilledButton(
-                  onPressed: () async {
-                    await ref.read(profileProvider.notifier).saveEdits(
-                          username: usernameController.text,
-                          bio: bioController.text,
-                          favoriteHabit: habitController.text,
-                          avatarEmoji: emojiController.text,
-                        );
-                    if (context.mounted) {
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: const Text('Сохранить'),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+      builder: (context) => _ProfileEditSheet(profile: profile),
     );
-
-    usernameController.dispose();
-    bioController.dispose();
-    habitController.dispose();
-    emojiController.dispose();
   }
 }
 
@@ -203,14 +118,7 @@ class _ProfileBody extends StatelessWidget {
             ),
             child: Column(
               children: [
-                CircleAvatar(
-                  radius: 42,
-                  backgroundColor: theme.colorScheme.surface,
-                  child: Text(
-                    profile.avatarEmoji,
-                    style: const TextStyle(fontSize: 34),
-                  ),
-                ),
+                _ProfileAvatar(profile: profile, theme: theme),
                 const SizedBox(height: 14),
                 Text(
                   profile.username,
@@ -310,7 +218,7 @@ class _ProfileBody extends StatelessWidget {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: profile.badges.map((b) => _BadgeChip(badge: b)).toList(),
+            children: profile.badges.map((badge) => _BadgeChip(badge: badge)).toList(),
           ),
         const SizedBox(height: 24),
         Row(
@@ -357,6 +265,186 @@ class _ProfileBody extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+class _ProfileEditSheet extends ConsumerStatefulWidget {
+  const _ProfileEditSheet({required this.profile});
+
+  final UserProfile profile;
+
+  @override
+  ConsumerState<_ProfileEditSheet> createState() => _ProfileEditSheetState();
+}
+
+class _ProfileEditSheetState extends ConsumerState<_ProfileEditSheet> {
+  late final TextEditingController _usernameController;
+  late final TextEditingController _bioController;
+  late final TextEditingController _habitController;
+  late final TextEditingController _emojiController;
+  late final TextEditingController _avatarUrlController;
+  bool _saving = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _usernameController = TextEditingController(text: widget.profile.username);
+    _bioController = TextEditingController(text: widget.profile.bio ?? '');
+    _habitController =
+        TextEditingController(text: widget.profile.favoriteHabit ?? '');
+    _emojiController = TextEditingController(text: widget.profile.avatarEmoji);
+    _avatarUrlController =
+        TextEditingController(text: widget.profile.avatarUrl ?? '');
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _bioController.dispose();
+    _habitController.dispose();
+    _emojiController.dispose();
+    _avatarUrlController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _save() async {
+    if (_saving) return;
+    setState(() => _saving = true);
+    try {
+      await ref.read(profileProvider.notifier).saveEdits(
+            username: _usernameController.text,
+            bio: _bioController.text,
+            favoriteHabit: _habitController.text,
+            avatarEmoji: _emojiController.text,
+            avatarUrl: _avatarUrlController.text,
+          );
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _saving = false);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        20,
+        12,
+        20,
+        20 + MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Редактирование профиля',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _usernameController,
+              decoration: const InputDecoration(
+                labelText: 'Имя игрока',
+                prefixIcon: Icon(Icons.person_outline),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _avatarUrlController,
+              keyboardType: TextInputType.url,
+              decoration: const InputDecoration(
+                labelText: 'Ссылка на настоящий аватар',
+                hintText: 'https://...',
+                prefixIcon: Icon(Icons.image_outlined),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _emojiController,
+              maxLength: 4,
+              decoration: const InputDecoration(
+                labelText: 'Эмодзи-аватар',
+                prefixIcon: Icon(Icons.emoji_emotions_outlined),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _habitController,
+              decoration: const InputDecoration(
+                labelText: 'Любимая привычка',
+                prefixIcon: Icon(Icons.flag_outlined),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _bioController,
+              maxLines: 3,
+              decoration: const InputDecoration(
+                labelText: 'О себе',
+                alignLabelWithHint: true,
+                prefixIcon: Icon(Icons.edit_note_outlined),
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: _saving ? null : _save,
+                child: Text(_saving ? 'Сохраняем...' : 'Сохранить'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ProfileAvatar extends StatelessWidget {
+  const _ProfileAvatar({
+    required this.profile,
+    required this.theme,
+  });
+
+  final UserProfile profile;
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    final avatarUrl = profile.avatarUrl?.trim();
+    final hasAvatarUrl = avatarUrl != null && avatarUrl.isNotEmpty;
+
+    return CircleAvatar(
+      radius: 42,
+      backgroundColor: theme.colorScheme.surface,
+      child: ClipOval(
+        child: hasAvatarUrl
+            ? Image.network(
+                avatarUrl,
+                width: 84,
+                height: 84,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Center(
+                  child: Text(
+                    profile.avatarEmoji,
+                    style: const TextStyle(fontSize: 34),
+                  ),
+                ),
+              )
+            : Text(
+                profile.avatarEmoji,
+                style: const TextStyle(fontSize: 34),
+              ),
+      ),
     );
   }
 }

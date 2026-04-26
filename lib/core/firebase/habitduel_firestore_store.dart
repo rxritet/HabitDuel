@@ -55,6 +55,10 @@ class HabitDuelFirestoreStore {
       wins: (data['wins'] as num?)?.toInt() ?? 0,
       losses: (data['losses'] as num?)?.toInt() ?? 0,
       badges: badges,
+      bio: data['bio'] as String?,
+      favoriteHabit: data['favoriteHabit'] as String?,
+      avatarEmoji: data['avatarEmoji'] as String? ?? '🔥',
+      avatarUrl: data['avatarUrl'] as String?,
     );
   }
 
@@ -72,6 +76,11 @@ class HabitDuelFirestoreStore {
           if (profile.email != null) 'email': profile.email,
           'wins': profile.wins,
           'losses': profile.losses,
+          if (profile.bio != null) 'bio': profile.bio,
+          if (profile.favoriteHabit != null)
+            'favoriteHabit': profile.favoriteHabit,
+          'avatarEmoji': profile.avatarEmoji,
+          if (profile.avatarUrl != null) 'avatarUrl': profile.avatarUrl,
           'updatedAt': FieldValue.serverTimestamp(),
         },
         SetOptions(merge: true),
@@ -325,6 +334,8 @@ class HabitDuelFirestoreStore {
           'isTrustedCheckin': duel.isTrustedCheckin,
           if (duel.healthMetric != null) 'healthMetric': duel.healthMetric,
           if (duel.healthTargetValue != null) 'healthTargetValue': duel.healthTargetValue,
+          'entryFee': duel.entryFee,
+          'currency': duel.currency.name,
           'myStreak': duel.myStreak,
           'opponentStreak': duel.opponentStreak,
           if (duel.startsAt != null) 'startsAt': Timestamp.fromDate(duel.startsAt!.toUtc()),
@@ -388,6 +399,8 @@ class HabitDuelFirestoreStore {
     bool isTrustedCheckin = false,
     String? healthMetric,
     double? healthTargetValue,
+    int entryFee = 0,
+    DuelCurrency currency = DuelCurrency.coins,
   }) async {
     if (!_isEnabled) throw Exception('Firestore is not enabled');
 
@@ -420,6 +433,8 @@ class HabitDuelFirestoreStore {
       isTrustedCheckin: isTrustedCheckin,
       healthMetric: healthMetric,
       healthTargetValue: healthTargetValue,
+      entryFee: entryFee,
+      currency: currency,
       createdAt: now,
       participants: [
         DuelParticipant(userId: creatorId, username: creatorUsername),
@@ -888,6 +903,8 @@ class HabitDuelFirestoreStore {
       isTrustedCheckin: duel.isTrustedCheckin,
       healthMetric: duel.healthMetric,
       healthTargetValue: duel.healthTargetValue,
+      entryFee: duel.entryFee,
+      currency: duel.currency,
       myStreak: duel.myStreak,
       opponentStreak: duel.opponentStreak,
       startsAt: duel.startsAt,
@@ -917,6 +934,11 @@ class HabitDuelFirestoreStore {
       isTrustedCheckin: data['isTrustedCheckin'] as bool? ?? false,
       healthMetric: data['healthMetric'] as String?,
       healthTargetValue: (data['healthTargetValue'] as num?)?.toDouble(),
+      entryFee: (data['entryFee'] as num?)?.toInt() ?? 0,
+      currency: DuelCurrency.values.firstWhere(
+        (value) => value.name == data['currency'],
+        orElse: () => DuelCurrency.coins,
+      ),
       myStreak: (data['myStreak'] as num?)?.toInt() ?? 0,
       opponentStreak: (data['opponentStreak'] as num?)?.toInt() ?? 0,
       startsAt: _readDateTime(data['startsAt']),

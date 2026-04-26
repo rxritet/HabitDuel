@@ -50,7 +50,16 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
     };
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Рейтинг')),
+      appBar: AppBar(
+        title: const Text('Рейтинг'),
+        actions: [
+          IconButton(
+            tooltip: 'Обновить рейтинг',
+            onPressed: () => ref.read(leaderboardProvider.notifier).load(),
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
+      ),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 250),
         child: KeyedSubtree(
@@ -142,6 +151,13 @@ class _LeaderboardHero extends StatelessWidget {
               'Кто держит лучшую форму прямо сейчас',
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w900,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Обновляется автоматически. Недельный цикл: ${_weeklyWindowLabel()}',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.outline,
               ),
             ),
             const SizedBox(height: 20),
@@ -461,4 +477,11 @@ String _winRate(LeaderboardEntry entry) {
   final total = entry.wins + entry.losses;
   if (total == 0) return '0';
   return ((entry.wins / total) * 100).toStringAsFixed(0);
+}
+
+String _weeklyWindowLabel() {
+  final now = DateTime.now();
+  final monday = now.subtract(Duration(days: now.weekday - 1));
+  final sunday = monday.add(const Duration(days: 6));
+  return '${monday.day}.${monday.month} - ${sunday.day}.${sunday.month}';
 }

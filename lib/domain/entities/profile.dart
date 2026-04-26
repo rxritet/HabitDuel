@@ -1,4 +1,5 @@
-/// Доменная сущность профиля пользователя.
+const _profileUnset = Object();
+
 class UserProfile {
   const UserProfile({
     required this.id,
@@ -31,10 +32,10 @@ class UserProfile {
     int? wins,
     int? losses,
     List<ProfileBadge>? badges,
-    String? bio,
-    String? favoriteHabit,
+    Object? bio = _profileUnset,
+    Object? favoriteHabit = _profileUnset,
     String? avatarEmoji,
-    String? avatarUrl,
+    Object? avatarUrl = _profileUnset,
   }) {
     return UserProfile(
       id: id ?? this.id,
@@ -43,10 +44,13 @@ class UserProfile {
       wins: wins ?? this.wins,
       losses: losses ?? this.losses,
       badges: badges ?? this.badges,
-      bio: bio ?? this.bio,
-      favoriteHabit: favoriteHabit ?? this.favoriteHabit,
+      bio: identical(bio, _profileUnset) ? this.bio : bio as String?,
+      favoriteHabit: identical(favoriteHabit, _profileUnset)
+          ? this.favoriteHabit
+          : favoriteHabit as String?,
       avatarEmoji: avatarEmoji ?? this.avatarEmoji,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
+      avatarUrl:
+          identical(avatarUrl, _profileUnset) ? this.avatarUrl : avatarUrl as String?,
     );
   }
 }
