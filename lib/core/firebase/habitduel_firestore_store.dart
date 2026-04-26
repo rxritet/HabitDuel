@@ -7,7 +7,6 @@ import '../../domain/entities/profile.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/entities/leaderboard_entry.dart';
 import '../../domain/entities/achievement.dart';
-import '../../domain/entities/app_update_info.dart';
 import '../../domain/entities/user_stats.dart';
 import '../../domain/entities/social.dart';
 import '../../domain/entities/shop.dart';
@@ -100,28 +99,6 @@ class HabitDuelFirestoreStore {
       await batch.commit();
     } catch (error) {
       debugPrint('Firestore profile mirror failed: $error');
-    }
-  }
-
-  Future<AppUpdateInfo?> readAndroidAppUpdate() async {
-    if (!_isEnabled) return null;
-    try {
-      final doc = await _db.collection('app_config').doc('android_update').get();
-      if (!doc.exists) return null;
-      final data = doc.data() ?? const <String, dynamic>{};
-      final changelogRaw = data['changelog'] as List<dynamic>? ?? const [];
-      return AppUpdateInfo(
-        versionName: data['versionName'] as String? ?? '',
-        versionCode: (data['versionCode'] as num?)?.toInt() ?? 0,
-        apkUrl: data['apkUrl'] as String? ?? '',
-        title: data['title'] as String? ?? 'Доступно обновление',
-        changelog: changelogRaw.map((item) => item.toString()).toList(growable: false),
-        forceUpdate: data['forceUpdate'] as bool? ?? false,
-        enabled: data['enabled'] as bool? ?? true,
-      );
-    } catch (error) {
-      debugPrint('readAndroidAppUpdate failed: $error');
-      return null;
     }
   }
 

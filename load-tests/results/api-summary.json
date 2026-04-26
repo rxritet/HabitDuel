@@ -1,250 +1,223 @@
 {
-    "root_group": {
-        "name": "",
-        "path": "",
-        "id": "d41d8cd98f00b204e9800998ecf8427e",
-        "groups": {
-            "setup": {
-                "name": "setup",
-                "path": "::setup",
-                "id": "5c0f8025f7e0b6654089e5b00e950f1a",
-                "groups": {},
-                "checks": {
-                        "register is 201 or 409": {
-                            "path": "::setup::register is 201 or 409",
-                            "id": "0740253d9d64fe1cfbbee98a67a69ba2",
-                            "passes": 120,
-                            "fails": 0,
-                            "name": "register is 201 or 409"
-                        }
-                    }
+    "metrics": {
+        "http_req_duration{name:duels_detail_lifecycle_creator}": {
+            "max": 21.031206,
+            "p(90)": 9.854217400000001,
+            "p(95)": 12.588564599999993,
+            "avg": 5.311226443850268,
+            "min": 2.930087,
+            "med": 3.483516,
+            "thresholds": {
+                "p(95)<900": false
             }
         },
-        "checks": {
-            "healthz is 200 in duel lifecycle": {
-                "fails": 0,
-                "name": "healthz is 200 in duel lifecycle",
-                "path": "::healthz is 200 in duel lifecycle",
-                "id": "f7889405c6285739984364fb2d0356aa",
-                "passes": 208
-            },
-            "healthz is 200 in auth churn": {
-                "name": "healthz is 200 in auth churn",
-                "path": "::healthz is 200 in auth churn",
-                "id": "3892d912b267018b99990987305e4b5f",
-                "passes": 93,
-                "fails": 0
-            },
-            "register is 201 or 409": {
-                "name": "register is 201 or 409",
-                "path": "::register is 201 or 409",
-                "id": "fd9da43e3ff169005c6f78576a066a45",
-                "passes": 93,
-                "fails": 0
-            },
-            "creator users me is 200": {
-                "name": "creator users me is 200",
-                "path": "::creator users me is 200",
-                "id": "4ad99e8cc2adccfa12666b1a27966130",
-                "passes": 208,
-                "fails": 0
-            },
-            "browse healthz is 200": {
-                "name": "browse healthz is 200",
-                "path": "::browse healthz is 200",
-                "id": "dd8608677c96cad559a1d5dbc84277a5",
-                "passes": 112,
-                "fails": 0
-            },
-            "browse users me is 200": {
-                "name": "browse users me is 200",
-                "path": "::browse users me is 200",
-                "id": "12df6129c2ed9f932994ee1a7edd9011",
-                "passes": 112,
-                "fails": 0
-            },
-            "browse duels list is 200": {
-                "fails": 0,
-                "name": "browse duels list is 200",
-                "path": "::browse duels list is 200",
-                "id": "38e9ae4ef54847f300927d4257a4fa7e",
-                "passes": 112
-            },
-            "browse leaderboard is 200": {
-                "name": "browse leaderboard is 200",
-                "path": "::browse leaderboard is 200",
-                "id": "c67f3994bd6977c4f328da83c8bf05b9",
-                "passes": 112,
-                "fails": 0
-            },
-            "users me is 200 in auth churn": {
-                "name": "users me is 200 in auth churn",
-                "path": "::users me is 200 in auth churn",
-                "id": "ad7041e7bf1d5b3a1285afcc6891576c",
-                "passes": 93,
-                "fails": 0
-            },
-            "opponent users me is 200": {
-                "path": "::opponent users me is 200",
-                "id": "1cf9ab4ce35db89381b985661c8bcf52",
-                "passes": 208,
-                "fails": 0,
-                "name": "opponent users me is 200"
-            },
-            "leaderboard is 200 in auth churn": {
-                "path": "::leaderboard is 200 in auth churn",
-                "id": "385dcea5990047b0c510d98189d97ab4",
-                "passes": 93,
-                "fails": 0,
-                "name": "leaderboard is 200 in auth churn"
-            },
-            "lifecycle duel create is 201": {
-                "path": "::lifecycle duel create is 201",
-                "id": "a9ba178b5a34096e0d1c8236e0cea3be",
-                "passes": 208,
-                "fails": 0,
-                "name": "lifecycle duel create is 201"
-            },
-            "lifecycle duel create returns id": {
-                "name": "lifecycle duel create returns id",
-                "path": "::lifecycle duel create returns id",
-                "id": "351f9e7f5ab24c6c7e021ad12b904e22",
-                "passes": 208,
-                "fails": 0
-            },
-            "lifecycle duel accept is 200": {
-                "fails": 0,
-                "name": "lifecycle duel accept is 200",
-                "path": "::lifecycle duel accept is 200",
-                "id": "849bf65b41cd615ad10896e349d06f90",
-                "passes": 208
-            },
-            "lifecycle creator duels list is 200": {
-                "id": "312867ffb7c7f662a49722309d178f27",
-                "passes": 208,
-                "fails": 0,
-                "name": "lifecycle creator duels list is 200",
-                "path": "::lifecycle creator duels list is 200"
-            },
-            "lifecycle opponent duels list is 200": {
-                "fails": 0,
-                "name": "lifecycle opponent duels list is 200",
-                "path": "::lifecycle opponent duels list is 200",
-                "id": "122d70702254a60d5c19b4679c8f69f7",
-                "passes": 208
-            },
-            "creator checkin is 201": {
-                "passes": 208,
-                "fails": 0,
-                "name": "creator checkin is 201",
-                "path": "::creator checkin is 201",
-                "id": "54bb4905d4704c48319e0da45c6f4753"
-            },
-            "opponent checkin is 201": {
-                "passes": 208,
-                "fails": 0,
-                "name": "opponent checkin is 201",
-                "path": "::opponent checkin is 201",
-                "id": "ab18166b5a18c48cd96779ac5cfa06c8"
-            },
-            "creator duel detail is 200": {
-                "fails": 0,
-                "name": "creator duel detail is 200",
-                "path": "::creator duel detail is 200",
-                "id": "9ae3a089b2befec94fd525fcd59fdd55",
-                "passes": 208
-            },
-            "opponent duel detail is 200": {
-                "id": "0a69f4cca951ed79bd318fbc4754c028",
-                "passes": 208,
-                "fails": 0,
-                "name": "opponent duel detail is 200",
-                "path": "::opponent duel detail is 200"
-            },
-            "leaderboard is 200 in lifecycle": {
-                "name": "leaderboard is 200 in lifecycle",
-                "path": "::leaderboard is 200 in lifecycle",
-                "id": "234ad1fb1dbe0296a8050a4916328fc6",
-                "passes": 208,
-                "fails": 0
-            },
-            "browse duel detail is 200": {
-                "name": "browse duel detail is 200",
-                "path": "::browse duel detail is 200",
-                "id": "cd8fd177436c28d6b6628168e8656a25",
-                "passes": 92,
-                "fails": 0
+        "iteration_duration": {
+            "med": 1552.752704,
+            "max": 3112.310206,
+            "p(90)": 2504.5162202,
+            "p(95)": 2718.0192091999998,
+            "avg": 1573.1439445012652,
+            "min": 312.31362
+        },
+        "http_req_duration{name:duels_list_browse}": {
+            "med": 7.4625474999999994,
+            "max": 66.125768,
+            "p(90)": 10.027167,
+            "p(95)": 56.680499999999995,
+            "avg": 11.1795614245283,
+            "min": 1.783524,
+            "thresholds": {
+                "p(95)<800": false
             }
-        }
-    },
-    "metrics": {
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 3495,
+            "thresholds": {
+                "rate<0.03": false
+            },
+            "value": 0
+        },
+        "http_req_waiting": {
+            "avg": 6.579928796280413,
+            "min": 0.250679,
+            "med": 3.604106,
+            "max": 95.672917,
+            "p(90)": 11.980729199999997,
+            "p(95)": 18.722796699999982
+        },
+        "vus": {
+            "value": 1,
+            "min": 1,
+            "max": 20
+        },
         "http_req_duration{name:leaderboard_browse}": {
-            "p(90)": 15.640381000000001,
-            "p(95)": 20.731381749999994,
-            "avg": 13.546537758928574,
-            "min": 5.316427,
-            "med": 10.2015995,
-            "max": 80.745389,
+            "p(95)": 88.2017095,
+            "avg": 16.121762943396234,
+            "min": 5.276613,
+            "med": 9.9246865,
+            "max": 95.360992,
+            "p(90)": 17.127379,
+            "thresholds": {
+                "p(95)<700": false
+            }
+        },
+        "http_req_duration{name:auth_register_dynamic}": {
+            "avg": 7.153741673267327,
+            "min": 1.884162,
+            "med": 3.226143,
+            "max": 59.998828,
+            "p(90)": 8.88997,
+            "p(95)": 46.201874,
+            "thresholds": {
+                "p(95)<600": false
+            }
+        },
+        "vus_max": {
+            "max": 20,
+            "value": 20,
+            "min": 20
+        },
+        "checks": {
+            "passes": 3682,
+            "fails": 0,
+            "value": 1
+        },
+        "iterations": {
+            "count": 394,
+            "rate": 11.846986640515821
+        },
+        "http_req_duration{name:duels_detail_lifecycle_opponent}": {
+            "avg": 5.392266331550802,
+            "min": 2.908652,
+            "med": 3.451787,
+            "max": 22.020135,
+            "p(90)": 9.453186400000003,
+            "p(95)": 18.596929299999985,
+            "thresholds": {
+                "p(95)<900": false
+            }
+        },
+        "http_req_blocked": {
+            "avg": 0.01497927010014304,
+            "min": 0.000829,
+            "med": 0.001959,
+            "max": 8.374325,
+            "p(90)": 0.004089,
+            "p(95)": 0.005286899999999994
+        },
+        "http_req_duration{name:auth_login_dynamic}": {
+            "avg": 3.6520703366336633,
+            "min": 1.18815,
+            "med": 1.493858,
+            "max": 34.96634,
+            "p(90)": 4.692792,
+            "p(95)": 28.432252,
+            "thresholds": {
+                "p(95)<600": false
+            }
+        },
+        "http_req_sending": {
+            "p(95)": 0.0332161,
+            "avg": 0.018227742203147393,
+            "min": 0.004414,
+            "med": 0.011315,
+            "max": 1.671576,
+            "p(90)": 0.029248
+        },
+        "data_sent": {
+            "count": 1272774,
+            "rate": 38270.39739694387
+        },
+        "http_req_duration{name:duels_create_lifecycle}": {
+            "p(90)": 19.893314600000007,
+            "p(95)": 28.18160079999999,
+            "avg": 12.243116663101597,
+            "min": 5.255918,
+            "med": 7.482381,
+            "max": 76.035703,
+            "thresholds": {
+                "p(95)<900": false
+            }
+        },
+        "http_reqs": {
+            "count": 3495,
+            "rate": 105.08938657005785
+        },
+        "http_req_duration{name:duels_accept_lifecycle}": {
+            "min": 3.905027,
+            "med": 4.855012,
+            "max": 25.927534,
+            "p(90)": 11.066767200000001,
+            "p(95)": 17.844630799999997,
+            "avg": 6.99414513903743,
+            "thresholds": {
+                "p(95)<900": false
+            }
+        },
+        "http_req_duration": {
+            "min": 0.305704,
+            "med": 3.702546,
+            "max": 95.76734,
+            "p(90)": 12.040912399999998,
+            "p(95)": 18.78929509999998,
+            "avg": 6.666663410872682,
+            "thresholds": {
+                "p(95)<1200": false,
+                "p(99)<2500": false
+            }
+        },
+        "http_req_duration{name:duels_checkin_creator}": {
+            "avg": 13.909918465240633,
+            "min": 7.157958,
+            "med": 9.15308,
+            "max": 62.859885,
+            "p(90)": 23.3762962,
+            "p(95)": 32.518466599999996,
+            "thresholds": {
+                "p(95)<900": false
+            }
+        },
+        "http_req_duration{name:duels_checkin_opponent}": {
+            "med": 9.099132,
+            "max": 60.615598,
+            "p(90)": 23.2501578,
+            "p(95)": 30.735030199999947,
+            "avg": 13.74092585561497,
+            "min": 6.866761,
+            "thresholds": {
+                "p(95)<900": false
+            }
+        },
+        "http_req_duration{name:healthz}": {
+            "p(90)": 0.8047517,
+            "p(95)": 1.235572199999979,
+            "avg": 0.7540837538071065,
+            "min": 0.305704,
+            "med": 0.553212,
+            "max": 7.158359,
+            "thresholds": {
+                "p(95)<300": false
+            }
+        },
+        "http_req_duration{name:users_me_browse}": {
+            "med": 9.618142,
+            "max": 95.76734,
+            "p(90)": 16.7750695,
+            "p(95)": 85.5231585,
+            "avg": 15.606950905660378,
+            "min": 2.26472,
             "thresholds": {
                 "p(95)<700": false
             }
         },
         "http_req_duration{expected_response:true}": {
-            "avg": 8.169077373866225,
-            "min": 0.294827,
-            "med": 4.7486105,
-            "max": 114.918694,
-            "p(90)": 14.992705000000006,
-            "p(95)": 25.33992224999993
-        },
-        "http_reqs": {
-            "count": 3528,
-            "rate": 109.11003207815644
-        },
-        "http_req_receiving": {
-            "avg": 0.07100774688208625,
-            "min": 0.017818,
-            "med": 0.0630625,
-            "max": 0.397951,
-            "p(90)": 0.09737040000000001,
-            "p(95)": 0.14538214999999993
-        },
-        "http_req_duration{name:duels_detail_lifecycle_opponent}": {
-            "avg": 7.290806432692306,
-            "min": 2.84634,
-            "med": 3.60935,
-            "max": 37.52139,
-            "p(90)": 12.11460600000001,
-            "p(95)": 36.340036749999996,
-            "thresholds": {
-                "p(95)<900": false
-            }
-        },
-        "http_req_duration{name:duels_checkin_creator}": {
-            "med": 10.4226335,
-            "max": 114.918694,
-            "p(90)": 27.647648100000012,
-            "p(95)": 112.2585699,
-            "avg": 19.49880479807694,
-            "min": 7.003697,
-            "thresholds": {
-                "p(95)<900": false
-            }
-        },
-        "http_req_duration{name:duels_accept_lifecycle}": {
-            "p(95)": 48.558079249999935,
-            "avg": 8.903330519230773,
-            "min": 3.755,
-            "med": 4.8503505,
-            "max": 50.787993,
-            "p(90)": 13.149379900000001,
-            "thresholds": {
-                "p(95)<900": false
-            }
-        },
-        "iterations": {
-            "count": 413,
-            "rate": 12.772801374228631
+            "p(90)": 12.040912399999998,
+            "p(95)": 18.78929509999998,
+            "avg": 6.666663410872682,
+            "min": 0.305704,
+            "med": 3.702546,
+            "max": 95.76734
         },
         "http_req_tls_handshaking": {
             "avg": 0,
@@ -254,1021 +227,1062 @@
             "p(90)": 0,
             "p(95)": 0
         },
-        "http_req_duration{name:users_me_browse}": {
-            "avg": 13.106490544642858,
-            "min": 2.49955,
-            "med": 9.731600499999999,
-            "max": 82.976301,
-            "p(90)": 15.191365300000001,
-            "p(95)": 19.816717199999996,
-            "thresholds": {
-                "p(95)<700": false
-            }
-        },
-        "http_req_duration{name:duels_list_browse}": {
-            "avg": 9.596345357142855,
-            "min": 2.030051,
-            "med": 7.4961649999999995,
-            "max": 78.057503,
-            "p(90)": 9.5979237,
-            "p(95)": 12.793776599999996,
-            "thresholds": {
-                "p(95)<800": false
-            }
-        },
-        "iteration_duration": {
-            "med": 1440.3674115,
-            "max": 3118.737966,
-            "p(90)": 2427.5273508,
-            "p(95)": 2561.9389392499997,
-            "avg": 1501.0854215628035,
-            "min": 251.852004
-        },
-        "http_req_duration{name:auth_login_dynamic}": {
-            "min": 0,
-            "med": 0,
-            "max": 0,
-            "p(90)": 0,
-            "p(95)": 0,
-            "avg": 0,
-            "thresholds": {
-                "p(95)<600": false
-            }
-        },
-        "http_req_duration{name:healthz}": {
-            "p(90)": 0.8584408,
-            "p(95)": 1.0770731999999987,
-            "avg": 0.6991083196125902,
-            "min": 0.294827,
-            "med": 0.557455,
-            "max": 5.605095,
-            "thresholds": {
-                "p(95)<300": false
-            }
-        },
-        "checks": {
-            "passes": 3736,
-            "fails": 0,
-            "value": 1
-        },
-        "vus": {
-            "min": 3,
-            "max": 20,
-            "value": 3
-        },
-        "http_req_connecting": {
-            "avg": 0.005909198412698412,
-            "min": 0,
-            "med": 0,
-            "max": 1.71604,
-            "p(90)": 0,
-            "p(95)": 0
-        },
-        "http_req_duration{name:duels_checkin_opponent}": {
-            "p(90)": 29.226931800000003,
-            "p(95)": 109.36730795,
-            "avg": 18.43479609615384,
-            "min": 6.91195,
-            "med": 9.034344,
-            "max": 110.18094,
-            "thresholds": {
-                "p(95)<900": false
-            }
-        },
-        "http_req_duration{name:auth_register_dynamic}": {
-            "avg": 5.450652397849464,
-            "min": 1.922209,
-            "med": 3.247388,
-            "max": 41.441956,
-            "p(90)": 8.216490799999997,
-            "p(95)": 19.022196799999975,
-            "thresholds": {
-                "p(95)<600": false
-            }
-        },
-        "http_req_duration{name:duels_create_lifecycle}": {
-            "p(95)": 76.13846955,
-            "avg": 13.80055925961538,
-            "min": 4.970087,
-            "med": 7.403624000000001,
-            "max": 82.571067,
-            "p(90)": 21.636852500000014,
-            "thresholds": {
-                "p(95)<900": false
-            }
-        },
-        "http_req_blocked": {
-            "avg": 0.01320650198412702,
-            "min": 0.00063,
-            "med": 0.001957,
-            "max": 5.095263,
-            "p(90)": 0.0041042000000000006,
-            "p(95)": 0.005099749999999995
-        },
-        "http_req_sending": {
-            "med": 0.0115425,
-            "max": 9.056699,
-            "p(90)": 0.0290506,
-            "p(95)": 0.03382414999999998,
-            "avg": 0.01971826162131515,
-            "min": 0.00365
-        },
-        "http_req_failed": {
-            "passes": 0,
-            "fails": 3528,
-            "thresholds": {
-                "rate<0.03": false
-            },
-            "value": 0
-        },
-        "http_req_duration{name:duels_detail_lifecycle_creator}": {
-            "avg": 7.065189687500005,
-            "min": 2.914369,
-            "med": 3.7320830000000003,
-            "max": 36.698507,
-            "p(90)": 12.498346200000006,
-            "p(95)": 35.528504049999974,
-            "thresholds": {
-                "p(95)<900": false
-            }
-        },
-        "data_sent": {
-            "count": 1326887,
-            "rate": 41036.47481124965
-        },
-        "vus_max": {
-            "value": 20,
-            "min": 20,
-            "max": 20
-        },
-        "http_req_duration": {
-            "max": 114.918694,
-            "p(90)": 14.992705000000006,
-            "p(95)": 25.33992224999993,
-            "avg": 8.169077373866225,
-            "min": 0.294827,
-            "med": 4.7486105,
-            "thresholds": {
-                "p(95)<1200": false,
-                "p(99)<2500": false
-            }
-        },
-        "http_req_waiting": {
-            "avg": 8.078351365362812,
-            "min": 0.238818,
-            "med": 4.634144,
-            "max": 114.822598,
-            "p(90)": 14.911072900000008,
-            "p(95)": 25.176480999999896
+        "http_req_receiving": {
+            "avg": 0.06850687238912732,
+            "min": 0.018565,
+            "med": 0.061113,
+            "max": 1.237086,
+            "p(90)": 0.09051659999999999,
+            "p(95)": 0.11510219999999988
         },
         "data_received": {
-            "count": 5468773,
-            "rate": 169132.08544732307
+            "count": 5268627,
+            "rate": 158419.67939812425
+        },
+        "http_req_connecting": {
+            "min": 0,
+            "med": 0,
+            "max": 1.431854,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0.004532454363376251
         }
     },
     "setup_data": {
         "pairs": [
             {
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMmNhMThjYy02M2QyLTQyZDItOTc5Mi1mOGFjNTMyYzYxOGMiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0xIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.9CeNDniCjf9zFelqJ7lS0Ewh3VqbExf41o4bAZFnXG0",
-                "creator": {
-                    "email": "seed_creator_1777201351275-0@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-0"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1OTBkNGM2Mi01N2NiLTQ0M2UtOGQwYi0yOWU5MjgxODA2ZDAiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTAiLCJpYXQiOjE3NzcyMDEzNTEsImV4cCI6MTc3OTc5MzM1MX0.96CYbpoayavMfFpZrvpXvj0fVKy9sOl2jkm_2jxQh7Q",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5OGFjNGNkNS00YWZhLTRkYTYtYTcyNC1mZTg0ODRjMjIwNDQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTAiLCJpYXQiOjE3NzcyMDE1NDQsImV4cCI6MTc3OTc5MzU0NH0.Bmv_VQKv1WLkQ1sxhvE40izc8V7QSLBV5Qk7IxmRo8s",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-1@habitduel.dev",
+                    "email": "seed_opponent_1777201544701-1@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-1"
-                }
-            },
-            {
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNzAwZDNkNC05MjY2LTQ0YmUtYmFiYy0zMzk1OWFhNjllZGYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0zIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.jNimEyOYK5SnDLS58FxNTqoZgNfp4JgXVKmyapO3fFY",
+                    "username": "seed_opponent_1777201544701-1"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiOWJjMzJjNC1mMzRkLTRmZTQtYjljYy01NWUzNzJiMGU3YTQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0xIiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.PI_C95EejgKiI1Z0B-Z414pxLoBe3l8Y5OnNhkiQq6M",
                 "creator": {
-                    "email": "seed_creator_1777201351275-2@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-2"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZDMyMjJkZS03ZDc4LTRkMTctYjJkYS04NDQ1ZTQwMjc0YzAiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTIiLCJpYXQiOjE3NzcyMDEzNTEsImV4cCI6MTc3OTc5MzM1MX0.GKBPCC_xDeVzsSJn7jcNNHVZFgVMBYhb6XOMYZmorsc",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-3@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-3"
-                }
-            },
-            {
-                "creator": {
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-4",
-                    "email": "seed_creator_1777201351275-4@habitduel.dev"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNzQwOTBkOS1lOWUwLTQ5YzItYTg4My1lZTJmZmQ4MDA2OWEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTQiLCJpYXQiOjE3NzcyMDEzNTEsImV4cCI6MTc3OTc5MzM1MX0.zk_z7yemYWF2bfmqUmyceBTjiacZ4t6Od4UO-vM_q8s",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-5@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-5"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiZmI0YWVjNi0xNzFiLTQxMzAtODMwYy1hZWY4NTQwMTMyODUiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS01IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.P4I6UUYUQ7Ic5vkKCXOntq3pL7J8ZqwmV5MaPG_y1S0"
-            },
-            {
-                "creator": {
-                    "email": "seed_creator_1777201351275-6@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-6"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4Y2Q4ODVhZi1lYjNjLTQ5NDMtYmViMy1lZGUwOWRjYjc3NDEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTYiLCJpYXQiOjE3NzcyMDEzNTEsImV4cCI6MTc3OTc5MzM1MX0.W8nFYQqnTY5MGEXRdA8UCXoK6WVPW7DgX0g-LVrBCh8",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-7@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-7"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmZDBmODMzMC1kOThlLTRhZDctOTIyMy00NzgzYjk2NDFmNGEiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS03IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.8fOVDRGU4jLGmpfGwWO5pYb2z2G8UK77Ygi-zIeg8rU"
-            },
-            {
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-9@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-9"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMzA3YTA5Yy03YzUxLTRlMGEtOWE0OC1kMTU0ZjkzMzcxNDMiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS05IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.wHqKKQ5kOMwkipNqThywIMznvScHi3UfRqRMczrbJK4",
-                "creator": {
-                    "email": "seed_creator_1777201351275-8@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-8"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1YmNiYzJlNS1iYTQ0LTQ5ZGYtODY4MC1hOGEzYmVjYTM3ZGQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTgiLCJpYXQiOjE3NzcyMDEzNTEsImV4cCI6MTc3OTc5MzM1MX0.j5IvL0FfJzLzicPrERHFJ-veI87gPS9ZTrwivk7ytH8"
-            },
-            {
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-11@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-11"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMzEzOWNhNS0yYTQ1LTQ5ODItYWZhMS1mYjVmZDc1NTQwZDQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0xMSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.Nm2OslSNqVmou7EulJ0EfxjqtR3_jBhs1TBd3KDBzaA",
-                "creator": {
-                    "email": "seed_creator_1777201351275-10@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-10"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTE1ZGZkYi1iYTUwLTRkYTktYTlhYi1hYjAwOTI0YWMzYjgiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTEwIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.PT_ZyzEiOrHWHE1lU5n0xMRs7zNocCBYDyPqwYBRmTw"
-            },
-            {
-                "creator": {
-                    "email": "seed_creator_1777201351275-12@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-12"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4YTVhM2NkZS04OTU2LTRiYTgtYmFjNC03MmNmZjlhMWRlYzIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTEyIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.CcqAV_TRy6TlcEt4nx0F8DT_Xcv7vJ3hDlnR4ouIu_M",
-                "opponent": {
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-13",
-                    "email": "seed_opponent_1777201351275-13@habitduel.dev"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNzVmYmU1NC1mZGU4LTQ2NTEtOGQ0ZS04YzEwZjEyMzg0NmQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0xMyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.qqtgnw8J_tErChvFVcBlDWGJn6XM2leu1z6BaGyY_dk"
-            },
-            {
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-15@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-15"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3MWVjMjA1My1iZDY4LTRmZjktYjA3OC03Y2M0OTc1NGNjYzkiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0xNSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.bf6j0oRJPz_26NpNB8rHjdkEG7uwId7GlJ_r8Q7fX_o",
-                "creator": {
-                    "email": "seed_creator_1777201351275-14@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-14"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4YmM5ODZmMS1mMGYwLTRhMmQtOWI3Ny1lNDc1MzUxMDkzNzQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTE0IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.tOWp6HneXjSkEnIPUCBmeA471qA00b_vhPJ8vs2i0g0"
-            },
-            {
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYTVlMjU1Yi0xNjExLTQ4ZDMtOGNiMC1kNDZmZjI4YzIyNWIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTE2IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.fNp5c94E5nvjxxkjlY6kBz22il7xIYkBNDTQbQc1dkA",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-17@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-17"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiY2ZiZjkyNi0zMDY4LTQ0NzYtODc5MC0yYWEzOTkyOTVjOTUiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0xNyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.sZ5Lx0Dnyx9C2a_uW6tdtvC3UJRBzFjlyisYwrqLh94",
-                "creator": {
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-16",
-                    "email": "seed_creator_1777201351275-16@habitduel.dev"
-                }
-            },
-            {
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-19@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-19"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MWM1NTQ5ZC05ZjE3LTQ4YTItYjMxYy04ZDBjMGYwMGM5MWIiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0xOSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.jDJUAJj112ex-x6DP_pEsGJoMbXDSzs4NEKiMedwntk",
-                "creator": {
-                    "email": "seed_creator_1777201351275-18@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-18"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYzgwZTZjNS1hMjU5LTQzMGMtOTIwOS1kNGQ3NzkwYWU2OWUiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTE4IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.gj0UCsNfD2s3ai_lV7DfD1vOMOoVOffb2GjyBU_OuC4"
-            },
-            {
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMGI0Yzc2ZC02NjM2LTQ1MWMtODg4Mi1hMGIzYWM1NjcyYjEiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0yMSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.fheiYLsm2kZVfL2SK9CnMWAhPtRJkl9ZR7hPtq-0Z6k",
-                "creator": {
-                    "email": "seed_creator_1777201351275-20@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-20"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkOGQ1YThhYy03NzQ4LTRiMjYtOWViMi01YzUyM2ZmZjEzZjkiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTIwIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.MmyhDX4APHZt8zOQAX4cSrzD0zPLF2xyZwgRlISJmKI",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-21@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-21"
-                }
-            },
-            {
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiZjYyMDhkNS00NmQzLTQ2OTUtOGVmMy1iMDVhZDY4ODg3NTMiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTIyIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.VUO-iMUoDRU4mUTqTcy4HuAN6ob2JQ3g1X6MzfXo5Jw",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-23@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-23"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1YTQ3MDFhNS1hOTc1LTQ4ZjctOGU5ZC1hM2IxYWViNjYwN2EiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0yMyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.s0vAmPm9ZbdKk3BSLHosCoUnrkcTmOsFWuMXXsaQ9do",
-                "creator": {
-                    "email": "seed_creator_1777201351275-22@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-22"
-                }
-            },
-            {
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhN2NiZjNkYS05MzQ5LTRiNTktOTUzYi1hYWQ5ZjdjMWFjZmMiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTI0IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.8XWnmCoZs3YRN0ZfyccLeCi07OxbZsYZ4iJNefXEhuE",
-                "opponent": {
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-25",
-                    "email": "seed_opponent_1777201351275-25@habitduel.dev"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3ZjBjYTdkOC1mNzZjLTQ3NDktYTZmZC0xNTc0ZmFhMTVlMmQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0yNSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.hS5w2kUaxT3LzVyApR9LWLOD9oDU-Hmf7bwzV-qVdwM",
-                "creator": {
-                    "username": "seed_creator_1777201351275-24",
-                    "email": "seed_creator_1777201351275-24@habitduel.dev",
+                    "username": "seed_creator_1777201544701-0",
+                    "email": "seed_creator_1777201544701-0@habitduel.dev",
                     "password": "loadtest123"
                 }
             },
             {
                 "creator": {
-                    "email": "seed_creator_1777201351275-26@habitduel.dev",
+                    "email": "seed_creator_1777201544701-2@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-26"
+                    "username": "seed_creator_1777201544701-2"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1YTljNTU5Mi1hZjZjLTQxYTgtOWVkMC03MjA5ZmZhODNjMmQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTI2IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.d0D9VviZ3QlFyB_p80YawRQFn829Q2wAl4-x7w9CHhU",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMDhiODQ0Zi0xN2E1LTRhM2QtYTUwNC04NWI4OTRlNjU5MWYiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTIiLCJpYXQiOjE3NzcyMDE1NDQsImV4cCI6MTc3OTc5MzU0NH0.eT2IdJhBaRjet5nr2QxJg2yZk4olheC4XB8qSe8N3sU",
                 "opponent": {
+                    "email": "seed_opponent_1777201544701-3@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-27",
-                    "email": "seed_opponent_1777201351275-27@habitduel.dev"
+                    "username": "seed_opponent_1777201544701-3"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNTQ0ZWNmZi04MGUzLTRhNjItOGZlZi1lZWI1MTE4YWRmMjQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0yNyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.LLsuvHAguHL6YGbovF2EZJKemsKgvtqEh2ZsbuYDkcs"
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxZjRiYjc1YS0wNzBiLTQyYWUtOGMwMi0yZDg2ZmJlMjA1YzQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0zIiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.O7clhcZJKA3oSws62o7tCAMWgFVaGZ5BbGnJGdZ4CFg"
             },
             {
                 "creator": {
+                    "email": "seed_creator_1777201544701-4@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-28",
-                    "email": "seed_creator_1777201351275-28@habitduel.dev"
+                    "username": "seed_creator_1777201544701-4"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMDMyZjhjOS00ZjhhLTQxMmEtOGNiNy1jMDIzZDE1N2U5ZGIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTI4IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.9w-8abyqNl7ZHw_bzqV0gvYLm6vcAEVMe8ava5I0PE0",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiM2Q1NTE5Ni1iZDRjLTQ4ZmItOGQxOC0xMTA3M2ZmYWFlZTQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTQiLCJpYXQiOjE3NzcyMDE1NDQsImV4cCI6MTc3OTc5MzU0NH0.Z0b6LYuiJtmTvufMy9eEtQ13c7vKHrgmpa6nPhhauc0",
                 "opponent": {
+                    "email": "seed_opponent_1777201544701-5@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-29",
-                    "email": "seed_opponent_1777201351275-29@habitduel.dev"
+                    "username": "seed_opponent_1777201544701-5"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NTYyNDc3MS1kNWI5LTQxNTMtYjM1Zi0wYTdhZDk2N2RlNGYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0yOSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.JK7wlCKk-Rut1nEEf8MAlkbCpl3cmj2UFvAOlo-07O8"
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYTFiOTQ2OC03YzZiLTRhNTMtYWE4MS01YzRhZGFmNjA0MzQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS01IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.2oXFprTB7Tj8dzF-wEfEYEMAI_jiyrg008dsWoRmaKI"
             },
             {
                 "creator": {
+                    "email": "seed_creator_1777201544701-6@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-30",
-                    "email": "seed_creator_1777201351275-30@habitduel.dev"
+                    "username": "seed_creator_1777201544701-6"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MWUzN2RmOC1jZjgzLTQwNDgtYTE4Mi1mYmQyM2Y2NDRiMGEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTMwIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.TqU206-Bid74JzAKFN1TVuz99B1zs-jKt-FPDim4eTs",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5NTk0NTcwZC02N2U5LTQ3NTktYWE0NC0zZmUxNmQwMTkyODIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTYiLCJpYXQiOjE3NzcyMDE1NDQsImV4cCI6MTc3OTc5MzU0NH0.3Iw5k_95BN2w6XmeFAtqFQGzuHNAu-71E-SAmCgwZCQ",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-31@habitduel.dev",
+                    "email": "seed_opponent_1777201544701-7@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-31"
+                    "username": "seed_opponent_1777201544701-7"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxODhjM2UzOS0zNGJiLTRlNzEtYTU0OS0xMDI1ZjFjNmU1NDciLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0zMSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.o2kgqqzQyv1vuOOJ-lxAm9EqAHuQiEJQfU-5MTQUce8"
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiZDViN2QwMy1jYmEwLTRmNmQtODBiMi1kOTczZTE4ZDk3N2QiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS03IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.0m5wD9HB-NwoiZ2wfuSaNJPUp262Hb0KWIhXRgQ5KMw"
             },
             {
                 "creator": {
-                    "email": "seed_creator_1777201351275-32@habitduel.dev",
+                    "email": "seed_creator_1777201544701-8@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-32"
+                    "username": "seed_creator_1777201544701-8"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkMjhkZDBjMC1lYTQ1LTQ0MGEtYmZhOS1iNDc0NWNmZWFlZjYiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTMyIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.eY1XTNiwrNGQRY2cewR4W5lxna6dqe1IVwnPX488UMU",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyN2NiMmJkNS00N2FjLTQyOTgtYmM5ZC02ZmQxNTFmZjAxMTgiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTgiLCJpYXQiOjE3NzcyMDE1NDQsImV4cCI6MTc3OTc5MzU0NH0.1wtd4M7BWM3TBHy28KVApyOpovaS7cCK-HqteN3eZUo",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-33@habitduel.dev",
+                    "email": "seed_opponent_1777201544701-9@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-33"
+                    "username": "seed_opponent_1777201544701-9"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmODJkNzczNy04NjIxLTQxZDItOGM3My1lNDc4NzQ5NjIyMWIiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0zMyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.1xs4NCSlGzhJvrW-bl8hH08eABr0TKFmQHz9ygEiuXo"
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMjE3NWNmMC03Yjk5LTQ0NmUtOGE3Mi00NzlmNGRmODE0OGMiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS05IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.PXVgkOEOSG-JjGDr-tulniODyxB1aHDcIC_hiGpmQc8"
             },
             {
                 "creator": {
-                    "username": "seed_creator_1777201351275-34",
-                    "email": "seed_creator_1777201351275-34@habitduel.dev",
+                    "username": "seed_creator_1777201544701-10",
+                    "email": "seed_creator_1777201544701-10@habitduel.dev",
                     "password": "loadtest123"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NWQwMWRiNC1lN2FmLTQ1MWItOTY1YS01NzQ3ODA0OThiZmMiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTM0IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.nbnPlXDvinLns_SMoU3HmuBHMHXIt0wf_sEyvLl74UI",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NDNlY2IwNC1lMjEyLTQyNTYtODhkOC0yYWUzNzJlZTFjNmMiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTEwIiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.TrObjMwDO22J25a1eftdcThE1NYVRwPB9Ktz4bMnX3g",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-35@habitduel.dev",
+                    "email": "seed_opponent_1777201544701-11@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-35"
+                    "username": "seed_opponent_1777201544701-11"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNjljMTllOC1lOGY5LTRiYWUtOTQ3Yy05ODkzMDllMjhlMjEiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0zNSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.NssWKThzSyxaZnIZb-UerbEtZL8SmgC0QApe6XNUOO4"
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NGRhNzEwZC00MjcxLTQzMjUtOTdkOS0yM2EyODEzNDkwYTUiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0xMSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.cgtA6LG-ceablZRYbLQbx5UkEFIWWfRDeMGfAaNxYYQ"
             },
             {
                 "creator": {
-                    "email": "seed_creator_1777201351275-36@habitduel.dev",
+                    "email": "seed_creator_1777201544701-12@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-36"
+                    "username": "seed_creator_1777201544701-12"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkMDhhZjVkMC0yODBjLTQ2MTUtOTBiMi01ZDNjZDQ4Nzk1ZjQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTM2IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.FC_63BPXdjQE7dNCU7bUGW-DNptorhGJR5WU9roMtlA",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3ZjViMDFhNi1hZWQzLTRjMWYtYWM5NC0yZWM3N2QwNTBlZDMiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTEyIiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.5Yti9lihvgJqJsmtolpTdg7tJlk6x6Yh_zQuMGnMT8I",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-37@habitduel.dev",
+                    "email": "seed_opponent_1777201544701-13@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-37"
+                    "username": "seed_opponent_1777201544701-13"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjM2YzYzUzYy00NTFjLTQxY2QtOGQyNi03NDZiNWEyNTVmZmQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0zNyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.BnPGACeIkrWAVcxr9-Kmng2GlIxI2xCGqKc_e9iSfD0"
-            },
-            {
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMjEyZDZmNy04M2RmLTQ1MmUtYTU5MS05NTVmNTNiYjFmYWIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTM4IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.OYe9bR6npXL3Lf5hisrm53r8AUahV85wSKLqapPc9go",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-39@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-39"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNWY0YmEzNy0xZWY4LTQzZDEtYTI5YS02NzgwMjZkM2VkNDkiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0zOSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.boyGAeivGHBgKg5OvMKJIELaBZ4PyvTiRvoUsqYP6gI",
-                "creator": {
-                    "email": "seed_creator_1777201351275-38@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-38"
-                }
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiZDljOWVjYi05NThlLTQzZDQtOWI4Ny01NWEzYmEyNjdiN2EiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0xMyIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.i0G9dFbCJytoN-jTg6Oxlw0HukJi3JM0PiLpYWt46vQ"
             },
             {
                 "creator": {
+                    "email": "seed_creator_1777201544701-14@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-40",
-                    "email": "seed_creator_1777201351275-40@habitduel.dev"
+                    "username": "seed_creator_1777201544701-14"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNzc1N2RjZi00MTc0LTQzZGEtOTUyNy1jYmI5MGJmMjM3M2MiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTQwIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.2BFFVPXyM1hWjCko7rfXHj1-5tqXauOK7vtNWZgOxas",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NzJhMDc3ZS01ZjViLTQ4MDYtYWRhNS0wZjE0OTczNDBkYWEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTE0IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.dSQzmSWzRUfgZjRc0URYehLuL5uTjljU5pF2fnh2qiQ",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-41@habitduel.dev",
+                    "email": "seed_opponent_1777201544701-15@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-41"
+                    "username": "seed_opponent_1777201544701-15"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYTU0NGY3NC1mOGRmLTRmNzYtOTM5OS1mYzE0MTI3YTI4NmUiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS00MSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.p6fvENCN6Q8_xceRIYB0rCAOU6E2TaxSlaw-Cfsmc_4"
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4MThhNzM3Zi00NjYwLTQ5YTctOGY5MS1lYmRkM2NmMjA5MzUiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0xNSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.JgAHcTFbOMUlSnBz6exIfxr8ITCgPDS8ivB0e2G0X7c"
             },
             {
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NjQwN2QyNi1mZjNjLTQyZDktOWRlMi03OGFhNmVlZWU0NTUiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0xNyIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.vV7qu8_J5TMe60IpZW_aEbZWWISx4chBY5z_--dP_k4",
                 "creator": {
-                    "username": "seed_creator_1777201351275-42",
-                    "email": "seed_creator_1777201351275-42@habitduel.dev",
-                    "password": "loadtest123"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNTFlMDdiMy0wN2Y3LTQ2NTItYTM3OC1mYzUxMjJjNjU5MzIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTQyIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.xK_jDsneI9Ct02vhIaoMksmgeG4ToddOf0PJNalDDvE",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-43@habitduel.dev",
+                    "email": "seed_creator_1777201544701-16@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-43"
+                    "username": "seed_creator_1777201544701-16"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3ODU5ZjcyMi1iZTdlLTQ2MzUtYWE4Ni0zMDc2MzlhZjBmNmYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS00MyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.VhOQrA_HypiyzaR1UeQtBsYj_oibbKUvgnq4igRZBg0"
-            },
-            {
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNzM0YjFhZi0yYTNmLTRjNjctODJkOC0yMDFjMzQxYjY5OGUiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS00NSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.Lo8OHTadWoEQHmJ1Ymq_vHEx-eeuE5dRcrAPemXRqtw",
-                "creator": {
-                    "username": "seed_creator_1777201351275-44",
-                    "email": "seed_creator_1777201351275-44@habitduel.dev",
-                    "password": "loadtest123"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxOTc0NTEwOS05ZmU4LTQwMDctOTFjNi1mMTZjN2UxOTMzNTYiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTQ0IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.kBFgR7WZIu9yzvikv-371qi0Ri4zmuMgNs9FvPcXHZo",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwZDljODAxMy02YmI1LTRkMGQtYjAzMi0wMmE0MzQwMGE4MzciLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTE2IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.toNK7HwhVEst3JrmCXZ6FDVv-MjZhsStS6OMwvdl_-8",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-45@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-45"
-                }
-            },
-            {
-                "creator": {
-                    "username": "seed_creator_1777201351275-46",
-                    "email": "seed_creator_1777201351275-46@habitduel.dev",
-                    "password": "loadtest123"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMjc2M2QxYS00N2JjLTQzMjYtYjc0MS00ZDJjMzAyNTg3YmMiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTQ2IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.l8UstMjBspe7v_wqOs59Jxd3a0HBfhikgqC_I_jVTI0",
-                "opponent": {
-                    "username": "seed_opponent_1777201351275-47",
-                    "email": "seed_opponent_1777201351275-47@habitduel.dev",
-                    "password": "loadtest123"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5MDg2ODE4ZS0yNTBiLTQ2ZjMtYjY5MS1hZWFlY2NkMmJmMGQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS00NyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.lJS0GkQopDhXCbk1kPzYFBkvZz8lGqUSW1N4XGCv4r4"
-            },
-            {
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyYTMxZmIwNy1mMzFiLTRjMWEtYjY0Ny0xMjE5YWFiODNmMDYiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTQ4IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9._Yw6AyIcw1csqp4F0tEZT_8sKBXqNx-AxOFWa0Ark4w",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-49@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-49"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3YzM2YmMyNS0yYjgwLTQwZDItYmIzMC0zZGYxMDU3ZDM1MjkiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS00OSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.KS6MSHdPp-mlMX7rJpe1BL8uPoKs_COOTkWpt066C0k",
-                "creator": {
-                    "username": "seed_creator_1777201351275-48",
-                    "email": "seed_creator_1777201351275-48@habitduel.dev",
+                    "username": "seed_opponent_1777201544701-17",
+                    "email": "seed_opponent_1777201544701-17@habitduel.dev",
                     "password": "loadtest123"
                 }
             },
             {
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNjY2NThkZi0yYTA4LTRkODYtOTNlNC0zN2U0MDMyY2U1NTYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0xOSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.Iuj-01EeHdkEshOvD_vkphJV3Q-up9_VSaaArcp6upI",
                 "creator": {
-                    "email": "seed_creator_1777201351275-50@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-50"
+                    "username": "seed_creator_1777201544701-18",
+                    "email": "seed_creator_1777201544701-18@habitduel.dev"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYzQ5N2JmMS0zYzczLTRjODUtODVmYS05MTljZDA0ZjkxN2MiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTUwIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.p1HvOnz09CWNF9jQ1SMRAawDC-b1RrMc1rB-3AALCq4",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlOGZlZDlmZC05NzAyLTRmYTEtYmJjMC0wZDYzZDczNDE2NGIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTE4IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.CYyDPmPJK_q3zv46lpfipx2r90BQemRFE1JeIAKOB5k",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-51@habitduel.dev",
+                    "email": "seed_opponent_1777201544701-19@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-51"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNzNiYzA0ZC00OWViLTRkNWQtOWE3Ny02N2QxYTU1MmZlZDgiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS01MSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.Ny0CN-798otgmSD62Oi7mIXTeTyHpX5hhQeLordsH7Y"
-            },
-            {
-                "creator": {
-                    "email": "seed_creator_1777201351275-52@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-52"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYzY3Njk3OS1lYTQ5LTQxMDItODFjNS1lMzgyYTVhYjMyNGEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTUyIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9._tPv9Dga4KzqrQ9iVYn0wDLtVkmrjKY8f0tceYn89Qw",
-                "opponent": {
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-53",
-                    "email": "seed_opponent_1777201351275-53@habitduel.dev"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZmVhMjg1Yi0zM2Q3LTQ0MmUtOWI3MC1lODNlYjU0Y2RhNzYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS01MyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.TlwQOJgAG5E4CA7Y30idn_E9ks5WK56agGmuWWleH0M"
-            },
-            {
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4ZTM4ZDM3My0xZTQxLTQ4MGUtYjM3Zi02MDYxMzI4M2M3ZTIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTU0IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.g_z9u7G0ExHsX_dSvGETuHhQ_qHxje_pSBNVs38ibG4",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-55@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-55"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhOTE0MjJhZC02ZjA5LTQwOTAtYjIxOS02MTNmZjE3NmJlNzYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS01NSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.4UodwKfNKpU7eK7mOkAGv9XIr4mM2I7eK_cj2gE3O-8",
-                "creator": {
-                    "email": "seed_creator_1777201351275-54@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-54"
-                }
-            },
-            {
-                "opponent": {
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-57",
-                    "email": "seed_opponent_1777201351275-57@habitduel.dev"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3YjBmMjQxMS1jZjI5LTQwY2YtODc0Ny1hNzk4MzFlNDg2N2IiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS01NyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.kWtC-D5G-BQeRYvpUc610yejI3zNFS5YFOEPZ5W9DI4",
-                "creator": {
-                    "username": "seed_creator_1777201351275-56",
-                    "email": "seed_creator_1777201351275-56@habitduel.dev",
-                    "password": "loadtest123"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzNGZjODIyNy0zYThhLTQ5MDYtYjUyNi0zZWQ3NDQzNmU2OWQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTU2IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.AMXAyYFnG4eA2x4Phocwm-7mU-0jNRzQT2zILpoNyUU"
-            },
-            {
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NDI4NzQ1Yi05NjkwLTRlOTItYjJjMy04MTBmYmU2NzY0NDEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTU4IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.yMvE0QK6UWJIQK46jrrGHGDXhoWtzh8LOvz0KxZtT3U",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-59@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-59"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhM2RmYmI5Zi1iMjI0LTRmOGItOTJmMi0zYWRjMjMzZjZhM2EiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS01OSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.cY73ejOt9ZHRCCQlmj3vOnVHe3M_GmCABPIfV12Izmg",
-                "creator": {
-                    "email": "seed_creator_1777201351275-58@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-58"
+                    "username": "seed_opponent_1777201544701-19"
                 }
             },
             {
                 "creator": {
-                    "email": "seed_creator_1777201351275-60@habitduel.dev",
+                    "email": "seed_creator_1777201544701-20@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-60"
+                    "username": "seed_creator_1777201544701-20"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3YzQ0NzhmNi05MzM0LTQ0NmItOWYzOC0wNGFkMDc1YTU2YzMiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTYwIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.3cI5mLOlHcAiueEh9yN2Su6y7TgrSrbIMYTPsKVLTKM",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmOTYxZWRiOC05ZDI1LTRkY2QtODMzMC0xODdiOTE2ZTI2MjQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTIwIiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.IkIwTfqJ054UfwpXGp-EtTO1Ayq_SdgoiE3XS2Y8B8o",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-61@habitduel.dev",
+                    "email": "seed_opponent_1777201544701-21@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-61"
+                    "username": "seed_opponent_1777201544701-21"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkMjgzZGFjMi05YmNlLTQ4M2MtODc0MS1kMDFiYTYwYWQ5MjMiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS02MSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.VrheUzs5JPvW7GktseiE0gDb_xf74GEHhwjO2twyS7I"
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlZGE0ZTllMy0yOTYxLTQ5NGUtYmFhMS0yNDdiNzgxNTk2MDYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0yMSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.Wgz22hFDYxzTeY0tUMVSs5chP15tTDirdPiPSUOlEF0"
             },
             {
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzZmI0MDE0MC05YTg3LTRlMmYtODhhOS02NWM0MDA2ZWNjMmYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS02MyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.T-82rwEy12Sd8LrS0pt1Gg7L2DNZBHhzTgsvaQjNoLk",
                 "creator": {
-                    "email": "seed_creator_1777201351275-62@habitduel.dev",
+                    "email": "seed_creator_1777201544701-22@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-62"
+                    "username": "seed_creator_1777201544701-22"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyZGNiMjg2MS1hN2QzLTQ4YzctOGQ1ZS02NjIwZWViOWFiMTkiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTYyIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.35BnU3HvHhOxme3dMUVO45b9QiAmwlyW_8qo71HNbRE",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNGQ1MDc3Yy0zYmEwLTQ1ODctYWQyNS1jNzZkZjdhMjNlZjMiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTIyIiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.YzwKtBdkCsY2P8bdjxqePpIRKjbZcFTkZAkYepcEGR0",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-63@habitduel.dev",
+                    "email": "seed_opponent_1777201544701-23@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-63"
+                    "username": "seed_opponent_1777201544701-23"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MzkzYjVhZC0wODNhLTRhMGYtYWZlOC1kYmQwMWI0MzdiNWUiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0yMyIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.8wSMIjdUzJ7KeLFyY_3kYAItKKHMuKgEnytA7nnY_98"
+            },
+            {
+                "creator": {
+                    "email": "seed_creator_1777201544701-24@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-24"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyYzk0NDgwOS0wMWI3LTRkMWUtYjUzMC02ZTkyMTg3ZGZjOGUiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTI0IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.rIG_zVnwEw0iJnuvuFHU1nzpdgwiP9taEdMq50e6p3I",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-25@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-25"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYTg5N2U1NS01ZWYwLTRhNTItYjNiOC1mNzUwOTg2NjA2ZjYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0yNSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.Ho6Itmp1QZf6GF5TqCoRppXoXF0-4HIRroyk_WQXT4Y"
+            },
+            {
+                "creator": {
+                    "email": "seed_creator_1777201544701-26@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-26"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3MWNiMmZhMC1mNDZlLTQzYTItODQ4My00OTBmOWMzYTA1ZTQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTI2IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.cA2fZbGl7uPFZFfQwY2aZqgrnZdRPKUqfX6TSFDwLQ0",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-27@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-27"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYzBjZGQ4OS1hOGU4LTQ0NGQtOTc3Ny0wZmFjY2UzN2Q3NjQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0yNyIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.E0W1qkGuZLMOuxFUxMwmBkGVYoOEhQ45-GwpfCYaIt4"
+            },
+            {
+                "creator": {
+                    "email": "seed_creator_1777201544701-28@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-28"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyZmJlMWY3NC1lMzg1LTRiY2YtYTkwOS0xMjRiYmE1ODNlZjMiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTI4IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.g7J2D9kwhQA0AzqMoR_xwIajEKawNFkno8_OhXtPwzE",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-29@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-29"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMDA4Y2E2Mi1iZjYxLTQwOGQtODQ4MS1lMzkyMjI0MWQ1MWQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0yOSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.aFCWRPkPN25HTsxwO41HeEb4OzXPgAUbeFyAJcLLTNM"
+            },
+            {
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NzY1ZTg2ZC01YmQzLTRhM2EtOTI3Yy1iMjZhNmMwODI3NzIiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0zMSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.cSzpGVYxxte_F4f_S3cwiS8-JH63f4wL2pfxQsZ5qF4",
+                "creator": {
+                    "username": "seed_creator_1777201544701-30",
+                    "email": "seed_creator_1777201544701-30@habitduel.dev",
+                    "password": "loadtest123"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1OTg5MDgyZC0zYjZlLTRhNGItYmU5ZS0wNDZjN2Y4NGIyNzkiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTMwIiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.PTcWYY4WlrtYxL7-VWEpQONlkDJRK_fx4z8z8G2OkBo",
+                "opponent": {
+                    "username": "seed_opponent_1777201544701-31",
+                    "email": "seed_opponent_1777201544701-31@habitduel.dev",
+                    "password": "loadtest123"
                 }
             },
             {
                 "creator": {
-                    "email": "seed_creator_1777201351275-64@habitduel.dev",
+                    "email": "seed_creator_1777201544701-32@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-64"
+                    "username": "seed_creator_1777201544701-32"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMGNkMTYwNi05OGU3LTQ0MDktOGUwMC1lYzVkOGFmMjcxMzMiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTY0IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.n9ToHXhpNulEPSJws-wwT2SG1dRNrSKJX6cfaPVb5Rg",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NjVkOWY1MC00YTlkLTRkNjQtYjJmOC1mNWIxN2E2N2Y4NDkiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTMyIiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.PrE77fp_uiQopuLSh9_-a2r_A_dc_PFnixv7zrADBis",
                 "opponent": {
-                    "username": "seed_opponent_1777201351275-65",
-                    "email": "seed_opponent_1777201351275-65@habitduel.dev",
-                    "password": "loadtest123"
+                    "email": "seed_opponent_1777201544701-33@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-33"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMzEzNmM3NS1kZTZlLTRiZjgtYTEwZi0yZjg3NDIwZDUwMWMiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS02NSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.4upVy8CcnrrgBNt-txk2f3n9wBchueGw4jnLGviMgJE"
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYmFjOTQyMC0zNDI4LTRiYjgtODA2YS1mMmVhZWY4ZjgzODciLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0zMyIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.nlzkeCt9vNXN4JAJpX91Ttxm2w9btqAkwUtfxYi5iLg"
             },
             {
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNTllMmE5ZC0zNzFkLTQ1MTEtOWEzYi05YTlmZWI2ZDRmNDEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTY2IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.YR_iMUAASA7SSEi3Q0CgAQAyxFqKoKMlxFSQe880XDU",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-67@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-67"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNjM3Nzc0Mi03ODQwLTQyNzktYWU0MS0wMjJjZWEyNGJkYWMiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS02NyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.V0x0LlGWY0oH6ZTGvdG0LuId4u4Wbi7r3hz0p7MZD08",
                 "creator": {
-                    "email": "seed_creator_1777201351275-66@habitduel.dev",
+                    "email": "seed_creator_1777201544701-34@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-66"
+                    "username": "seed_creator_1777201544701-34"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzZDM4Y2UwZC1lODRlLTQ4ZmUtODYyMS0zMWVhNjliOTc3YWMiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTM0IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.n2bB446cBvQTqSki2CLt6vSMsGSL-jsoblFU08u_bxQ",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-35@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-35"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiOGVhZmM4MS1hMjM5LTQ0ODktOTU2ZS1lMDJkOTk2MDNjMWYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0zNSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.Boy5wp_1GhRkt600pHCzhNM7tuC1GTUR0MC07hB7gfI"
+            },
+            {
+                "creator": {
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-36",
+                    "email": "seed_creator_1777201544701-36@habitduel.dev"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTBjNjQxZC05ZjJiLTQ0OWUtYWU1Yi1iNDgwZjlmOTk1MDUiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTM2IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.ou6PSlIWErsvy0-UlpSsnLoP4gssZS_vCvfgOD7H27Y",
+                "opponent": {
+                    "username": "seed_opponent_1777201544701-37",
+                    "email": "seed_opponent_1777201544701-37@habitduel.dev",
+                    "password": "loadtest123"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMzUxMjNmNC1jMTEyLTQ1OTgtYTFkYi0yYjlhNDlhMDhjOGEiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0zNyIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.IVp3jC1o2spHe9Mq5Hzknz7Jz7RdLZO34qltjt_Fx2E"
+            },
+            {
+                "creator": {
+                    "email": "seed_creator_1777201544701-38@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-38"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxYTExYjZlYS0yZTU0LTQ0ZWItYWE1ZC1iYTk2NTI1N2Q4MjciLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTM4IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.75LU_Ez8D5Djiw9dpKyJp20CWato4dKZp3hgSrhxEWw",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-39@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-39"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MTg2N2U1Ni01NWUxLTQzODAtYWQ0NS1lMTZiYjEwY2RmNWYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0zOSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.6tKxJn01_dxSUj4cfeY0mM51bAD3WCcjGnU1JlF1OBc"
+            },
+            {
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwOWVkYzAxYi0xNWZjLTQ1YjgtYTVmNC04ZDA1Y2JkYTViMGEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTQwIiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.7smnocihgQK8cDOPG8B8HsonTxeN6ZcaUGvIbZa6o98",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-41@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-41"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3Y2M4OGI1OC1hMWY4LTRmNTYtYmZiNC02ODRlZTAwOWYyNGQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS00MSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.63SYTyaK9NR6-aGegsWnBe6S4N__1VV7Rsblfd9xpBM",
+                "creator": {
+                    "email": "seed_creator_1777201544701-40@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-40"
                 }
             },
             {
                 "opponent": {
+                    "email": "seed_opponent_1777201544701-43@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-69",
-                    "email": "seed_opponent_1777201351275-69@habitduel.dev"
+                    "username": "seed_opponent_1777201544701-43"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNjdiYzdjMy05NTAwLTQzYzItYjBhNi04OTY0YmQzZDk2YmYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS02OSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.j6-qn5PxO_QVMs4kEs8bTy7U8V0RP-2kAwhEWOp0pNg",
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNTM4MmI1OC1mOWQ2LTQ4OGUtYjQ1MS05OTMwYWRjMDA1YzYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS00MyIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.bN11qF-gj-TlOLZ7Qkh2Kq0jC_Nm0de-2UGJ_cMC03I",
                 "creator": {
-                    "email": "seed_creator_1777201351275-68@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-68"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkNjAwYzZhOS02N2RmLTRhZTYtYTk4NC0zZDU4NTA5ZWYyMjgiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTY4IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.lbqNzFmkFNYI5wY9zD2JMeGvKJ_euH5hiovg3uKbSAw"
-            },
-            {
-                "creator": {
-                    "username": "seed_creator_1777201351275-70",
-                    "email": "seed_creator_1777201351275-70@habitduel.dev",
+                    "username": "seed_creator_1777201544701-42",
+                    "email": "seed_creator_1777201544701-42@habitduel.dev",
                     "password": "loadtest123"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0ZmFlNmE2Mi1lMDc1LTQ5MTMtOWM3OC1iMWEzNWUzNzExNTYiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTcwIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.sHBQfOTsR0iSm1B6a8REtJwuWpZ8CWn1knktkrgN6ho",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0NTNlNGU1NS04MGYyLTQyMzAtYjBhMS1mMzJmMDJmYjE5ZGYiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTQyIiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.gxnEugP4E0858OMkCBTyAj0D4opSvYtV44FEjbTmq0o"
+            },
+            {
+                "creator": {
+                    "email": "seed_creator_1777201544701-44@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-44"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZDE4NmEwMi1iNTE1LTQ5N2EtYWQ5NC1kOWI5NjlkNTM5NWMiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTQ0IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.inaJ9GPoU7dRxnkN6v98X41fVMuN0wA86jYofXPTaD0",
                 "opponent": {
-                    "username": "seed_opponent_1777201351275-71",
-                    "email": "seed_opponent_1777201351275-71@habitduel.dev",
+                    "username": "seed_opponent_1777201544701-45",
+                    "email": "seed_opponent_1777201544701-45@habitduel.dev",
                     "password": "loadtest123"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMDMwMDhkMy1lYjM3LTRiNTItOGZjYi1kMWVhNTdhMTk4YTMiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS03MSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.rChhMuBwZdcsm3M36WTYAgBbjwo_98Bn3_tg2sqB_ng"
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMWIwMmZkMy1iMDk4LTQzNDMtOTIwMi0xNGYzYTE0YWM0NjIiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS00NSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.EVG4g8T22wXDckmO0j6AavUd3ICdUS7VzpojqhYAefQ"
             },
             {
-                "creator": {
-                    "email": "seed_creator_1777201351275-72@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-72"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYTIxMDQwZS05MTcxLTQ4ZTUtYWQ0Mi1kNTk0MjU0NjdkYTUiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTcyIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.oJCQStis-wKIhHfVcpMktbvc1kATdx8vBLdWwPFt2cU",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyZTMyYWJjZi1iNWYwLTQwMDctOTkwNy1kMTZmN2NlY2MwOGUiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTQ2IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.NsDlAbBjEz57Ofkp6QLOyT8akgCFALS0hh3fesxHOq4",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-73@habitduel.dev",
+                    "email": "seed_opponent_1777201544701-47@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-73"
+                    "username": "seed_opponent_1777201544701-47"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYzIwZWE1My05NDQ1LTQwYjYtOTFiNy04M2E3M2NjYTI1M2YiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS03MyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.i23dH_99mUrRdrc4n_1a2vQhDDyb-vVfBT9IWBYHISY"
-            },
-            {
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-75@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-75"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMzZkNDk2Mi02OTc2LTQ2MGUtYjNiYy03NjE1ODQ3NWZkYjciLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS03NSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.WbOznLmCuaf9VGFdLgT6bXOphSeG2xBeWi8mhIh9pxc",
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3ODYwMzA2OC0xM2M3LTRlNTMtYmM3OS1lOTJkOTg4YzFkYzUiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS00NyIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.iITf-9Uk92amuiSR5GCVuGfWcps4Wlb9AcXc_4R5TjM",
                 "creator": {
-                    "email": "seed_creator_1777201351275-74@habitduel.dev",
+                    "email": "seed_creator_1777201544701-46@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-74"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMDk2OWMwZi02MGRjLTQwMTEtYmNmNi1lMTQ0NDc5MDEyMzgiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTc0IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.ezZLMKu2YxQyBPW3ieAjrVu5UG0r11FIC3M6LcH6uJg"
-            },
-            {
-                "creator": {
-                    "email": "seed_creator_1777201351275-76@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-76"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzODlmYzIyZC00ZDE3LTRmYzEtODRhYS0xMWVjYmQ0NjliNGYiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTc2IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.XSm7DEA04P7blu8T3lSCzM2tJRX-ak-XOxB8AohkrKE",
-                "opponent": {
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-77",
-                    "email": "seed_opponent_1777201351275-77@habitduel.dev"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkNjZiODEwNC05MGQ1LTQ4MjEtYjk0YS1jOTE4NWE5MjNhMTMiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS03NyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.SFg7rTqCNZk4Xjl2fh-BsbO-gc8oR_c4mHF6DcZZ7Gk"
-            },
-            {
-                "creator": {
-                    "email": "seed_creator_1777201351275-78@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-78"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMmFiYWQ1Yy1lN2JkLTRjNmEtYmMwNC1iZjY4YTA4NWQ5ZDQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTc4IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.haIZWJT_l3GaUgv0qAaDruuJrSL5gGYRy2KgbMi_2bo",
-                "opponent": {
-                    "username": "seed_opponent_1777201351275-79",
-                    "email": "seed_opponent_1777201351275-79@habitduel.dev",
-                    "password": "loadtest123"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNzZlNDllYS04YzkxLTQ1ZDktODY1Ny0yYTJjZjJlOWVkNzYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS03OSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.Lk2WZssox9_cBxBoxZrUDRdhcFzkXiDtFQq85-fG2e4"
-            },
-            {
-                "creator": {
-                    "email": "seed_creator_1777201351275-80@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-80"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NDM5Mjg1ZS05M2I5LTQ4NDItODM5Mi05ZWVkYzkxOGFlNTgiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTgwIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.17SbpoL2ZHTBgGysXdEiCbnRKma8AjmyBg_Eey8I1t0",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-81@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-81"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4M2JjYTBiZS1jZWZlLTQ4NzMtOGMyMi00OTk5MmIwMjAyZjMiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS04MSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.VseklvQWnCNfw0LxTl4xg4tlfe0E-JIIn1OtR6emOgM"
-            },
-            {
-                "creator": {
-                    "email": "seed_creator_1777201351275-82@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-82"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0Y2U5MWVjYy04NTQ3LTRiMWYtYmUxNS00NTg4NjI4Nzk0YzEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTgyIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.kDD8abmTMKQxX5Jpvak38YVBYClquL-AzTeCw8GW7R4",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-83@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-83"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNTU3OTY2Ny0zOTEzLTRkYzMtOTMyNC1kODAyZDc0OThkNjMiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS04MyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.r-_I93mBStG8yyBAMErC-zgUKsX5T3q8DxkFT_H4JJY"
-            },
-            {
-                "creator": {
-                    "email": "seed_creator_1777201351275-84@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-84"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMTkyZDViNS1mYjRjLTQ5YTAtYTYwZC0yNGFlYTc3NTBiMWUiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTg0IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.nyqk5RGYVFXfaDdz2V118gmkKNIbYC6QnHXmim8_F8o",
-                "opponent": {
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-85",
-                    "email": "seed_opponent_1777201351275-85@habitduel.dev"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMjU5Zjc2Zi1lMjY1LTRiN2ItOGY2MC1hM2ViMTJmOTQyOTYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS04NSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.ZWR8drxVasZusq3pzdsSo-U3qR3eWt8iOgdnlPnueVY"
-            },
-            {
-                "creator": {
-                    "email": "seed_creator_1777201351275-86@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-86"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiMDYyYWI5MC1kYjMyLTQyMzctYWMxMi0yNTY2MmYyMWU2YTciLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTg2IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.wjliY07Ls1twdBAjVuRfZsDwArIUOODvToQlP2aqDjc",
-                "opponent": {
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-87",
-                    "email": "seed_opponent_1777201351275-87@habitduel.dev"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNTE1NmY1ZS0xYzllLTQ3ODktYWVjMS0xZGZlNjY0ODVhMGQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS04NyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.ZOn13Rn7ygg5B_LPWTNTFUv9kMAr8LEUMISpFUchn1o"
-            },
-            {
-                "creator": {
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-88",
-                    "email": "seed_creator_1777201351275-88@habitduel.dev"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MTIyZDg3Yi1kZjVhLTQyY2EtOTA3NC01MDAzOTZhNDllMzQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTg4IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.UZoHJVuJs8M00h4bAaCavTNagKQCADBKZ9Kw03oFBiU",
-                "opponent": {
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-89",
-                    "email": "seed_opponent_1777201351275-89@habitduel.dev"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDdjNGRiNy1lZDMwLTQxNGItYjEwYy1kMWU0MWFiYmY1OGQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS04OSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.S-XsiWYu5yvobIaN8vEXhVCbxIgqEMUk9_uSYuGYPUg"
-            },
-            {
-                "creator": {
-                    "email": "seed_creator_1777201351275-90@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-90"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkMzFjNzk2Ni00OWE3LTRjYzQtODZhOC1hMjVlMzRmOGU5YjUiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTkwIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.x1SV8qkNOHEOjTITu5Oi9u7c60-mU7eJGZpYkkjQIA4",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-91@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-91"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhODMyZTdmMC04Y2M0LTQ4NGItODY3Zi1mOTllMmEyMWFiMTIiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS05MSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.i6utL69o7P8saZ8zm8wWV3YyJf3v1frJf6tCtFi1XWI"
-            },
-            {
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxN2FiNTE5Mi1kY2VjLTRiMzAtOTY1ZC0wMzRiYWI4NzNmN2QiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTkyIiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.quW9whXUqgIukgKDqj4K3W_lcFhcP3Uma3cLbeMGCfY",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-93@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-93"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjOTQ5ZTM0OC1lNGJiLTQ4OTEtOTY1MS0wOTJhZjRmOGJlMWQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS05MyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.qFr-f18cLaDh8VuT85UubgLUb20WjBXI8HWV-Z_mdHk",
-                "creator": {
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-92",
-                    "email": "seed_creator_1777201351275-92@habitduel.dev"
+                    "username": "seed_creator_1777201544701-46"
                 }
             },
             {
                 "creator": {
-                    "email": "seed_creator_1777201351275-94@habitduel.dev",
+                    "email": "seed_creator_1777201544701-48@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-94"
+                    "username": "seed_creator_1777201544701-48"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYzFlMmRlMS05MzQzLTQ5OTUtODE0Yy04Mjc2MGU3ODFjMWQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTk0IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.0uPnFnFE0i0u84mR5PS5FDTuM74Ej1RFuX88OQYASfc",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5NTZmOTIwZC05ZWIxLTQ4OTctYTZkNy1kM2U4YmUzMjE1ZDUiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTQ4IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.HSMK7EfxgqTrulaugHFAD-NMMkbaI8RVFAm4Mg28Ujw",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-95@habitduel.dev",
+                    "email": "seed_opponent_1777201544701-49@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-95"
+                    "username": "seed_opponent_1777201544701-49"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MGZlMjcwZC04MDJmLTRjZDQtYTI1NC1kMDY2M2RmOWMzYWIiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS05NSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.AmQr0FKwijmyB8S-ed-1z2mnRwHHwsZ_M1BCmdkgmWM"
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MTM2YTgxMi1kMzNiLTRjOTctODEyOS1mODkyMjExNDZhOTciLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS00OSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.5WXiiFet-22MOqq4SSInhKNH7DTEEzkw_Itr4PIWfIk"
+            },
+            {
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-51@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-51"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MDI3NWVmMS1kM2RjLTRiYjUtYTQzNy03MTcwODZhODk4YjQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS01MSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.EXRkoSFansY2C4-NshAclTqWxYAimcTkWVx6pl2vx2s",
+                "creator": {
+                    "email": "seed_creator_1777201544701-50@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-50"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjY2E3ZjNhOS03Y2Y4LTQzMGYtYmY4Ny1hMWMxMTRmZTMyYWEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTUwIiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.Jl4oWu4u_f4lxeEgmmKl3hh9e6ieW4idmqPSX0SWo6Y"
             },
             {
                 "creator": {
-                    "email": "seed_creator_1777201351275-96@habitduel.dev",
+                    "email": "seed_creator_1777201544701-52@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-96"
+                    "username": "seed_creator_1777201544701-52"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4ZjUzYTg0MC1jODdkLTQ5YTItYmQwNS02ZjlmYWYzNzJlZDIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTk2IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.Vnny5QbNY4o2nVCxyU6C_GIAj5rYbVLLL5lmZqWgOM0",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkNzFlOGVjNi1mMWU5LTRlN2ItYmQ0Mi0xZGJhMjRiY2JmMTQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTUyIiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.hhblZDbLouLIol3F456czqUIOb9ZV1aoeHpvqnKwjy8",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-97@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-97"
+                    "username": "seed_opponent_1777201544701-53",
+                    "email": "seed_opponent_1777201544701-53@habitduel.dev"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMTY4MDE1Ny1kZTgwLTQxM2QtOTk3NC1lZTRjNmQ1MmEyMWYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS05NyIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.76KFs8ZXxAZ_vtwX2W0QCE6qwDg4cr1p0CzLlIHvLHI"
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYWNhZGE0Ny05NDAwLTRhMDgtOTBjZi02NGJlMDE1OTVmNzIiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS01MyIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.fwm6pFmxdu-uVYMcadIWdAvrHPBYDN_qosMbVSiHHF0"
             },
             {
-                "creator": {
-                    "username": "seed_creator_1777201351275-98",
-                    "email": "seed_creator_1777201351275-98@habitduel.dev",
-                    "password": "loadtest123"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1YWVkZDdjNy1jMjEwLTRmNTctYWQyMC01ZGYzMDYyNGFhYzQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTk4IiwiaWF0IjoxNzc3MjAxMzUxLCJleHAiOjE3Nzk3OTMzNTF9.ecKsgPYaiInYAc91AX5iyb8xO3corRsaA8QYfN-ncVw",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwYWU4YzdhNS00YTMxLTQyODYtYTg2MC1hM2QzYzcyODJjMjciLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTU0IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.DiOK7igVuONgcA7hbKnzzGzgUjaNlhwuXdqbhMSJuV0",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-99@habitduel.dev",
+                    "email": "seed_opponent_1777201544701-55@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-99"
+                    "username": "seed_opponent_1777201544701-55"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwYmM3ZTY1Mi1mNGIwLTRjNjktOWJlYy04MmQzNTE1YThjYmUiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS05OSIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.2t19kURhZhjgIYNVghWXvcwV2luEQkr1qTap6zMxWEo"
-            },
-            {
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlY2I0OGJlNS05YmQ4LTQzZGItOTMxOS0wMmFkNjEyMjc1MTEiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS01NSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.KIy94LBboGl2E99sy4XLfxcC3WUMDZ0LCM-MUCmx2ms",
                 "creator": {
-                    "email": "seed_creator_1777201351275-100@habitduel.dev",
+                    "email": "seed_creator_1777201544701-54@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-100"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NzU0OGIzOS03N2ZmLTQ0ZTEtYTRhZS02OWEwZjZjODExODQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTEwMCIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.B0NwBy6V6SKHN8CzbscKn7qzIn3aoWJuBTEvZJ195gw",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-101@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-101"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyYWY5YTZlOC0xY2ZlLTQ2YTctODlkMC1lNTc4MmYwOGFiNjAiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0xMDEiLCJpYXQiOjE3NzcyMDEzNTEsImV4cCI6MTc3OTc5MzM1MX0.FFkvjZdalQv6JX8XfLvBNCFRLDhzxofZFgrkJK6_s04"
-            },
-            {
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkZDQyMTA0NS1mZmQwLTQyMzktYWRiMS1mY2FiYjI0NTRlNzQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTEwMiIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.xJydon7v1w_EBhV7LCkgUU9T_lL403z3X2Ji8ncwMsY",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-103@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-103"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NDg0NWM2Yi0xMTFmLTQzNmYtYTdjYS02YTgyNDJhYzJhOWUiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0xMDMiLCJpYXQiOjE3NzcyMDEzNTEsImV4cCI6MTc3OTc5MzM1MX0.mQPA4ZquoeW4fHSu6kQr9vGo_QV49iBBxP1sRG_9r24",
-                "creator": {
-                    "email": "seed_creator_1777201351275-102@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-102"
-                }
-            },
-            {
-                "creator": {
-                    "email": "seed_creator_1777201351275-104@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-104"
-                },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZjhmMzZhYi1jMWIzLTRlYWYtYjEwNC0yMGJjZjlkYzkwZTEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTEwNCIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.V8TSmttkvDHb6QF1qoxQhpy91qj1xFaydu_9Ldv88M8",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-105@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-105"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4YjliNGM0OC1lMDdhLTRkZDEtOWQ0Yi01YWViYTM1NmUzMWYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0xMDUiLCJpYXQiOjE3NzcyMDEzNTEsImV4cCI6MTc3OTc5MzM1MX0.Ejo9eaGXUF5VHgM6zI0iaI1ALvzs0atQ68cgSy9rVXA"
-            },
-            {
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNTk2NjQxYi0xMWE5LTRkYWEtODY2Yy05MjFiNTE1NDg3NWYiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTEwNiIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.cmMvyaG8Jo2D_zfKDlnsPhyfx6DDvcA60lJdAeGCyh8",
-                "opponent": {
-                    "email": "seed_opponent_1777201351275-107@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-107"
-                },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlOTY3NzNjZi05YTQ1LTRjMjgtYWE4Mi0zMTYzNTBhNTM1OGIiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0xMDciLCJpYXQiOjE3NzcyMDEzNTEsImV4cCI6MTc3OTc5MzM1MX0.rteSrlcEHpD7dwpeZxVP2BaHr6TJu9M6do1Evf5ahmw",
-                "creator": {
-                    "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-106",
-                    "email": "seed_creator_1777201351275-106@habitduel.dev"
+                    "username": "seed_creator_1777201544701-54"
                 }
             },
             {
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-109@habitduel.dev",
+                    "email": "seed_opponent_1777201544701-57@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-109"
+                    "username": "seed_opponent_1777201544701-57"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NTJlNmMyYS01YzBiLTQyNjMtOTBhOS1lMDdlZmM4NmQxNmYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0xMDkiLCJpYXQiOjE3NzcyMDEzNTEsImV4cCI6MTc3OTc5MzM1MX0.9XTq_F-SVnB2gJhKZwqFwtezj8452KwZdIaTqkR5z_k",
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYzIwODlmNC0yMjJiLTQ0NWItOTU3OS05NzNjNmRjMDE3MTAiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS01NyIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.tyu0ESCWvAz9yDhkR9aP3K1jC2Z06HN8_WFfATMR2fU",
                 "creator": {
-                    "email": "seed_creator_1777201351275-108@habitduel.dev",
+                    "email": "seed_creator_1777201544701-56@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-108"
+                    "username": "seed_creator_1777201544701-56"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNjFlOGVlZC02YWJiLTQ4NWUtOGY2OC05Mzk5MjZiZDM3NzUiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTEwOCIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.JbQBlLNMLo8YhXzt0xlS5CMqUMdcfFkRM3AEU2_X27M"
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYWZhZmRjNC04ZmM2LTQ5YzktODBjZi00NDEwYTNhYzc3Y2EiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTU2IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.CDJleGjv1Qtarc7vO0AkCnh3M4-G0ZgaNv9ZnyafX8s"
+            },
+            {
+                "creator": {
+                    "email": "seed_creator_1777201544701-58@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-58"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3MDMxMzcwOS0wYTQwLTRjMzYtYjQ1OS1jYzkwMDhjZDllNmIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTU4IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.m7SBf-wtv3I1uuDD-dLmgA8xo3SQYTt5UK2yIjNdhTM",
+                "opponent": {
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-59",
+                    "email": "seed_opponent_1777201544701-59@habitduel.dev"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjZjJhY2FlOC0wYzViLTQwM2UtODM5MS04YmEwY2YyYmY0OTMiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS01OSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.vQenONrn38Ofw5bnzQjbjoVEfwDMpa3V8Fb5Bz0edb8"
+            },
+            {
+                "creator": {
+                    "email": "seed_creator_1777201544701-60@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-60"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlZWViYmRiNi0xOTUzLTRlNDQtYWM0Zi02M2Q3Mzk4ZDg4NDIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTYwIiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.rlHixa-agKqoWkTfiALyaMZe4qHsmOHotW7YMD1RvVE",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-61@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-61"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwYjU4MjhhZC1lZWZlLTRlZWItOWY5OC03NDI1MTgwZDA4YzgiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS02MSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.FJIKMW5JOl_TQy5YgrRJ8i7txzQO_qlwpIwAcip1JIs"
             },
             {
                 "opponent": {
+                    "email": "seed_opponent_1777201544701-63@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-111",
-                    "email": "seed_opponent_1777201351275-111@habitduel.dev"
+                    "username": "seed_opponent_1777201544701-63"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNzhhZDRjZi1hMzVkLTRmMmYtOGY5Yy1jNzI0OTM3NTIxNjciLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0xMTEiLCJpYXQiOjE3NzcyMDEzNTEsImV4cCI6MTc3OTc5MzM1MX0.Plaj386hFSU7j9z_HDYk4yAHchxb47wOE96Gu5tNwu8",
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmODY2NTJiYS1mN2ViLTQ2ZmQtOTBlZS0wNWM3YzViNTk2NzUiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS02MyIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.b-VXzWBd_uLVxRROjm_Jub_SQPWnW2NqEMXwNoY0YW8",
                 "creator": {
-                    "username": "seed_creator_1777201351275-110",
-                    "email": "seed_creator_1777201351275-110@habitduel.dev",
+                    "email": "seed_creator_1777201544701-62@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-62"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMzkyYTIwYy05NDMyLTQ1MTQtOTdiNC1mYTU3ZGE2MzJlODQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTYyIiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.gy3ge9gnx5BjZMqcI4Y-T8UgkON_T0CeFdb6ukp_b6A"
+            },
+            {
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-65@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-65"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2N2FjNTEwYS05MDRhLTRkZWUtYTAyYi1hZGIwZjQ1NjkwNzIiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS02NSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.gnZdH0NIhWz6RnwLznrRXbT6RPbhb_WTDN0lUWyFnGA",
+                "creator": {
+                    "email": "seed_creator_1777201544701-64@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-64"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZDEzYjY3OS03YWIzLTRiYWItYjYxOC03NTEwYzJmNTIzZTIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTY0IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.td3EuTpOkVfSTFfgQQDYMLjxxVLxFC3S43Ws2CEes7I"
+            },
+            {
+                "creator": {
+                    "username": "seed_creator_1777201544701-66",
+                    "email": "seed_creator_1777201544701-66@habitduel.dev",
                     "password": "loadtest123"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkN2U5NDkzMi0wY2U2LTRhNDUtYWExZS0wOTdiY2JjNDFjNDEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTExMCIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.l9u2oJzE9H0r3DH_EsImcicfHIjEnPwjtsYamQiAOE0"
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMzk2ODRkNS1mYzhjLTRkNDAtYTNkNS01MzcwOGM2MGFkNGQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTY2IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.voQDgQLwxKVbdbt3S1gJWiLAiYhVI0Gp5yl_-wt634k",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-67@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-67"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMmNhOGExMC00MGM4LTQxY2MtOTYzMi1hYThjMzY0YTMxNTMiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS02NyIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.7d_7eKtS7LkmXpZyGfHyVwRm5OlaiQ1V36vQxnZ9yMI"
+            },
+            {
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmOTE5YjNkMC1jYjhmLTQ2ZjUtODBhZS05MTFiMzhlNWJlYmIiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS02OSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.xTP4lJ3DCktRnj7rke4tfk6xBCbPWoJTC-OCIZf4IN4",
+                "creator": {
+                    "email": "seed_creator_1777201544701-68@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-68"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiZDZjZDFlYS01N2Q5LTQ2ZTMtOThmZC1mNjlkMGNmMTBlODEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTY4IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.83UZvNqiiYdBbu5L5E-T86HZonDXllpbYxRut2ePSVU",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-69@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-69"
+                }
             },
             {
                 "creator": {
-                    "email": "seed_creator_1777201351275-112@habitduel.dev",
+                    "email": "seed_creator_1777201544701-70@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-112"
+                    "username": "seed_creator_1777201544701-70"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMjVkODc5NS0yYWVhLTQ2NzUtYTNmZi1mZGE3MmJiMTEwMGEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTExMiIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.ka7JmGuYzsC69j3UhJoQByq9UQindCMayiJk3ZQepxE",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyODI1MTdkYy1kOWEzLTQ5ZDctOTBkYS05ODZmNDJjYWVmNGIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTcwIiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.qhqINPSAUZOB7L219AWM4o60yThQd-MYRIU7jCwFpbQ",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-113@habitduel.dev",
+                    "email": "seed_opponent_1777201544701-71@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-113"
+                    "username": "seed_opponent_1777201544701-71"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MzRmN2E3Ni1mYjk5LTQyODMtOGNhZC02NzMxZDM0ZGE1ZmEiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0xMTMiLCJpYXQiOjE3NzcyMDEzNTEsImV4cCI6MTc3OTc5MzM1MX0.x0TP9tnIal1MBQuRjP4GUUvLbgfOj5S3oLhQGpnumP8"
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5MzllYmY5OS1jNGQ0LTQ1ZjMtYjVkMy0wYjI3MzBkMDNmYmIiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS03MSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.uywxrzMTGQF7wsqNG1DidzYrhYroZ7GDJiRSWyy-eAY"
+            },
+            {
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1YzQzYjkxYS01MjAyLTQ4YmMtOGY2Ny00OTA5NWQxM2E0M2UiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS03MyIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.A8ny2oxYFdGld71KIooOeMUEjG-hnWIg3ZhLZE5K4W8",
+                "creator": {
+                    "email": "seed_creator_1777201544701-72@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-72"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1Y2ZhOGFjNS1hYTZiLTRmYzktOWMwZC0wMjc0MWU1YzYzZTEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTcyIiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.UGHa5x7D8pprrtWkh-a_SA9v21a58xzQtdeOR1C90tE",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-73@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-73"
+                }
             },
             {
                 "creator": {
-                    "email": "seed_creator_1777201351275-114@habitduel.dev",
+                    "email": "seed_creator_1777201544701-74@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-114"
+                    "username": "seed_creator_1777201544701-74"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlYjRlNmRlOS0xZGM1LTQ5NGItYTlmMy01NmRmY2FjZDllNzIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTExNCIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.wx6MJ6AXcz1grdlsk962NGBo_qTXMprTP-PlGXYfevw",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmNTEyNzNmZC00YzMxLTRlYjMtOTg1NC05ZDkwZjkzYzEyMjciLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTc0IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.nQ3Jl6irDxBlnbJvmOQaro8COaPcxw4pYAYXrU7VV-0",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-115@habitduel.dev",
+                    "email": "seed_opponent_1777201544701-75@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-115"
+                    "username": "seed_opponent_1777201544701-75"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmMjE0MWVkMC05NzczLTRjODEtOGZjZC01ZDVlOGY0ZWFjY2EiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0xMTUiLCJpYXQiOjE3NzcyMDEzNTEsImV4cCI6MTc3OTc5MzM1MX0.AcAJRz11HOP2VJQmP7lYOTZvXQ7lQT5VEByjjrFjdaw"
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMWFiNjVhYy05OWU1LTRkMDktOWFmOC1lOWYwNTY4Mzk3NGQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS03NSIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.V7dmQSEAwzHqE_c5YqwHsIdeO4uatMuq8m6cHJquwSM"
+            },
+            {
+                "creator": {
+                    "username": "seed_creator_1777201544701-76",
+                    "email": "seed_creator_1777201544701-76@habitduel.dev",
+                    "password": "loadtest123"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxYjY0NTNjNy04YzNmLTRiNTQtOTA5NC01NjU2NWMxMTI1N2UiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTc2IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.pvkJgD0deqj7Qj3OZM-ajcwjtwzv7vjcmVcLlyzH_GQ",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-77@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-77"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzMTVjZDM3My02ODM5LTQwNjktYmIyYS04ZGE4YzZmNTNjN2QiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS03NyIsImlhdCI6MTc3NzIwMTU0NCwiZXhwIjoxNzc5NzkzNTQ0fQ.QO8Hs_JDtlHjUGfOLA_nQrtk4JePL7-CjyQTkOVlWYk"
+            },
+            {
+                "creator": {
+                    "username": "seed_creator_1777201544701-78",
+                    "email": "seed_creator_1777201544701-78@habitduel.dev",
+                    "password": "loadtest123"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwZTVlNTVmNy0xYmIyLTQyMzktYjQ4My04MWM1NDU1YjZmYTYiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTc4IiwiaWF0IjoxNzc3MjAxNTQ0LCJleHAiOjE3Nzk3OTM1NDR9.fRye2_a2D6E5TGUXuWWBX71JHtf_A2QGyh2piedZTh4",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-79@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-79"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlN2E2MDYyMi1jMzEwLTRjYmUtODIxNi1mY2ViMTA3ZWZlMmQiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS03OSIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.TozvsNFbwPp2I7GJXBi9xeYNlqFL3CBDjsjIoHFsX14"
+            },
+            {
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMmViZTJiMy02ZDE4LTRhNmMtOWIxZC02NDI2MzMyMzVhYzQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTgwIiwiaWF0IjoxNzc3MjAxNTQ1LCJleHAiOjE3Nzk3OTM1NDV9.W6M6ZoEf0peYg_F6QY-jbAD4-Us3uQQePwNbF6gEXuw",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-81@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-81"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNWUyZjJlYy0yODlhLTRiM2QtODg3My0yNjgyZjdlYjViNTEiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS04MSIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.Nz8ponO4hOEHPFFQTjZiIDJ1tf9nopprxmB2nbgb4YI",
+                "creator": {
+                    "email": "seed_creator_1777201544701-80@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-80"
+                }
+            },
+            {
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlZjE5ZWUwMy1jNzkwLTRhMDItOTUxZC1lZTBlM2ExMjk5MjMiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS04MyIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.awSLsRXB2dUYP48eJwf4sRR_IaRdkLuURhDf2aG9KkA",
+                "creator": {
+                    "email": "seed_creator_1777201544701-82@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-82"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4YzA5NmRlMS0zZWIzLTRjNWUtYmE1YS1kZmZiNTE2OWNmOTYiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTgyIiwiaWF0IjoxNzc3MjAxNTQ1LCJleHAiOjE3Nzk3OTM1NDV9.CskQ39nGJ0LOzLcvPSBuQElBQEBYqLft7JmF572UsdQ",
+                "opponent": {
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-83",
+                    "email": "seed_opponent_1777201544701-83@habitduel.dev"
+                }
+            },
+            {
+                "creator": {
+                    "email": "seed_creator_1777201544701-84@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-84"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkYmNkMTlhOC0yYTZiLTRiZjUtYmQzYS0yNTkyMzI2MGY3NzIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTg0IiwiaWF0IjoxNzc3MjAxNTQ1LCJleHAiOjE3Nzk3OTM1NDV9.P_yIVnznzj2BEg0tLGyDw6eItrzSs0IwLp0o4CbcRUs",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-85@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-85"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxYzI5NGE4MC1hMmI5LTQ5M2QtYjFkNy04ZTc5ZjBhODE5ZTUiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS04NSIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.mhm_DuJ-OMPtNMpivjFkX3SE9bTWQRWMTiRyCa1HmCw"
+            },
+            {
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkNzI3MzkyYy1iYTlkLTRkZDctYWIwMi0xYmRhOTlmNzAzNTQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTg2IiwiaWF0IjoxNzc3MjAxNTQ1LCJleHAiOjE3Nzk3OTM1NDV9.u43DtKX3PqNMOUNsa_EDLPa44WHPEBtoy8iEuwUfZJc",
+                "opponent": {
+                    "username": "seed_opponent_1777201544701-87",
+                    "email": "seed_opponent_1777201544701-87@habitduel.dev",
+                    "password": "loadtest123"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzN2YzZTY5Zi1iMTQ3LTQ4ZTAtOGI4ZC0zNjZkMGM1OTIzODMiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS04NyIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.5VP44u2nzavpgoboTK2Ym9oRo95A_5T3jXSv8tvRjR4",
+                "creator": {
+                    "email": "seed_creator_1777201544701-86@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-86"
+                }
+            },
+            {
+                "creator": {
+                    "email": "seed_creator_1777201544701-88@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-88"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhODBhZWE3Ni01MTAzLTQ4NmQtYWI4Yi1hZTlkNGZhMzA5Y2QiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTg4IiwiaWF0IjoxNzc3MjAxNTQ1LCJleHAiOjE3Nzk3OTM1NDV9.mlG4DJRGpxI5m5xarjcSjQ5uNRjGjzMzn2UPJYmWVM0",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-89@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-89"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMGI0MTljNC0wN2IwLTQ3OTEtYTcyNy1jZmRhMmU5ODI5M2MiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS04OSIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.oRGC0itW7IdnqJuljCtKSRYrsEKyPtaNeArpHNONCgI"
+            },
+            {
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwY2ZlMmNiOC1jYTAwLTQzNGYtYTBlYi02ZmIwZDZmN2JiYzIiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS05MSIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.bhHj3RIws2HHEF8bm2RstdISj4VY9opfvGc5ya9WB9U",
+                "creator": {
+                    "email": "seed_creator_1777201544701-90@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-90"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxZDk0ZThjMS1lNTc2LTRkOWQtOWUzZS1mYWM0MWM3ZWU5ODIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTkwIiwiaWF0IjoxNzc3MjAxNTQ1LCJleHAiOjE3Nzk3OTM1NDV9.sKlZ1_WdlUpuhw1IXYJ44x4rFmg_CG_y5jj9oxsauRs",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-91@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-91"
+                }
+            },
+            {
+                "creator": {
+                    "email": "seed_creator_1777201544701-92@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-92"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjMjExYmY5ZC1mMGJmLTQ5MmMtODViYy0xNjk0NzRhMjY4MDciLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTkyIiwiaWF0IjoxNzc3MjAxNTQ1LCJleHAiOjE3Nzk3OTM1NDV9.ejdCLq-nrmETLwNdRNlIu46uBomkTjSl7-uUohojz1A",
+                "opponent": {
+                    "username": "seed_opponent_1777201544701-93",
+                    "email": "seed_opponent_1777201544701-93@habitduel.dev",
+                    "password": "loadtest123"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDg0YzY2YS0yNjlkLTQyZmQtOThmZi0wOTM5MmI4OWRiMGMiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS05MyIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.yhJj8kM4FaoxBlMrjtMedt93vFY6Ibrj8No-MdNJSQo"
+            },
+            {
+                "creator": {
+                    "email": "seed_creator_1777201544701-94@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-94"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NmZiNmIxZS1iMTM2LTRkMjItYWUwMy1iMjYyNWM1ZmJmMmIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTk0IiwiaWF0IjoxNzc3MjAxNTQ1LCJleHAiOjE3Nzk3OTM1NDV9.SOxvnJUBgONFe8rkZwX7bZe21eBwhdgOKKlRaEQRUiU",
+                "opponent": {
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-95",
+                    "email": "seed_opponent_1777201544701-95@habitduel.dev"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwN2ZjYjFkMy04NzU0LTQxMDAtOWY5Ni1kMGYwZGE2ZjZjODkiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS05NSIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.RmlF4ojOba6jIGbfvmvb2Kw_yNv2g5uReQtIP4Lm7R4"
+            },
+            {
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-97@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-97"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNjY0ZGFhNS1hODZjLTQ2MzctYTlhNC05NDZjYjI2MjE2ODciLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS05NyIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.a06ny3rEj4mfLBwI1snuG1Jw13Lwyz3RLy35NC8qF9M",
+                "creator": {
+                    "email": "seed_creator_1777201544701-96@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-96"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3ZDQ0ODlkOC0zNjY0LTQyMjYtYTI5Yy1jYjM2ZjNlNTNhNDIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTk2IiwiaWF0IjoxNzc3MjAxNTQ1LCJleHAiOjE3Nzk3OTM1NDV9.BOjISHocaf6kydljHAcjFGW32Y_iSVJQ3GkkFc1w7Xc"
+            },
+            {
+                "creator": {
+                    "username": "seed_creator_1777201544701-98",
+                    "email": "seed_creator_1777201544701-98@habitduel.dev",
+                    "password": "loadtest123"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NTViYTZjNi1hMGJiLTQ3ZmYtYmU2NC05NTNmNzY1OWFiNjkiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTk4IiwiaWF0IjoxNzc3MjAxNTQ1LCJleHAiOjE3Nzk3OTM1NDV9.rgXOchY_In9EWYEMUVfyQ8GXgyyRPF8RKx_4m9QFWrA",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-99@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-99"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyNDIyMzRjNC04MmM2LTQyZWUtODM3MC0yZjlkNmZkZDU5ZTkiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS05OSIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.9Wl_XkTtgaT9OaF3sv7S6T-zhxYUmweHp8r7W13lFCQ"
+            },
+            {
+                "creator": {
+                    "email": "seed_creator_1777201544701-100@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-100"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3N2QyNzZkMS1lZTBjLTRiMWEtOTM5ZS05NzMyNWIzYjQ2NWMiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTEwMCIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.fq8dPC4Gqt9YMV1fIAd12jol1iz0p7iv-jg7xuILv1I",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-101@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-101"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5MTQ3MjY0MS02MWNiLTQxMmQtYTFjMy1jOTlmOTY2ZjQ2OTYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0xMDEiLCJpYXQiOjE3NzcyMDE1NDUsImV4cCI6MTc3OTc5MzU0NX0.cx2UirlKhpx6sIc7HoA_A46Qemp38LhRAKuhp_yTxxs"
+            },
+            {
+                "opponent": {
+                    "username": "seed_opponent_1777201544701-103",
+                    "email": "seed_opponent_1777201544701-103@habitduel.dev",
+                    "password": "loadtest123"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNTVjY2M5Yy1jMGVlLTQwNjktODRjZS0xZDViM2Y1NzJkYTciLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0xMDMiLCJpYXQiOjE3NzcyMDE1NDUsImV4cCI6MTc3OTc5MzU0NX0.R6UYOEra9EQCMYAmJYnc2VQNpaEPG093JEFySpZhONo",
+                "creator": {
+                    "email": "seed_creator_1777201544701-102@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-102"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZTZlNmI2Mi1jMzZhLTQxZTEtOTVmNi1kZGEwMWUwNzAwZWIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTEwMiIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.QHMxpgH1zOb1ZsmTsxbndQQz47pqj68YCU-YqSfrDJk"
+            },
+            {
+                "opponent": {
+                    "username": "seed_opponent_1777201544701-105",
+                    "email": "seed_opponent_1777201544701-105@habitduel.dev",
+                    "password": "loadtest123"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYjYzYWVhOC1hMzJjLTQyYTctYjgzZC1jMWNjMzY4ZjY0MDEiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0xMDUiLCJpYXQiOjE3NzcyMDE1NDUsImV4cCI6MTc3OTc5MzU0NX0.5DQZ1_k8kwTVZnvGhBY2bv5CCy8oJGdo8atG1sViW7o",
+                "creator": {
+                    "email": "seed_creator_1777201544701-104@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-104"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlNzRhNThjYi04ZmJhLTQwMDktODEwMS05ZWI2ZDAwZGUxYzQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTEwNCIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.l5xo-wtq490iCjAHXegHlIC_i5VOGt4I2U44L_q2dC0"
+            },
+            {
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-107@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-107"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2ODczNGYzNy00ZWM1LTRiODctYTdhNi0wODZiNTdkMmI5ODYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0xMDciLCJpYXQiOjE3NzcyMDE1NDUsImV4cCI6MTc3OTc5MzU0NX0.fWYaVXLiw56xFIuBNgYcU9ohHiN2p22HG9NhD6JDDtc",
+                "creator": {
+                    "email": "seed_creator_1777201544701-106@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-106"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MTU0NjRkZC00OTg3LTQzYmEtYTMzYi1lMzc3OTQ3NmQwOGYiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTEwNiIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.vuhXnZPIUirP_Emzhtku1EiysQALDzXPdfR8WGIkoTg"
             },
             {
                 "creator": {
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-116",
-                    "email": "seed_creator_1777201351275-116@habitduel.dev"
+                    "username": "seed_creator_1777201544701-108",
+                    "email": "seed_creator_1777201544701-108@habitduel.dev"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyODY4YTI0OC1hOGFjLTQ2MDgtYjU2YS05NDI3ZWFlZWM1NTEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTExNiIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.5w_w6ay2LzeQVRCyO5Dk-7ICThQLssLzTQCIRs4M1KI",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmZjk2NGVkNy0xNGM3LTQyYmEtODBlYS1kZmZjNzE5ZWU5MjciLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTEwOCIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.AxZOWM6v-hQIenLIIma3LIVHXgzUmblvgkQj4pK2Aek",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-117@habitduel.dev",
-                    "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-117"
+                    "username": "seed_opponent_1777201544701-109",
+                    "email": "seed_opponent_1777201544701-109@habitduel.dev",
+                    "password": "loadtest123"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjNDUyYjk5My01ZTUxLTRiMGMtYWQ3Yy0wNGJlZTk5OTNmNGUiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0xMTciLCJpYXQiOjE3NzcyMDEzNTEsImV4cCI6MTc3OTc5MzM1MX0.iY3jx5B4AHGgLMAifOqX_kp0oklEMAeluVGiedf1--Q"
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxZTU4OWFhZC02Nzg5LTQyNDgtODIzNi1jYWM1Yjc2ODZkMWEiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0xMDkiLCJpYXQiOjE3NzcyMDE1NDUsImV4cCI6MTc3OTc5MzU0NX0.vVHXFSMDhxwOPyYQ8aZgmqvy9w4Hy2C5AqGUTBt3F-0"
+            },
+            {
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMzdkN2NkMi03ZWNlLTQwNTMtYjM0My05YjJlNmU5OWJmNTIiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0xMTEiLCJpYXQiOjE3NzcyMDE1NDUsImV4cCI6MTc3OTc5MzU0NX0.pvReXSdEYyPNBSoxa-P89fy-NAYmrQUT6eLLaJTh-us",
+                "creator": {
+                    "email": "seed_creator_1777201544701-110@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-110"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkOWQ3ZmQ5Ny1hMjdmLTRjZTAtYTM1YS1kYjdjNjZkNmY0ZGIiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTExMCIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.u3CVFt6IOcwyYIEz7_0AG2GsgcYbX_yGMzZ-ZLy5e4k",
+                "opponent": {
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-111",
+                    "email": "seed_opponent_1777201544701-111@habitduel.dev"
+                }
             },
             {
                 "creator": {
+                    "email": "seed_creator_1777201544701-112@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_creator_1777201351275-118",
-                    "email": "seed_creator_1777201351275-118@habitduel.dev"
+                    "username": "seed_creator_1777201544701-112"
                 },
-                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ODE1YTIxNS00NzRjLTRlZmUtODkzYS0wYzZjNTY1M2VmNmUiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxMzUxMjc1LTExOCIsImlhdCI6MTc3NzIwMTM1MSwiZXhwIjoxNzc5NzkzMzUxfQ.QjoaPtVM1AfRQh4QTdI_KgBEmUVMvgGg2FTEkKhQ76I",
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyZGJiZjQ4ZC05YjkwLTQwYzctYWIzNi0xZTAyZjYwOWUxYmEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTExMiIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.l3SHsUuxxDZlF7D02_sRslPJAE2UN2QNfnsAU5ICEOQ",
                 "opponent": {
-                    "email": "seed_opponent_1777201351275-119@habitduel.dev",
+                    "email": "seed_opponent_1777201544701-113@habitduel.dev",
                     "password": "loadtest123",
-                    "username": "seed_opponent_1777201351275-119"
+                    "username": "seed_opponent_1777201544701-113"
                 },
-                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhM2NlZWQ1NS00YjZhLTQ0Y2ItOWVjOS1jNzljMjJkZGNjNmEiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTM1MTI3NS0xMTkiLCJpYXQiOjE3NzcyMDEzNTEsImV4cCI6MTc3OTc5MzM1MX0.9R4IbfLwujeEgLv6dPnYMe8VAUCBTJAYjij-vIgL84k"
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3OWI4YzcyYi04M2IzLTRkNzEtODhjNi0zMGJlMThlMzMxNDYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0xMTMiLCJpYXQiOjE3NzcyMDE1NDUsImV4cCI6MTc3OTc5MzU0NX0.bQkV_teO7TvQ-KAOngcIcfIsggYgvLxuS3rtw-KhGbI"
+            },
+            {
+                "creator": {
+                    "email": "seed_creator_1777201544701-114@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-114"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxM2FlNjE5My03ODYwLTRmNmYtYTk3My1kZWViMDM2NjhhYWEiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTExNCIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.QgmK8o_nONUpJ-8uNHnnTg_8LQ4aTfW8yw1OQEy183U",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-115@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-115"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MDE0OGJjYy0xMDM5LTQ3N2MtYTZmOS1jYzhlOTE1YmNiNjgiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0xMTUiLCJpYXQiOjE3NzcyMDE1NDUsImV4cCI6MTc3OTc5MzU0NX0.b-KK6-J769MXEMFMCCjpFEJOiPIOKpIqJjRTblybT_8"
+            },
+            {
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3MTVkM2ZjMC04YTQyLTQ4MGYtODg0NC1hMDViMjg4NTAzOWYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0xMTciLCJpYXQiOjE3NzcyMDE1NDUsImV4cCI6MTc3OTc5MzU0NX0.t5T4mFaSVRpT8d3mNtKFy1S9YISSPj9IoTvWtpnH51c",
+                "creator": {
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-116",
+                    "email": "seed_creator_1777201544701-116@habitduel.dev"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkMDhkYTM1OC04ODllLTQ4MmUtODM4NS1iODIyZWExYzNjNzYiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTExNiIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.sNXcVMDn7mVlFr70yrDe5MWqCPOY3FP1ioTcKf0Y3I4",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-117@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-117"
+                }
+            },
+            {
+                "creator": {
+                    "email": "seed_creator_1777201544701-118@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_creator_1777201544701-118"
+                },
+                "creatorToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxOGFiYWM0NS0xNjE0LTRmYTctYjA1Ni1kMWEyNzExMjI4MTQiLCJ1c2VybmFtZSI6InNlZWRfY3JlYXRvcl8xNzc3MjAxNTQ0NzAxLTExOCIsImlhdCI6MTc3NzIwMTU0NSwiZXhwIjoxNzc5NzkzNTQ1fQ.E5c25ClCn_rSXlGzjJnjtuFne7frm52wYnm68I9NjB4",
+                "opponent": {
+                    "email": "seed_opponent_1777201544701-119@habitduel.dev",
+                    "password": "loadtest123",
+                    "username": "seed_opponent_1777201544701-119"
+                },
+                "opponentToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5OGZkZDA5Zi1lYzUzLTQ0ZGItODA4ZS1lYTMzZTUyMDYzMmYiLCJ1c2VybmFtZSI6InNlZWRfb3Bwb25lbnRfMTc3NzIwMTU0NDcwMS0xMTkiLCJpYXQiOjE3NzcyMDE1NDUsImV4cCI6MTc3OTc5MzU0NX0.LrHJX8xGtDNjv8ErQMRrcmyLu2Q1bgrWCYSqQMKZM0E"
             }
         ],
-        "runId": "1777201351275"
+        "runId": "1777201544701"
+    },
+    "root_group": {
+        "groups": {
+            "setup": {
+                "checks": {
+                    "register is 201 or 409": {
+                        "path": "::setup::register is 201 or 409",
+                        "id": "0740253d9d64fe1cfbbee98a67a69ba2",
+                        "passes": 120,
+                        "fails": 0,
+                        "name": "register is 201 or 409"
+                    },
+                    "login is 200": {
+                        "path": "::setup::login is 200",
+                        "id": "5399e1055d1ad3dc8ed9ef0eeaa732e6",
+                        "passes": 120,
+                        "fails": 0,
+                        "name": "login is 200"
+                    }
+                },
+                "name": "setup",
+                "path": "::setup",
+                "id": "5c0f8025f7e0b6654089e5b00e950f1a",
+                "groups": {}
+            }
+        },
+        "checks": {
+            "healthz is 200 in auth churn": {
+                "id": "3892d912b267018b99990987305e4b5f",
+                "passes": 101,
+                "fails": 0,
+                "name": "healthz is 200 in auth churn",
+                "path": "::healthz is 200 in auth churn"
+            },
+            "healthz is 200 in duel lifecycle": {
+                "name": "healthz is 200 in duel lifecycle",
+                "path": "::healthz is 200 in duel lifecycle",
+                "id": "f7889405c6285739984364fb2d0356aa",
+                "passes": 187,
+                "fails": 0
+            },
+            "register is 201 or 409": {
+                "id": "fd9da43e3ff169005c6f78576a066a45",
+                "passes": 101,
+                "fails": 0,
+                "name": "register is 201 or 409",
+                "path": "::register is 201 or 409"
+            },
+            "login is 200": {
+                "name": "login is 200",
+                "path": "::login is 200",
+                "id": "3b88dde1cb8802a9beb5779826a428a1",
+                "passes": 101,
+                "fails": 0
+            },
+            "creator users me is 200": {
+                "id": "4ad99e8cc2adccfa12666b1a27966130",
+                "passes": 187,
+                "fails": 0,
+                "name": "creator users me is 200",
+                "path": "::creator users me is 200"
+            },
+            "browse healthz is 200": {
+                "name": "browse healthz is 200",
+                "path": "::browse healthz is 200",
+                "id": "dd8608677c96cad559a1d5dbc84277a5",
+                "passes": 106,
+                "fails": 0
+            },
+            "browse users me is 200": {
+                "id": "12df6129c2ed9f932994ee1a7edd9011",
+                "passes": 106,
+                "fails": 0,
+                "name": "browse users me is 200",
+                "path": "::browse users me is 200"
+            },
+            "browse duels list is 200": {
+                "name": "browse duels list is 200",
+                "path": "::browse duels list is 200",
+                "id": "38e9ae4ef54847f300927d4257a4fa7e",
+                "passes": 106,
+                "fails": 0
+            },
+            "browse leaderboard is 200": {
+                "name": "browse leaderboard is 200",
+                "path": "::browse leaderboard is 200",
+                "id": "c67f3994bd6977c4f328da83c8bf05b9",
+                "passes": 106,
+                "fails": 0
+            },
+            "users me is 200 in auth churn": {
+                "name": "users me is 200 in auth churn",
+                "path": "::users me is 200 in auth churn",
+                "id": "ad7041e7bf1d5b3a1285afcc6891576c",
+                "passes": 101,
+                "fails": 0
+            },
+            "opponent users me is 200": {
+                "name": "opponent users me is 200",
+                "path": "::opponent users me is 200",
+                "id": "1cf9ab4ce35db89381b985661c8bcf52",
+                "passes": 187,
+                "fails": 0
+            },
+            "leaderboard is 200 in auth churn": {
+                "name": "leaderboard is 200 in auth churn",
+                "path": "::leaderboard is 200 in auth churn",
+                "id": "385dcea5990047b0c510d98189d97ab4",
+                "passes": 101,
+                "fails": 0
+            },
+            "lifecycle duel create is 201": {
+                "name": "lifecycle duel create is 201",
+                "path": "::lifecycle duel create is 201",
+                "id": "a9ba178b5a34096e0d1c8236e0cea3be",
+                "passes": 187,
+                "fails": 0
+            },
+            "lifecycle duel create returns id": {
+                "fails": 0,
+                "name": "lifecycle duel create returns id",
+                "path": "::lifecycle duel create returns id",
+                "id": "351f9e7f5ab24c6c7e021ad12b904e22",
+                "passes": 187
+            },
+            "lifecycle duel accept is 200": {
+                "passes": 187,
+                "fails": 0,
+                "name": "lifecycle duel accept is 200",
+                "path": "::lifecycle duel accept is 200",
+                "id": "849bf65b41cd615ad10896e349d06f90"
+            },
+            "lifecycle creator duels list is 200": {
+                "name": "lifecycle creator duels list is 200",
+                "path": "::lifecycle creator duels list is 200",
+                "id": "312867ffb7c7f662a49722309d178f27",
+                "passes": 187,
+                "fails": 0
+            },
+            "lifecycle opponent duels list is 200": {
+                "path": "::lifecycle opponent duels list is 200",
+                "id": "122d70702254a60d5c19b4679c8f69f7",
+                "passes": 187,
+                "fails": 0,
+                "name": "lifecycle opponent duels list is 200"
+            },
+            "creator checkin is 201": {
+                "id": "54bb4905d4704c48319e0da45c6f4753",
+                "passes": 187,
+                "fails": 0,
+                "name": "creator checkin is 201",
+                "path": "::creator checkin is 201"
+            },
+            "opponent checkin is 201": {
+                "name": "opponent checkin is 201",
+                "path": "::opponent checkin is 201",
+                "id": "ab18166b5a18c48cd96779ac5cfa06c8",
+                "passes": 187,
+                "fails": 0
+            },
+            "creator duel detail is 200": {
+                "path": "::creator duel detail is 200",
+                "id": "9ae3a089b2befec94fd525fcd59fdd55",
+                "passes": 187,
+                "fails": 0,
+                "name": "creator duel detail is 200"
+            },
+            "opponent duel detail is 200": {
+                "fails": 0,
+                "name": "opponent duel detail is 200",
+                "path": "::opponent duel detail is 200",
+                "id": "0a69f4cca951ed79bd318fbc4754c028",
+                "passes": 187
+            },
+            "leaderboard is 200 in lifecycle": {
+                "passes": 187,
+                "fails": 0,
+                "name": "leaderboard is 200 in lifecycle",
+                "path": "::leaderboard is 200 in lifecycle",
+                "id": "234ad1fb1dbe0296a8050a4916328fc6"
+            },
+            "browse duel detail is 200": {
+                "fails": 0,
+                "name": "browse duel detail is 200",
+                "path": "::browse duel detail is 200",
+                "id": "cd8fd177436c28d6b6628168e8656a25",
+                "passes": 82
+            }
+        },
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e"
     }
 }

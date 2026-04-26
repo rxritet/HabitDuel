@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../core/firebase/habitduel_firestore_store.dart';
-import '../../core/updates/app_update_service.dart';
 import '../../data/datasources/firebase_aware_data_sources.dart';
 import '../../data/repositories/auth_repo_impl.dart';
 import '../../data/repositories/duel_repo_impl.dart';
@@ -16,8 +15,7 @@ import '../../domain/usecases/duels/create_duel_usecase.dart';
 import '../../domain/usecases/duels/get_duel_detail_usecase.dart';
 import '../../domain/usecases/duels/get_my_duels_usecase.dart';
 
-// ─── Инфраструктурные провайдеры ───────────────────────────────────────
-
+// Infrastructure providers.
 final secureStorageProvider = Provider<FlutterSecureStorage>(
   (_) => const FlutterSecureStorage(),
 );
@@ -26,12 +24,7 @@ final firestoreStoreProvider = Provider<HabitDuelFirestoreStore>((ref) {
   return HabitDuelFirestoreStore();
 });
 
-final appUpdateServiceProvider = Provider<AppUpdateService>((ref) {
-  return AppUpdateService(ref.watch(firestoreStoreProvider));
-});
-
-// ─── Auth — теперь полностью Firebase Auth ─────────────────────────────
-
+// Auth.
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepositoryImpl(
     ref.watch(secureStorageProvider),
@@ -39,8 +32,7 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   );
 });
 
-// ─── Use cases аутентификации ──────────────────────────────────────────
-
+// Auth use cases.
 final registerUseCaseProvider = Provider<RegisterUseCase>((ref) {
   return RegisterUseCase(ref.watch(authRepositoryProvider));
 });
@@ -49,9 +41,7 @@ final loginUseCaseProvider = Provider<LoginUseCase>((ref) {
   return LoginUseCase(ref.watch(authRepositoryProvider));
 });
 
-// ─── Провайдеры данных дуэлей ──────────────────────────────────────────
-// Используем FirebaseAwareDuelDataSource — Firestore primary, REST fallback.
-
+// Duel data providers. Firestore is primary; REST remains a fallback.
 final duelRemoteDSProvider = Provider<FirebaseAwareDuelDataSource>((ref) {
   return FirebaseAwareDuelDataSource(
     ref.watch(secureStorageProvider),
@@ -63,8 +53,7 @@ final duelRepositoryProvider = Provider<DuelRepository>((ref) {
   return DuelRepositoryImpl(ref.watch(duelRemoteDSProvider));
 });
 
-// ─── Use cases дуэлей ──────────────────────────────────────────────────
-
+// Duel use cases.
 final createDuelUseCaseProvider = Provider<CreateDuelUseCase>((ref) {
   return CreateDuelUseCase(ref.watch(duelRepositoryProvider));
 });
@@ -85,8 +74,7 @@ final checkInUseCaseProvider = Provider<CheckInUseCase>((ref) {
   return CheckInUseCase(ref.watch(duelRepositoryProvider));
 });
 
-// ─── Leaderboard / Profile ─────────────────────────────────────────────
-
+// Leaderboard and profile.
 final leaderboardRemoteDSProvider =
     Provider<FirebaseAwareLeaderboardDataSource>((ref) {
   return FirebaseAwareLeaderboardDataSource(

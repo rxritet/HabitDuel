@@ -146,16 +146,6 @@ export function registerAndLoginUser(user, registerTag, loginTag, extraTags) {
     },
   });
 
-  var token = registerResponse.status === 201 ? registerResponse.json('token') : null;
-  if (token) {
-    return {
-      user: user,
-      token: token,
-      registerStatus: registerResponse.status,
-      loginStatus: null,
-    };
-  }
-
   var loginResponse = loginUser(user, loginTag, extraTags);
   check(loginResponse, {
     'login is 200': function (r) {

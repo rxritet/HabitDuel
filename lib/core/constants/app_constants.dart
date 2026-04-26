@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kDebugMode, kIsWeb, TargetPlatform;
 
-/// Базовый URL API-сервера HabitDuel.
+/// Base URL for the HabitDuel API server.
 ///
-/// Можно переопределить через `--dart-define=API_BASE_URL=https://...`.
-/// В debug используются локальные адреса для эмулятора/симулятора.
+/// Override it with `--dart-define=API_BASE_URL=https://...`.
+/// Debug builds use local addresses for emulator and simulator workflows.
 String get kBaseUrl {
   const overrideUrl = String.fromEnvironment('API_BASE_URL');
   if (overrideUrl.isNotEmpty) {
@@ -34,17 +34,16 @@ String get kBaseUrl {
   );
 }
 
-/// Тайм-ауты HTTP.
+/// HTTP timeouts.
 ///
-/// В debug делаем fail-fast, чтобы UI не подвисал долго,
-/// если локальный backend не запущен.
+/// Debug builds fail fast so the UI does not hang on a stopped local backend.
 Duration get kConnectTimeout =>
-  kDebugMode ? const Duration(seconds: 3) : const Duration(seconds: 10);
+    kDebugMode ? const Duration(seconds: 3) : const Duration(seconds: 10);
 
 Duration get kReceiveTimeout =>
-  kDebugMode ? const Duration(seconds: 5) : const Duration(seconds: 10);
+    kDebugMode ? const Duration(seconds: 5) : const Duration(seconds: 10);
 
-/// Ключи защищённого хранилища.
+/// Secure storage keys.
 const String kTokenKey = 'jwt_token';
 const String kUserIdKey = 'user_id';
 const String kUsernameKey = 'username';

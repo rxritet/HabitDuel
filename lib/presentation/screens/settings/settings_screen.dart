@@ -4,9 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/notifications/notification_service.dart';
 import '../../providers/auth_provider.dart';
-import '../../providers/core_providers.dart';
 import '../../providers/theme_provider.dart';
-import '../../widgets/app_update_dialog.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -67,80 +65,49 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
-  Future<void> _checkUpdatesManually() async {
-    final result =
-        await ref.read(appUpdateServiceProvider).checkForUpdate(manual: true);
-    if (!mounted) return;
-
-    if (!result.updateAvailable || result.remote == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('У вас уже установлена актуальная версия')),
-      );
-      return;
-    }
-
-    await showAppUpdateDialog(
-      context,
-      result: result,
-      onDownload: () async {
-        final opened = await ref.read(appUpdateServiceProvider).openDownload(
-              result.remote!,
-            );
-        if (!opened && mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Не удалось открыть ссылку на APK')),
-          );
-        }
-      },
-      onLater: () => ref
-          .read(appUpdateServiceProvider)
-          .dismissVersion(result.remote!.versionCode),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeModeProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: const Text('Настройки')),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : ListView(
               children: [
-                const _SectionHeader(title: 'Daily Reminder'),
+                const _SectionHeader(title: 'Напоминания'),
                 SwitchListTile(
-                  title: const Text('Enable daily reminder'),
-                  subtitle: const Text('Напоминание о check-in'),
+                  title: const Text('Ежедневное напоминание'),
+                  subtitle: const Text('Напоминать о check-in'),
                   value: _reminderEnabled,
                   onChanged: _toggleReminder,
                 ),
                 ListTile(
-                  title: const Text('Reminder time'),
+                  title: const Text('Время напоминания'),
                   subtitle: Text(_reminderTime.format(context)),
                   trailing: const Icon(Icons.access_time),
                   enabled: _reminderEnabled,
                   onTap: _reminderEnabled ? _pickTime : null,
                 ),
                 const Divider(height: 32),
-                const _SectionHeader(title: 'Appearance'),
+                const _SectionHeader(title: 'Оформление'),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: SegmentedButton<ThemeMode>(
                     segments: const [
                       ButtonSegment(
                         value: ThemeMode.system,
-                        label: Text('System'),
+                        label: Text('Система'),
                         icon: Icon(Icons.brightness_auto),
                       ),
                       ButtonSegment(
                         value: ThemeMode.light,
-                        label: Text('Light'),
+                        label: Text('Светлая'),
                         icon: Icon(Icons.light_mode_outlined),
                       ),
                       ButtonSegment(
                         value: ThemeMode.dark,
-                        label: Text('Dark'),
+                        label: Text('Темная'),
                         icon: Icon(Icons.dark_mode_outlined),
                       ),
                     ],
@@ -151,20 +118,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                 ),
                 const Divider(height: 32),
-                const _SectionHeader(title: 'Updates'),
-                ListTile(
-                  leading: const Icon(Icons.system_update_alt_outlined),
-                  title: const Text('Check for updates'),
-                  subtitle: const Text('Проверить новую APK-версию через Firebase'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: _checkUpdatesManually,
-                ),
-                const Divider(height: 32),
-                const _SectionHeader(title: 'Account'),
+                const _SectionHeader(title: 'Аккаунт'),
                 ListTile(
                   leading: const Icon(Icons.logout, color: Colors.red),
                   title: const Text(
-                    'Log out',
+                    'Выйти',
                     style: TextStyle(color: Colors.red),
                   ),
                   onTap: () => ref.read(authProvider.notifier).logout(),

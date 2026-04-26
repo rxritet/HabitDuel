@@ -1,20 +1,14 @@
 # HabitDuel k6 Load Tests
 
-В папке лежит несколько сценариев, но основной прогон теперь строится вокруг длинной смешанной нагрузки и реальных тестовых пользователей.
+This folder contains backend API load tests for the local Docker Compose stack.
 
-## Сценарии
+## Scripts
 
-- `api-smoke.js`
-  Быстрый smoke-прогон доступности основных маршрутов.
-- `api-lifecycle.js`
-  Полный flow двух игроков: регистрация, логин, создание вызова, принятие, check-in, детали.
-- `api-load.js`
-  Основной долгий сценарий с тремя параллельными типами нагрузки:
-  - `auth_churn`: постоянно создает новых пользователей и логинит их
-  - `duel_lifecycle`: гоняет полный жизненный цикл дуэли на заранее созданных парах
-  - `browse_api`: читает health, профиль, список дуэлей, leaderboard и детали дуэлей
+- `api-smoke.js`: quick availability check for the main routes.
+- `api-lifecycle.js`: full two-player duel flow with registration, login, duel creation, accept, check-in, details, and leaderboard.
+- `api-load.js`: mixed load scenario that creates real test users, runs duel lifecycles, and browses authenticated API routes.
 
-## Что покрывается
+## Covered Routes
 
 - `GET /healthz`
 - `POST /auth/register`
@@ -27,23 +21,16 @@
 - `POST /duels/:id/checkin`
 - `GET /leaderboard/`
 
-## Реальные тестовые пользователи
-
-`api-load.js` перед стартом делает `setup()` и создает пул реальных пользователей в системе.
-Дополнительно во время самого прогона сценарий `auth_churn` продолжает создавать новых пользователей, чтобы нагрузка шла не только по чтению, но и по регистрации/логину.
-
-Префикс пользователей строится через `K6_RUN_ID`, чтобы прогоны не мешали друг другу.
-
-## Быстрый запуск
+## Quick Run
 
 ```powershell
 docker compose up -d --build db migrate server
 docker compose --profile load run --rm k6
 ```
 
-По умолчанию запускается `api-load.js`.
+By default, Docker Compose runs `api-load.js`.
 
-## Выбор сценария
+## Choose A Script
 
 ```powershell
 $env:K6_SCRIPT="api-smoke.js"
@@ -57,48 +44,7 @@ $env:K6_DURATION="20s"
 docker compose --profile load run --rm k6
 ```
 
-## Основные переменные для `api-load.js`
-
-- `K6_RUN_ID`
-  Уникальный идентификатор прогона. Удобно задавать руками, если хочешь потом находить тестовых пользователей.
-- `K6_AUTH_VUS`
-  Число VU для сценария регистрации и логина.
-- `K6_DUEL_VUS`
-  Число VU для полного жизненного цикла дуэли.
-- `K6_BROWSE_RATE`
-  Сколько browse-итераций в секунду запускать.
-- `K6_BROWSE_VUS`
-  Сколько VU заранее выделить под browse.
-- `K6_PAIR_COUNT`
-  Сколько пар пользователей создать в `setup()`.
-- `K6_RAMP_UP`
-  Время разгона.
-- `K6_STEADY`
-  Основная полка нагрузки.
-- `K6_RAMP_DOWN`
-  Время плавного снижения нагрузки.
-
-## Готовые профили прогонов
-
-### Smoke
-
-```powershell
-$env:K6_SCRIPT="api-smoke.js"
-$env:K6_VUS="5"
-$env:K6_DURATION="15s"
-docker compose --profile load run --rm k6
-```
-
-### Lifecycle
-
-```powershell
-$env:K6_SCRIPT="api-lifecycle.js"
-$env:K6_VUS="12"
-$env:K6_DURATION="45s"
-docker compose --profile load run --rm k6
-```
-
-### Main Load
+## Main Load Profile
 
 ```powershell
 $env:K6_SCRIPT="api-load.js"
@@ -114,7 +60,7 @@ $env:K6_RAMP_DOWN="1m"
 docker compose --profile load run --rm k6
 ```
 
-### Stress
+## Stress Profile
 
 ```powershell
 $env:K6_SCRIPT="api-load.js"
@@ -130,22 +76,8 @@ $env:K6_RAMP_DOWN="2m"
 docker compose --profile load run --rm k6
 ```
 
-## Запуск через helper-скрипт
+## Notes
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\dev-stack.ps1 -LoadTest -LoadScript api-load.js
-```
-
-Если нужны кастомные env-переменные, удобнее выставить их в текущей PowerShell-сессии перед запуском.
-
-## Практический смысл
-
-- `api-smoke.js` подходит для быстрой проверки после поднятия стека
-- `api-lifecycle.js` полезен для проверки бизнес-флоу
-- `api-load.js` подходит для реальной оценки устойчивости API под смешанной нагрузкой
-
-## Ограничения
-
-- Эти сценарии покрывают Shelf + Postgres API
-- Они не нагружают напрямую Firebase Auth, Firestore или FCM
-- Клиентские Flutter-only экраны и Firebase-only сценарии нужно тестировать отдельно
+- `K6_RUN_ID` keeps generated test users grouped by run.
+- These tests target the Shelf + PostgreSQL API.
+- Firebase Auth, Firestore, FCM, and Flutter-only UI flows should be tested separately.
