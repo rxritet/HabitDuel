@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/auth_provider.dart';
+import '../../providers/core_providers.dart';
 import '../../providers/duel_provider.dart';
+import '../../widgets/app_update_dialog.dart';
 import '../../../domain/entities/duel.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -13,10 +15,39 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  bool _checkedForUpdate = false;
+
   @override
   void initState() {
     super.initState();
     Future.microtask(() => ref.read(duelsListProvider.notifier).load());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkForUpdate());
+  }
+
+  Future<void> _checkForUpdate() async {
+    if (_checkedForUpdate || !mounted) return;
+    _checkedForUpdate = true;
+
+    final result = await ref.read(appUpdateServiceProvider).checkForUpdate();
+    if (!mounted || !result.updateAvailable || !result.shouldPrompt) return;
+
+    await showAppUpdateDialog(
+      context,
+      result: result,
+      onDownload: () async {
+        final opened = await ref.read(appUpdateServiceProvider).openDownload(
+              result.remote!,
+            );
+        if (!opened && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Не удалось открыть ссылку на обновление')),
+          );
+        }
+      },
+      onLater: () => ref
+          .read(appUpdateServiceProvider)
+          .dismissVersion(result.remote!.versionCode),
+    );
   }
 
   @override
