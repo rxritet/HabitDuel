@@ -1,0 +1,58 @@
+[
+  {
+    "id": "__CURRENT_USER_ID__",
+    "username": "__CURRENT_USERNAME__",
+    "email": "demo-current@habitduel.app",
+    "wins": 9,
+    "losses": 3,
+    "created_at": "2026-04-01T08:00:00Z"
+  },
+  {
+    "id": "demo-aigerim",
+    "username": "AigerimFit",
+    "email": "aigerim.demo@habitduel.app",
+    "wins": 14,
+    "losses": 4,
+    "created_at": "2026-04-01T08:10:00Z"
+  },
+  {
+    "id": "demo-dastan",
+    "username": "DastanFocus",
+    "email": "dastan.demo@habitduel.app",
+    "wins": 11,
+    "losses": 5,
+    "created_at": "2026-04-01T08:20:00Z"
+  },
+  {
+    "id": "demo-madi",
+    "username": "MadiRun",
+    "email": "madi.demo@habitduel.app",
+    "wins": 8,
+    "losses": 6,
+    "created_at": "2026-04-01T08:30:00Z"
+  },
+  {
+    "id": "demo-sana",
+    "username": "SanaReads",
+    "email": "sana.demo@habitduel.app",
+    "wins": 7,
+    "losses": 4,
+    "created_at": "2026-04-01T08:40:00Z"
+  },
+  {
+    "id": "demo-timur",
+    "username": "TimurCode",
+    "email": "timur.demo@habitduel.app",
+    "wins": 5,
+    "losses": 7,
+    "created_at": "2026-04-01T08:50:00Z"
+  },
+  {
+    "id": "demo-zere",
+    "username": "ZereYoga",
+    "email": "zere.demo@habitduel.app",
+    "wins": 4,
+    "losses": 5,
+    "created_at": "2026-04-01T09:00:00Z"
+  }
+]

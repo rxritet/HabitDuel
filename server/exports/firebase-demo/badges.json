@@ -1,0 +1,8 @@
+[
+  {"id": "current-first-win", "user_id": "__CURRENT_USER_ID__", "badge_type": "first_win", "earned_at": "2026-04-10T10:00:00Z"},
+  {"id": "current-streak-7", "user_id": "__CURRENT_USER_ID__", "badge_type": "streak_7", "earned_at": "2026-04-14T10:00:00Z"},
+  {"id": "aigerim-duel-master", "user_id": "demo-aigerim", "badge_type": "duel_master", "earned_at": "2026-04-20T10:00:00Z"},
+  {"id": "dastan-focus", "user_id": "demo-dastan", "badge_type": "focus_week", "earned_at": "2026-04-18T10:00:00Z"},
+  {"id": "sana-reader", "user_id": "demo-sana", "badge_type": "bookworm", "earned_at": "2026-04-16T10:00:00Z"},
+  {"id": "zere-yoga", "user_id": "demo-zere", "badge_type": "streak_7", "earned_at": "2026-04-22T10:00:00Z"}
+]

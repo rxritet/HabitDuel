@@ -14,6 +14,12 @@ Future<void> main() async {
       env['GOOGLE_APPLICATION_CREDENTIALS'] ??
       '../service-account.json';
   final dryRun = (env['IMPORT_DRY_RUN'] ?? 'false').toLowerCase() == 'true';
+  final substitutions = <String, String>{
+    if ((env['DEMO_CURRENT_USER_ID'] ?? '').isNotEmpty)
+      '__CURRENT_USER_ID__': env['DEMO_CURRENT_USER_ID']!,
+    if ((env['DEMO_CURRENT_USERNAME'] ?? '').isNotEmpty)
+      '__CURRENT_USERNAME__': env['DEMO_CURRENT_USERNAME']!,
+  };
 
   if (projectId == null || projectId.isEmpty) {
     stderr.writeln('FIREBASE_PROJECT_ID is required (or set in ../firebase.json).');
@@ -46,11 +52,11 @@ Future<void> main() async {
     return;
   }
 
-  final users = await _readRows('${exportDir.path}/users.json');
-  final duels = await _readRows('${exportDir.path}/duels.json');
-  final participants = await _readRows('${exportDir.path}/duel_participants.json');
-  final checkins = await _readRows('${exportDir.path}/checkins.json');
-  final badges = await _readRows('${exportDir.path}/badges.json');
+  final users = await _readRows('${exportDir.path}/users.json', substitutions);
+  final duels = await _readRows('${exportDir.path}/duels.json', substitutions);
+  final participants = await _readRows('${exportDir.path}/duel_participants.json', substitutions);
+  final checkins = await _readRows('${exportDir.path}/checkins.json', substitutions);
+  final badges = await _readRows('${exportDir.path}/badges.json', substitutions);
 
   print('Import target project: $projectId');
   print('Export dir: ${exportDir.absolute.path}');
@@ -86,7 +92,7 @@ Future<void> main() async {
     totalWrites += await _commitBatched(
       firestore,
       databasePath,
-      _buildDuelWrites(projectId, duels),
+      _buildDuelWrites(projectId, duels, participants),
       label: 'duels',
     );
 
@@ -117,7 +123,10 @@ Future<void> main() async {
   }
 }
 
-Future<List<Map<String, dynamic>>> _readRows(String path) async {
+Future<List<Map<String, dynamic>>> _readRows(
+  String path,
+  Map<String, String> substitutions,
+) async {
   final file = File(path);
   if (!file.existsSync()) {
     return const [];
@@ -130,8 +139,36 @@ Future<List<Map<String, dynamic>>> _readRows(String path) async {
 
   return raw
       .whereType<Map>()
-      .map((e) => e.map((key, value) => MapEntry(key.toString(), value)))
+      .map((e) => e.map(
+            (key, value) => MapEntry(
+              key.toString(),
+              _replacePlaceholders(value, substitutions),
+            ),
+          ))
       .toList(growable: false);
+}
+
+Object? _replacePlaceholders(Object? value, Map<String, String> substitutions) {
+  if (value is String) {
+    return substitutions.entries.fold(
+      value,
+      (text, entry) => text.replaceAll(entry.key, entry.value),
+    );
+  }
+  if (value is List) {
+    return value
+        .map((item) => _replacePlaceholders(item, substitutions))
+        .toList(growable: false);
+  }
+  if (value is Map) {
+    return value.map(
+      (key, nestedValue) => MapEntry(
+        key.toString(),
+        _replacePlaceholders(nestedValue, substitutions),
+      ),
+    );
+  }
+  return value;
 }
 
 List<fs.Write> _buildUserWrites(String projectId, List<Map<String, dynamic>> rows) {
@@ -158,11 +195,25 @@ List<fs.Write> _buildUserWrites(String projectId, List<Map<String, dynamic>> row
       .toList(growable: false);
 }
 
-List<fs.Write> _buildDuelWrites(String projectId, List<Map<String, dynamic>> rows) {
+List<fs.Write> _buildDuelWrites(
+  String projectId,
+  List<Map<String, dynamic>> rows,
+  List<Map<String, dynamic>> participantRows,
+) {
+  final participantsByDuel = <String, List<String>>{};
+  for (final participant in participantRows) {
+    final duelId = _asString(participant['duel_id']);
+    final userId = _asString(participant['user_id']);
+    if (duelId.isEmpty || userId.isEmpty) continue;
+    participantsByDuel.putIfAbsent(duelId, () => <String>[]).add(userId);
+  }
+
   return rows
       .map((row) {
         final id = _asString(row['id']);
         if (id.isEmpty) return null;
+
+        final participantIds = participantsByDuel[id] ?? const <String>[];
 
         return _upsertWrite(
           projectId,
@@ -174,7 +225,17 @@ List<fs.Write> _buildDuelWrites(String projectId, List<Map<String, dynamic>> row
             'creatorId': _nullableString(row['creator_id']),
             'opponentId': _nullableString(row['opponent_id']),
             'status': _asString(row['status']),
+            'type': _nullableString(row['type']) ?? 'duel',
             'durationDays': _asInt(row['duration_days']),
+            'maxParticipants': _asInt(row['max_participants']) == 0
+                ? 2
+                : _asInt(row['max_participants']),
+            'inviteCode': _nullableString(row['invite_code']),
+            'habitCategory': _nullableString(row['habit_category']),
+            'isTrustedCheckin': _asBool(row['is_trusted_checkin']),
+            'entryFee': _asInt(row['entry_fee']),
+            'currency': _nullableString(row['currency']) ?? 'tenge',
+            'participantIds': participantIds,
             'startsAt': _nullableTimestamp(row['starts_at']),
             'endsAt': _nullableTimestamp(row['ends_at']),
             'createdAt': _nullableTimestamp(row['created_at']),
@@ -364,6 +425,12 @@ int _asInt(Object? value) {
   if (value is int) return value;
   if (value is num) return value.toInt();
   return int.tryParse(value?.toString() ?? '') ?? 0;
+}
+
+bool _asBool(Object? value) {
+  if (value is bool) return value;
+  final text = value?.toString().trim().toLowerCase();
+  return text == 'true' || text == '1' || text == 'yes';
 }
 
 String? _readProjectIdFromFirebaseJson(String path) {

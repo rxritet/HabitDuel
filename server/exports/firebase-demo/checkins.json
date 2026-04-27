@@ -1,0 +1,12 @@
+[
+  {"id": "reading-current-1", "duel_id": "demo-duel-reading-active", "user_id": "__CURRENT_USER_ID__", "username": "__CURRENT_USERNAME__", "checked_at": "2026-04-26T20:10:00Z", "note": "Finished one chapter."},
+  {"id": "reading-sana-1", "duel_id": "demo-duel-reading-active", "user_id": "demo-sana", "username": "SanaReads", "checked_at": "2026-04-26T19:40:00Z", "note": "Read before dinner."},
+  {"id": "reading-current-2", "duel_id": "demo-duel-reading-active", "user_id": "__CURRENT_USER_ID__", "username": "__CURRENT_USERNAME__", "checked_at": "2026-04-25T20:05:00Z", "note": "Kept the streak alive."},
+  {"id": "steps-aigerim-1", "duel_id": "demo-duel-steps-open", "user_id": "demo-aigerim", "username": "AigerimFit", "checked_at": "2026-04-26T18:00:00Z", "note": "12 400 steps."},
+  {"id": "steps-madi-1", "duel_id": "demo-duel-steps-open", "user_id": "demo-madi", "username": "MadiRun", "checked_at": "2026-04-26T18:20:00Z", "note": "10 800 steps."},
+  {"id": "steps-timur-1", "duel_id": "demo-duel-steps-open", "user_id": "demo-timur", "username": "TimurCode", "checked_at": "2026-04-26T18:40:00Z", "note": "Evening walk done."},
+  {"id": "run-current-1", "duel_id": "demo-duel-run-completed", "user_id": "__CURRENT_USER_ID__", "username": "__CURRENT_USERNAME__", "checked_at": "2026-04-14T06:10:00Z", "note": "3 km easy run."},
+  {"id": "run-madi-1", "duel_id": "demo-duel-run-completed", "user_id": "demo-madi", "username": "MadiRun", "checked_at": "2026-04-14T06:20:00Z", "note": "Intervals completed."},
+  {"id": "yoga-zere-1", "duel_id": "demo-duel-yoga-open", "user_id": "demo-zere", "username": "ZereYoga", "checked_at": "2026-04-26T21:00:00Z", "note": "20 minute flow."},
+  {"id": "yoga-sana-1", "duel_id": "demo-duel-yoga-open", "user_id": "demo-sana", "username": "SanaReads", "checked_at": "2026-04-26T21:05:00Z", "note": "Stretching session."}
+]

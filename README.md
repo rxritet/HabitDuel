@@ -91,6 +91,19 @@ More k6 details live in `load-tests/k6/README.md`.
 - Firebase project contains the required Android app config.
 - Release APK is for sideload/demo only unless proper release signing is configured.
 
+## Firebase Demo Data
+
+Demo Firestore JSON lives in `server/exports/firebase-demo`. To import it, put a Firebase service account JSON at the repo root as `service-account.json` or set `FIREBASE_SERVICE_ACCOUNT_PATH`, then run from `server`:
+
+```powershell
+$env:EXPORT_DIR='exports/firebase-demo'
+$env:DEMO_CURRENT_USER_ID='<your Firebase Auth uid>'
+$env:DEMO_CURRENT_USERNAME='Aliar'
+dart run bin/import_firebase.dart
+```
+
+Use `IMPORT_DRY_RUN=true` first if you only want to verify the target project and row counts.
+
 ## Project Structure
 
 ```text

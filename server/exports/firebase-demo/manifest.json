@@ -1,0 +1,29 @@
+{
+  "exported_at": "2026-04-27T00:00:00Z",
+  "source": {
+    "name": "HabitDuel Firebase demo seed",
+    "notes": "Use DEMO_CURRENT_USER_ID and DEMO_CURRENT_USERNAME to bind demo duels to a real Firebase Auth user."
+  },
+  "files": {
+    "users": {
+      "count": 7,
+      "path": "users.json"
+    },
+    "duels": {
+      "count": 5,
+      "path": "duels.json"
+    },
+    "duel_participants": {
+      "count": 12,
+      "path": "duel_participants.json"
+    },
+    "checkins": {
+      "count": 10,
+      "path": "checkins.json"
+    },
+    "badges": {
+      "count": 6,
+      "path": "badges.json"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+[
+  {"duel_id": "demo-duel-reading-active", "user_id": "__CURRENT_USER_ID__", "username": "__CURRENT_USERNAME__", "streak": 12, "last_checkin": "2026-04-26T20:10:00Z"},
+  {"duel_id": "demo-duel-reading-active", "user_id": "demo-sana", "username": "SanaReads", "streak": 10, "last_checkin": "2026-04-26T19:40:00Z"},
+  {"duel_id": "demo-duel-steps-open", "user_id": "demo-aigerim", "username": "AigerimFit", "streak": 4, "last_checkin": "2026-04-26T18:00:00Z"},
+  {"duel_id": "demo-duel-steps-open", "user_id": "demo-madi", "username": "MadiRun", "streak": 3, "last_checkin": "2026-04-26T18:20:00Z"},
+  {"duel_id": "demo-duel-steps-open", "user_id": "demo-timur", "username": "TimurCode", "streak": 2, "last_checkin": "2026-04-26T18:40:00Z"},
+  {"duel_id": "demo-duel-focus-pending", "user_id": "demo-dastan", "username": "DastanFocus", "streak": 0, "last_checkin": null},
+  {"duel_id": "demo-duel-focus-pending", "user_id": "__CURRENT_USER_ID__", "username": "__CURRENT_USERNAME__", "streak": 0, "last_checkin": null},
+  {"duel_id": "demo-duel-run-completed", "user_id": "demo-madi", "username": "MadiRun", "streak": 9, "last_checkin": "2026-04-14T06:20:00Z"},
+  {"duel_id": "demo-duel-run-completed", "user_id": "__CURRENT_USER_ID__", "username": "__CURRENT_USERNAME__", "streak": 11, "last_checkin": "2026-04-14T06:10:00Z"},
+  {"duel_id": "demo-duel-yoga-open", "user_id": "demo-zere", "username": "ZereYoga", "streak": 6, "last_checkin": "2026-04-26T21:00:00Z"},
+  {"duel_id": "demo-duel-yoga-open", "user_id": "demo-sana", "username": "SanaReads", "streak": 5, "last_checkin": "2026-04-26T21:05:00Z"},
+  {"duel_id": "demo-duel-yoga-open", "user_id": "demo-aigerim", "username": "AigerimFit", "streak": 4, "last_checkin": "2026-04-26T21:10:00Z"}
+]
