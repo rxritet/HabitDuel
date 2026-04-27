@@ -187,7 +187,7 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeOutCubic,
               child: _duelType == DuelType.duel
-                  ? _OneVsOneFields(
+                  ? _OneVsOnePlayerPicker(
                       controller: _opponentCtrl,
                       leaderboardState: leaderboardState,
                       currentUserId: currentUserId,
@@ -251,6 +251,72 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
           ],
         ),
       ),
+    );
+  }
+}
+
+class _OneVsOnePlayerPicker extends StatelessWidget {
+  const _OneVsOnePlayerPicker({
+    required this.controller,
+    required this.leaderboardState,
+    required this.currentUserId,
+  });
+
+  final TextEditingController controller;
+  final LeaderboardState leaderboardState;
+  final String? currentUserId;
+
+  @override
+  Widget build(BuildContext context) {
+    if (leaderboardState is LeaderboardLoading ||
+        leaderboardState is LeaderboardInitial) {
+      return const LinearProgressIndicator();
+    }
+
+    if (leaderboardState is LeaderboardLoaded) {
+      final players = (leaderboardState as LeaderboardLoaded)
+          .entries
+          .where((entry) => entry.userId != currentUserId)
+          .toList(growable: false);
+
+      if (players.isNotEmpty) {
+        final currentValue = players.any((entry) => entry.username == controller.text.trim())
+            ? controller.text.trim()
+            : '';
+
+        return DropdownButtonFormField<String>(
+          initialValue: currentValue,
+          decoration: const InputDecoration(
+            labelText: 'Opponent',
+            prefixIcon: Icon(Icons.person_search),
+          ),
+          items: [
+            const DropdownMenuItem(
+              value: '',
+              child: Text('Open challenge'),
+            ),
+            ...players.map(
+              (entry) => DropdownMenuItem(
+                value: entry.username,
+                child: Text('${entry.username}  W:${entry.wins} L:${entry.losses}'),
+              ),
+            ),
+          ],
+          onChanged: (value) {
+            controller.text = value ?? '';
+          },
+        );
+      }
+    }
+
+    return TextFormField(
+      controller: controller,
+      decoration: const InputDecoration(
+        labelText: 'Opponent username',
+        hintText: 'Type username manually',
+        prefixIcon: Icon(Icons.person_search),
+      ),
+      textInputAction: TextInputAction.done,
     );
   }
 }
