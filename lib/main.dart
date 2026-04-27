@@ -26,6 +26,20 @@ import 'presentation/screens/stats/stats_screen.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
 
+bool get _isPresentationDemoMode =>
+    kIsWeb && Uri.base.queryParameters['demo'] == '1';
+
+int _initialDemoTabIndex() {
+  if (!_isPresentationDemoMode) return 0;
+  return switch (Uri.base.queryParameters['tab']) {
+    'stats' => 1,
+    'achievements' => 2,
+    'leaderboard' => 3,
+    'profile' => 4,
+    _ => 0,
+  };
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -94,7 +108,7 @@ class _HabitDuelAppState extends ConsumerState<HabitDuelApp> {
       routes: {
         '/login': (_) => const LoginScreen(),
         '/register': (_) => const RegisterScreen(),
-        '/home': (_) => const MainShell(),
+        '/home': (_) => MainShell(initialIndex: _initialDemoTabIndex()),
         '/create-duel': (_) => const CreateDuelScreen(),
         '/leaderboard': (_) => const LeaderboardScreen(),
         '/profile': (_) => const ProfileScreen(),
@@ -124,14 +138,16 @@ class _HabitDuelAppState extends ConsumerState<HabitDuelApp> {
 }
 
 class MainShell extends StatefulWidget {
-  const MainShell({super.key});
+  const MainShell({super.key, this.initialIndex = 0});
+
+  final int initialIndex;
 
   @override
   State<MainShell> createState() => _MainShellState();
 }
 
 class _MainShellState extends State<MainShell> {
-  int _index = 0;
+  late int _index;
 
   final List<Widget?> _screens = [
     const HomeScreen(),
@@ -140,6 +156,13 @@ class _MainShellState extends State<MainShell> {
     null,
     null,
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _index = widget.initialIndex.clamp(0, _screens.length - 1);
+    _screens[_index] = _buildScreen(_index);
+  }
 
   Widget _buildScreen(int index) {
     return switch (index) {

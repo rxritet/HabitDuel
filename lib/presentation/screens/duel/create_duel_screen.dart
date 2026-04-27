@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/health/health_service.dart';
 import '../../../domain/entities/duel.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/duel_provider.dart';
+import '../../providers/leaderboard_provider.dart';
 
 class CreateDuelScreen extends ConsumerStatefulWidget {
   const CreateDuelScreen({super.key});
@@ -45,6 +47,9 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
         _selectedHealthMetric = null;
         _healthTarget = 8000;
       });
+    });
+    Future.microtask(() {
+      ref.read(leaderboardProvider.notifier).load(limit: 50);
     });
   }
 
@@ -137,6 +142,9 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
 
     final state = ref.watch(createDuelProvider);
     final isLoading = state is CreateDuelLoading;
+    final leaderboardState = ref.watch(leaderboardProvider);
+    final authState = ref.watch(authProvider);
+    final currentUserId = authState is Authenticated ? authState.user.id : null;
 
     return Scaffold(
       appBar: AppBar(
@@ -179,7 +187,11 @@ class _CreateDuelScreenState extends ConsumerState<CreateDuelScreen>
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeOutCubic,
               child: _duelType == DuelType.duel
-                  ? _OneVsOneFields(controller: _opponentCtrl)
+                  ? _OneVsOneFields(
+                      controller: _opponentCtrl,
+                      leaderboardState: leaderboardState,
+                      currentUserId: currentUserId,
+                    )
                   : _GroupFields(
                       maxParticipants: _maxParticipants,
                       onSizeChanged: (v) => setState(() => _maxParticipants = v),

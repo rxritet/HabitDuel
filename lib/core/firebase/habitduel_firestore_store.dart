@@ -28,11 +28,19 @@ class HabitDuelFirestoreStore {
   CollectionReference<Map<String, dynamic>> get _duels => _db.collection('duels');
   CollectionReference<Map<String, dynamic>> get _invites => _db.collection('invites');
 
+  static const String _demoUserId = 'demo-user';
+
+  bool get _isPresentationDemoMode =>
+      kIsWeb && Uri.base.queryParameters['demo'] == '1';
+
   // ═══════════════════════════════════════════════════════════════════
   //  USERS / PROFILES
   // ═══════════════════════════════════════════════════════════════════
 
   Future<UserProfile?> readProfile(String userId) async {
+    if (_isPresentationDemoMode && userId == _demoUserId) {
+      return _demoProfile;
+    }
     if (!_isEnabled) return null;
     final userDoc = await _users.doc(userId).get();
     if (!userDoc.exists) return null;
@@ -102,6 +110,44 @@ class HabitDuelFirestoreStore {
     }
   }
 
+  Future<void> syncUserDisplayNameInDuels({
+    required String userId,
+    required String username,
+  }) async {
+    if (!_isEnabled || userId.isEmpty || username.trim().isEmpty) return;
+    try {
+      final snapshot = await _duels.where('participantIds', arrayContains: userId).get();
+      if (snapshot.docs.isEmpty) return;
+
+      var batch = _db.batch();
+      var writes = 0;
+
+      Future<void> commitIfNeeded({bool force = false}) async {
+        if (writes == 0 || (!force && writes < 400)) return;
+        await batch.commit();
+        batch = _db.batch();
+        writes = 0;
+      }
+
+      for (final duelDoc in snapshot.docs) {
+        batch.set(
+          duelDoc.reference.collection('participants').doc(userId),
+          {
+            'userId': userId,
+            'username': username.trim(),
+          },
+          SetOptions(merge: true),
+        );
+        writes++;
+        await commitIfNeeded();
+      }
+
+      await commitIfNeeded(force: true);
+    } catch (error) {
+      debugPrint('Firestore duel username sync failed: $error');
+    }
+  }
+
   Future<void> mirrorUserFromAuth(User user) async {
     if (!_isEnabled) return;
     try {
@@ -130,6 +176,13 @@ class HabitDuelFirestoreStore {
     int limit = 50,
     int offset = 0,
   }) async {
+    if (_isPresentationDemoMode) {
+      final entries = _demoLeaderboardEntries
+          .skip(offset)
+          .take(limit)
+          .toList(growable: false);
+      return (entries: entries, total: _demoLeaderboardEntries.length);
+    }
     if (!_isEnabled) {
       return (entries: const <LeaderboardEntry>[], total: 0);
     }
@@ -166,6 +219,13 @@ class HabitDuelFirestoreStore {
     int limit = 50,
     int offset = 0,
   }) {
+    if (_isPresentationDemoMode) {
+      final entries = _demoLeaderboardEntries
+          .skip(offset)
+          .take(limit)
+          .toList(growable: false);
+      return Stream.value((entries: entries, total: _demoLeaderboardEntries.length));
+    }
     if (!_isEnabled) return Stream.value((entries: const <LeaderboardEntry>[], total: 0));
     
     return _users.orderBy('wins', descending: true).snapshots().map((snapshot) {
@@ -224,6 +284,9 @@ class HabitDuelFirestoreStore {
   // ═══════════════════════════════════════════════════════════════════
 
   Future<List<Duel>> readMyDuels(String userId) async {
+    if (_isPresentationDemoMode && userId == _demoUserId) {
+      return _demoMyDuels;
+    }
     if (!_isEnabled) return const [];
     final snapshot = await _duels
         .where('participantIds', arrayContains: userId)
@@ -234,6 +297,9 @@ class HabitDuelFirestoreStore {
   }
 
   Future<Duel?> readDuel(String duelId) async {
+    if (_isPresentationDemoMode) {
+      return _demoDuelById(duelId);
+    }
     if (!_isEnabled) return null;
     final duelDoc = await _duels.doc(duelId).get();
     if (!duelDoc.exists) return null;
@@ -250,6 +316,9 @@ class HabitDuelFirestoreStore {
 
   /// Stream для real-time обновлений дуэли (заменяет WebSocket).
   Stream<Duel?> watchDuel(String duelId) {
+    if (_isPresentationDemoMode) {
+      return Stream.value(_demoDuelById(duelId));
+    }
     if (!_isEnabled) return const Stream.empty();
     return _duels.doc(duelId).snapshots().asyncMap((snap) async {
       if (!snap.exists) return null;
@@ -293,6 +362,9 @@ class HabitDuelFirestoreStore {
 
   /// Stream для real-time обновлений списка дуэлей пользователя.
   Stream<List<Duel>> watchMyDuels(String userId) {
+    if (_isPresentationDemoMode && userId == _demoUserId) {
+      return Stream.value(_demoMyDuels);
+    }
     if (!_isEnabled) return const Stream.empty();
     return _duels
         .where('participantIds', arrayContains: userId)
@@ -303,6 +375,9 @@ class HabitDuelFirestoreStore {
 
   /// Stream для открытых групповых дуэлей.
   Stream<List<Duel>> watchOpenGroupDuels() {
+    if (_isPresentationDemoMode) {
+      return Stream.value(_demoOpenGroupDuels);
+    }
     if (!_isEnabled) return const Stream.empty();
     return _duels
         .where('type', isEqualTo: 'group')
@@ -1045,6 +1120,9 @@ class HabitDuelFirestoreStore {
   // ═══════════════════════════════════════════════════════════════════
 
   Future<List<Achievement>> readAchievements(String userId) async {
+    if (_isPresentationDemoMode && userId == _demoUserId) {
+      return _demoAchievements;
+    }
     if (!_isEnabled) return [];
     try {
       final snap = await _users.doc(userId).collection('achievements').get();
@@ -1108,6 +1186,9 @@ class HabitDuelFirestoreStore {
   // ═══════════════════════════════════════════════════════════════════
 
   Future<UserStats?> readUserStats(String userId) async {
+    if (_isPresentationDemoMode && userId == _demoUserId) {
+      return _demoUserStats;
+    }
     if (!_isEnabled) return null;
     try {
       final doc = await _users.doc(userId).collection('stats').doc('overview').get();
@@ -1627,5 +1708,268 @@ class HabitDuelFirestoreStore {
     } catch (e) {
       debugPrint('updateQuestProgress failed: $e');
     }
+  }
+
+  UserProfile get _demoProfile => UserProfile(
+        id: _demoUserId,
+        username: Uri.base.queryParameters['username']?.trim().isNotEmpty == true
+            ? Uri.base.queryParameters['username']!.trim()
+            : 'Aruzhan',
+        email: 'demo@habitduel.app',
+        wins: 9,
+        losses: 3,
+        bio: 'Строю привычку читать и тренироваться каждый день через дух соревнования.',
+        favoriteHabit: 'Чтение 30 минут',
+        avatarEmoji: '🔥',
+        badges: [
+          ProfileBadge(
+            badgeType: 'first_win',
+            earnedAt: DateTime.utc(2026, 4, 10),
+          ),
+          ProfileBadge(
+            badgeType: 'streak_7',
+            earnedAt: DateTime.utc(2026, 4, 14),
+          ),
+          ProfileBadge(
+            badgeType: 'streak_21',
+            earnedAt: DateTime.utc(2026, 4, 22),
+          ),
+        ],
+      );
+
+  List<LeaderboardEntry> get _demoLeaderboardEntries => const [
+        LeaderboardEntry(rank: 1, userId: 'u-max', username: 'MaxPower', wins: 14, losses: 4),
+        LeaderboardEntry(rank: 2, userId: _demoUserId, username: 'Aruzhan', wins: 9, losses: 3),
+        LeaderboardEntry(rank: 3, userId: 'u-askar', username: 'AskarFit', wins: 8, losses: 5),
+        LeaderboardEntry(rank: 4, userId: 'u-dana', username: 'DanaReads', wins: 7, losses: 4),
+        LeaderboardEntry(rank: 5, userId: 'u-tim', username: 'TimFocus', wins: 5, losses: 4),
+        LeaderboardEntry(rank: 6, userId: 'u-mira', username: 'MiraRun', wins: 4, losses: 5),
+      ];
+
+  List<Duel> get _demoMyDuels {
+    final now = DateTime.now().toUtc();
+    return [
+      Duel(
+        id: 'demo-duel-active',
+        habitName: 'Чтение 30 минут',
+        description: 'Кто дольше продержит ежедневное чтение без пропусков.',
+        status: 'active',
+        durationDays: 21,
+        creatorId: _demoUserId,
+        opponentId: 'u-askar',
+        myStreak: 12,
+        opponentStreak: 10,
+        startsAt: now.subtract(const Duration(days: 12)),
+        endsAt: now.add(const Duration(days: 9)),
+        createdAt: now.subtract(const Duration(days: 13)),
+        participants: [
+          const DuelParticipant(userId: _demoUserId, username: 'Aruzhan', streak: 12, rank: 1),
+          const DuelParticipant(userId: 'u-askar', username: 'AskarFit', streak: 10, rank: 2),
+        ],
+        checkins: [
+          CheckInEntry(
+            id: 'c1',
+            userId: _demoUserId,
+            username: 'Aruzhan',
+            checkedAt: now.subtract(const Duration(hours: 2)),
+            note: 'Прочитала 36 страниц перед сном',
+          ),
+          CheckInEntry(
+            id: 'c2',
+            userId: 'u-askar',
+            username: 'AskarFit',
+            checkedAt: now.subtract(const Duration(hours: 5)),
+            note: 'Закончил главу по саморазвитию',
+          ),
+        ],
+      ),
+      Duel(
+        id: 'demo-duel-group',
+        habitName: '10 000 шагов в день',
+        description: 'Открытое лобби на неделю с небольшим взносом.',
+        status: 'open',
+        durationDays: 7,
+        type: DuelType.group,
+        creatorId: 'u-dana',
+        maxParticipants: 5,
+        entryFee: 500,
+        currency: DuelCurrency.tenge,
+        createdAt: now.subtract(const Duration(days: 1)),
+        participants: const [
+          DuelParticipant(userId: 'u-dana', username: 'DanaReads', streak: 4, rank: 1),
+          DuelParticipant(userId: _demoUserId, username: 'Aruzhan', streak: 3, rank: 2),
+          DuelParticipant(userId: 'u-max', username: 'MaxPower', streak: 3, rank: 3),
+        ],
+      ),
+      Duel(
+        id: 'demo-duel-completed',
+        habitName: 'Утренние тренировки',
+        description: 'Завершённый дуэльный сезон.',
+        status: 'completed',
+        durationDays: 14,
+        creatorId: 'u-mira',
+        opponentId: _demoUserId,
+        myStreak: 11,
+        opponentStreak: 8,
+        startsAt: now.subtract(const Duration(days: 20)),
+        endsAt: now.subtract(const Duration(days: 6)),
+        createdAt: now.subtract(const Duration(days: 21)),
+        participants: const [
+          DuelParticipant(userId: 'u-mira', username: 'MiraRun', streak: 8, rank: 2),
+          DuelParticipant(userId: _demoUserId, username: 'Aruzhan', streak: 11, rank: 1),
+        ],
+      ),
+    ];
+  }
+
+  List<Duel> get _demoOpenGroupDuels => _demoMyDuels
+      .where((duel) => duel.status == 'open')
+      .toList(growable: false);
+
+  Duel? _demoDuelById(String duelId) {
+    for (final duel in _demoMyDuels) {
+      if (duel.id == duelId) return duel;
+    }
+    return null;
+  }
+
+  List<Achievement> get _demoAchievements => [
+        Achievement(
+          id: 'first_checkin',
+          type: 'first_checkin',
+          title: 'Первый шаг',
+          description: 'Отметься в приложении впервые.',
+          icon: '🎯',
+          xpReward: 10,
+          isUnlocked: true,
+          unlockedAt: DateTime.utc(2026, 4, 2),
+          progress: 1,
+          requiredValue: 1,
+          category: AchievementCategory.general,
+        ),
+        Achievement(
+          id: 'streak_7',
+          type: 'streak_7',
+          title: 'Неделя силы',
+          description: 'Сохрани серию 7 дней подряд.',
+          icon: '🔥',
+          xpReward: 50,
+          isUnlocked: true,
+          unlockedAt: DateTime.utc(2026, 4, 14),
+          progress: 7,
+          requiredValue: 7,
+          category: AchievementCategory.streak,
+        ),
+        Achievement(
+          id: 'streak_21',
+          type: 'streak_21',
+          title: 'Марафонец',
+          description: 'Поддерживай привычку 21 день.',
+          icon: '💎',
+          xpReward: 150,
+          isUnlocked: true,
+          unlockedAt: DateTime.utc(2026, 4, 22),
+          progress: 21,
+          requiredValue: 21,
+          category: AchievementCategory.streak,
+        ),
+        const Achievement(
+          id: 'duel_master',
+          type: 'duel_master',
+          title: 'Мастер дуэлей',
+          description: 'Выиграй 10 поединков.',
+          icon: '⚔️',
+          xpReward: 200,
+          isUnlocked: false,
+          progress: 9,
+          requiredValue: 10,
+          category: AchievementCategory.duel,
+        ),
+        Achievement(
+          id: 'social_butterfly',
+          type: 'social_butterfly',
+          title: 'Душа компании',
+          description: 'Сыграй 5 дуэлей с друзьями.',
+          icon: '🦋',
+          xpReward: 100,
+          isUnlocked: true,
+          unlockedAt: DateTime.utc(2026, 4, 18),
+          progress: 5,
+          requiredValue: 5,
+          category: AchievementCategory.social,
+        ),
+        const Achievement(
+          id: 'early_bird',
+          type: 'early_bird',
+          title: 'Жаворонок',
+          description: 'Сделай 7 утренних check-in до 8:00.',
+          icon: '🌅',
+          xpReward: 75,
+          isUnlocked: false,
+          progress: 5,
+          requiredValue: 7,
+          category: AchievementCategory.special,
+        ),
+      ];
+
+  UserStats get _demoUserStats {
+    final now = DateTime.now();
+    final heatMap = <String, int>{};
+    for (var i = 0; i < 28; i++) {
+      final date = now.subtract(Duration(days: i));
+      final key =
+          '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+      final value = switch (i % 6) {
+        0 => 0,
+        1 || 2 => 1,
+        3 || 4 => 2,
+        _ => 3,
+      };
+      heatMap[key] = value;
+    }
+
+    return UserStats(
+      userId: _demoUserId,
+      totalCheckins: 47,
+      totalDuels: 12,
+      totalWins: 9,
+      totalLosses: 3,
+      bestStreak: 21,
+      currentStreak: 12,
+      averageCheckinHour: 20.0,
+      favoriteHabitCategory: 'Self-development',
+      weeklyStats: List.generate(
+        4,
+        (index) => WeeklyStats(
+          weekStart: DateTime(now.year, now.month, now.day)
+              .subtract(Duration(days: now.weekday - 1 + (7 * (3 - index)))),
+          checkins: 8 + index,
+          duelsPlayed: 2,
+          duelsWon: index > 1 ? 2 : 1,
+          xpEarned: 120 + (index * 20),
+        ),
+      ),
+      heatMapData: heatMap,
+      headToHeadStats: const {
+        'u-askar': HeadToHeadStats(
+          opponentId: 'u-askar',
+          opponentName: 'AskarFit',
+          wins: 3,
+          losses: 1,
+          draws: 0,
+          totalCheckins: 14,
+          opponentTotalCheckins: 11,
+        ),
+        'u-mira': HeadToHeadStats(
+          opponentId: 'u-mira',
+          opponentName: 'MiraRun',
+          wins: 2,
+          losses: 1,
+          draws: 1,
+          totalCheckins: 12,
+          opponentTotalCheckins: 10,
+        ),
+      },
+    );
   }
 }

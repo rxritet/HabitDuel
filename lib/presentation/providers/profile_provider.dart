@@ -104,6 +104,10 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
       await _ref.read(firestoreStoreProvider).upsertProfile(
             updatedProfile.copyWith(localAvatarBase64: null),
           );
+      await _ref.read(firestoreStoreProvider).syncUserDisplayNameInDuels(
+            userId: updatedProfile.id,
+            username: updatedProfile.username,
+          );
     } catch (_) {
       // Local edits remain available even if mirror sync is unavailable.
     }

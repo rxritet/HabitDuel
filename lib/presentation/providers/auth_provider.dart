@@ -7,6 +7,9 @@ import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import 'core_providers.dart';
 
+bool get _isPresentationDemoMode =>
+    kIsWeb && Uri.base.queryParameters['demo'] == '1';
+
 sealed class AuthState {
   const AuthState();
 }
@@ -37,6 +40,15 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   Future<void> checkSession() async {
     state = const AuthLoading();
+    if (_isPresentationDemoMode) {
+      final demoUsername =
+          (Uri.base.queryParameters['username'] ?? 'Aruzhan').trim();
+      await _activateDemoSession(
+        username: demoUsername.isEmpty ? 'Aruzhan' : demoUsername,
+        email: 'demo@habitduel.app',
+      );
+      return;
+    }
     final hasToken = await _repo.hasToken();
     if (hasToken) {
       final storage = _ref.read(secureStorageProvider);
