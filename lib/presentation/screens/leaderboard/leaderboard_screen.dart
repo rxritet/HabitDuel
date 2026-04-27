@@ -293,7 +293,7 @@ class _PodiumCard extends StatelessWidget {
 
     return Container(
       height: height,
-      padding: const EdgeInsets.fromLTRB(14, 14, 14, 16),
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 14),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
         gradient: LinearGradient(
@@ -314,41 +314,47 @@ class _PodiumCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text(medal, style: const TextStyle(fontSize: 28)),
-          const SizedBox(height: 8),
+          Text(
+            medal,
+            style: TextStyle(fontSize: isChampion ? 24 : 22),
+          ),
+          const SizedBox(height: 6),
           CircleAvatar(
-            radius: isChampion ? 30 : 26,
+            radius: isChampion ? 28 : 24,
             backgroundColor: theme.colorScheme.surface,
             child: Text(
               entry.username.isEmpty ? '?' : entry.username[0].toUpperCase(),
               style: TextStyle(
-                fontSize: isChampion ? 26 : 22,
+                fontSize: isChampion ? 24 : 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
           Text(
             entry.username,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
-            style: theme.textTheme.titleMedium?.copyWith(
+            style: (isChampion
+                    ? theme.textTheme.titleMedium
+                    : theme.textTheme.titleSmall)
+                ?.copyWith(
               fontWeight: FontWeight.w800,
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 4),
           Text(
             '${entry.wins} побед',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.bodyMedium?.copyWith(
+            style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.outline,
             ),
           ),
           const Spacer(),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
             decoration: BoxDecoration(
               color: theme.colorScheme.surface.withValues(alpha: 0.72),
               borderRadius: BorderRadius.circular(999),
@@ -357,7 +363,7 @@ class _PodiumCard extends StatelessWidget {
               '$winRate% винрейт',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.labelMedium?.copyWith(
+              style: theme.textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),

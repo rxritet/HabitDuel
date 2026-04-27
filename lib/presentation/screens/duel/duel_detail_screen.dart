@@ -132,6 +132,9 @@ class _DuelBody extends StatelessWidget {
     
     final isParticipant = currentUserId != null && 
         duel.participants.any((p) => p.userId == currentUserId);
+    final canAcceptPending = currentUserId != null &&
+        duel.status == 'pending' &&
+        duel.opponentId == currentUserId;
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -235,7 +238,7 @@ class _DuelBody extends StatelessWidget {
                 : const Icon(Icons.check_circle),
             label: Text(isCheckinLoading ? 'Checking in…' : 'Check In'),
           ),
-        if (duel.status == 'pending' && !isParticipant)
+        if (canAcceptPending)
           FilledButton.icon(
             onPressed: onAccept,
             icon: const Icon(Icons.handshake),

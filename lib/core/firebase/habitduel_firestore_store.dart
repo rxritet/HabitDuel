@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
@@ -80,6 +82,7 @@ class HabitDuelFirestoreStore {
         {
           'id': profile.id,
           'username': profile.username,
+          'usernameLower': _normalizeUsername(profile.username),
           if (profile.email != null) 'email': profile.email,
           'wins': profile.wins,
           'losses': profile.losses,
@@ -155,6 +158,7 @@ class HabitDuelFirestoreStore {
         {
           'id': user.id,
           'username': user.username,
+          'usernameLower': _normalizeUsername(user.username),
           if (user.email != null) 'email': user.email,
           'wins': user.wins,
           'losses': user.losses,
@@ -266,6 +270,7 @@ class HabitDuelFirestoreStore {
           {
             'id': entry.userId,
             'username': entry.username,
+            'usernameLower': _normalizeUsername(entry.username),
             'wins': entry.wins,
             'losses': entry.losses,
             'updatedAt': FieldValue.serverTimestamp(),
@@ -288,12 +293,20 @@ class HabitDuelFirestoreStore {
       return _demoMyDuels;
     }
     if (!_isEnabled) return const [];
-    final snapshot = await _duels
+    final participantSnapshot = await _duels
         .where('participantIds', arrayContains: userId)
         .orderBy('createdAt', descending: true)
         .get();
-    final duels = snapshot.docs.map(_duelFromSnapshot).toList();
-    return duels;
+    final pendingInviteSnapshot = await _duels
+        .where('opponentId', isEqualTo: userId)
+        .where('status', isEqualTo: 'pending')
+        .orderBy('createdAt', descending: true)
+        .get();
+
+    return _mergeDuelSnapshots([
+      participantSnapshot.docs,
+      pendingInviteSnapshot.docs,
+    ], hydrateParticipants: true);
   }
 
   Future<Duel?> readDuel(String duelId) async {
@@ -366,11 +379,58 @@ class HabitDuelFirestoreStore {
       return Stream.value(_demoMyDuels);
     }
     if (!_isEnabled) return const Stream.empty();
-    return _duels
+    final participantStream = _duels
         .where('participantIds', arrayContains: userId)
         .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snap) => snap.docs.map(_duelFromSnapshot).toList());
+        .snapshots();
+    final pendingInviteStream = _duels
+        .where('opponentId', isEqualTo: userId)
+        .where('status', isEqualTo: 'pending')
+        .orderBy('createdAt', descending: true)
+        .snapshots();
+
+    late final StreamController<List<Duel>> controller;
+    StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? participantSub;
+    StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? pendingSub;
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> participantDocs = const [];
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> pendingDocs = const [];
+    var participantReady = false;
+    var pendingReady = false;
+
+    void emitMerged() {
+      if (!participantReady || !pendingReady) return;
+      _mergeDuelSnapshots(
+        [participantDocs, pendingDocs],
+        hydrateParticipants: true,
+      ).then(controller.add).catchError(controller.addError);
+    }
+
+    controller = StreamController<List<Duel>>(
+      onListen: () {
+        participantSub = participantStream.listen(
+          (snapshot) {
+            participantDocs = snapshot.docs;
+            participantReady = true;
+            emitMerged();
+          },
+          onError: controller.addError,
+        );
+        pendingSub = pendingInviteStream.listen(
+          (snapshot) {
+            pendingDocs = snapshot.docs;
+            pendingReady = true;
+            emitMerged();
+          },
+          onError: controller.addError,
+        );
+      },
+      onCancel: () async {
+        await participantSub?.cancel();
+        await pendingSub?.cancel();
+      },
+    );
+
+    return controller.stream;
   }
 
   /// Stream для открытых групповых дуэлей.
@@ -462,6 +522,7 @@ class HabitDuelFirestoreStore {
       await batch.commit();
     } catch (error) {
       debugPrint('Firestore duel upsert failed: $error');
+      rethrow;
     }
   }
 
@@ -490,11 +551,20 @@ class HabitDuelFirestoreStore {
 
     String? actualOpponentId;
     if (type == DuelType.duel && opponentUsername != null && opponentUsername.isNotEmpty) {
-      final querySnap = await _users.where('username', isEqualTo: opponentUsername).limit(1).get();
+      final normalizedOpponentUsername = _normalizeUsername(opponentUsername);
+      QuerySnapshot<Map<String, dynamic>> querySnap = await _users
+          .where('usernameLower', isEqualTo: normalizedOpponentUsername)
+          .limit(1)
+          .get();
+      if (querySnap.docs.isEmpty) {
+        querySnap = await _users.where('username', isEqualTo: opponentUsername.trim()).limit(1).get();
+      }
       if (querySnap.docs.isNotEmpty) {
         actualOpponentId = querySnap.docs.first.id;
       } else {
-        throw Exception('User "$opponentUsername" not found. They must login first.');
+        throw Exception(
+          'User "$opponentUsername" not found in Firestore users. Ask them to sign in again so their profile is mirrored.',
+        );
       }
     }
 
@@ -523,8 +593,6 @@ class HabitDuelFirestoreStore {
       createdAt: now,
       participants: [
         DuelParticipant(userId: creatorId, username: creatorUsername),
-        if (actualOpponentId != null)
-          DuelParticipant(userId: actualOpponentId, username: opponentUsername!),
       ],
     );
 
@@ -559,6 +627,14 @@ class HabitDuelFirestoreStore {
     }
 
     final duelData = duelDoc.data()!;
+    final invitedOpponentId = duelData['opponentId'] as String?;
+    final status = duelData['status'] as String? ?? 'pending';
+    if (status != 'pending') {
+      throw Exception('Duel is no longer pending');
+    }
+    if (invitedOpponentId != null && invitedOpponentId != userId) {
+      throw Exception('This duel was assigned to another user');
+    }
     final entryFee = (duelData['entryFee'] as num?)?.toInt() ?? 0;
     if (entryFee > 0) {
       await _ensureEnoughTenge(userId: userId, amount: entryFee);
@@ -625,10 +701,17 @@ class HabitDuelFirestoreStore {
 
     // Обновляем streak участника
     final participantRef = duelRef.collection('participants').doc(userId);
-    batch.update(participantRef, {
-      'streak': FieldValue.increment(1),
-      'lastCheckin': now.toIso8601String(),
-    });
+    batch.set(
+      participantRef,
+      {
+        'userId': userId,
+        'username': username,
+        'streak': FieldValue.increment(1),
+        'lastCheckin': now.toIso8601String(),
+        'isEliminated': false,
+      },
+      SetOptions(merge: true),
+    );
 
     batch.update(duelRef, {
       'updatedAt': FieldValue.serverTimestamp(),
@@ -1084,12 +1167,45 @@ class HabitDuelFirestoreStore {
     );
   }
 
+  Future<List<Duel>> _mergeDuelSnapshots(
+    Iterable<List<QueryDocumentSnapshot<Map<String, dynamic>>>> snapshots, {
+    bool hydrateParticipants = false,
+  }) async {
+    final merged = <String, QueryDocumentSnapshot<Map<String, dynamic>>>{};
+    for (final docs in snapshots) {
+      for (final doc in docs) {
+        merged[doc.id] = doc;
+      }
+    }
+
+    final docs = merged.values.toList(growable: false);
+    final duels = hydrateParticipants
+        ? await Future.wait(docs.map(_hydrateDuelFromSnapshot))
+        : docs.map(_duelFromSnapshot).toList(growable: false);
+    duels.sort((a, b) => (b.createdAt ?? DateTime(0)).compareTo(a.createdAt ?? DateTime(0)));
+    return duels;
+  }
+
+  Future<Duel> _hydrateDuelFromSnapshot(
+    QueryDocumentSnapshot<Map<String, dynamic>> snapshot,
+  ) async {
+    final participantDocs = await _readParticipantsIfAllowed(snapshot.reference);
+    final checkins = await _readCheckinsIfAllowed(snapshot.reference);
+    return _duelFromDocument(
+      snapshot,
+      participants: participantDocs,
+      checkins: checkins,
+    );
+  }
+
   DateTime? _readDateTime(Object? value) {
     if (value is Timestamp) return value.toDate().toUtc();
     if (value is DateTime) return value.toUtc();
     if (value is String) return DateTime.tryParse(value)?.toUtc();
     return null;
   }
+
+  String _normalizeUsername(String value) => value.trim().toLowerCase();
 
   String _generateInviteCode() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';

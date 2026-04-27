@@ -55,11 +55,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final userId = await storage.read(key: kUserIdKey);
       final username = await storage.read(key: kUsernameKey);
       if (userId != null && userId.isNotEmpty) {
+        final restoredUser = User(
+          id: userId,
+          username: (username == null || username.isEmpty) ? 'Player' : username,
+        );
+        try {
+          await _ref.read(firestoreStoreProvider).mirrorUserFromAuth(restoredUser);
+        } catch (_) {
+          // Session restore should still succeed even if Firestore mirror is unavailable.
+        }
         state = Authenticated(
-          User(
-            id: userId,
-            username: (username == null || username.isEmpty) ? 'Player' : username,
-          ),
+          restoredUser,
         );
       } else {
         state = const Unauthenticated();

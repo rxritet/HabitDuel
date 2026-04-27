@@ -321,8 +321,8 @@ class _OneVsOnePlayerPicker extends StatelessWidget {
   }
 }
 
-class _OneVsOneFields extends StatelessWidget {
-  const _OneVsOneFields({required this.controller});
+class OneVsOneFieldsLegacy extends StatelessWidget {
+  const OneVsOneFieldsLegacy({required this.controller});
   final TextEditingController controller;
 
   @override

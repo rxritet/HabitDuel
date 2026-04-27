@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/errors/failures.dart';
@@ -169,7 +170,12 @@ class DuelDetailNotifier extends StateNotifier<DuelDetailState> {
       await _ref.read(checkInUseCaseProvider).call(duelId, note: note);
       // Stream automatically updates the UI
       return true;
-    } on Failure {
+    } on Failure catch (error) {
+      debugPrint('Check-in failed: ${error.message}');
+      return false;
+    } catch (error, stackTrace) {
+      debugPrint('Check-in failed with unexpected error: $error');
+      debugPrintStack(stackTrace: stackTrace);
       return false;
     }
   }

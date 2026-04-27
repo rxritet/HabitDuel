@@ -22,6 +22,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(duelsListProvider);
+    final authState = ref.watch(authProvider);
+    final currentUserId = authState is Authenticated ? authState.user.id : null;
     final body = switch (state) {
       DuelsListInitial() || DuelsListLoading() => const Center(
           child: CircularProgressIndicator(),
@@ -41,6 +43,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 itemBuilder: (context, index) => _AnimatedDuelCard(
                   duel: duels[index],
                   index: index,
+                  currentUserId: currentUserId,
                 ),
               ),
             ),
@@ -75,14 +78,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 }
 
 class _DuelCard extends StatelessWidget {
-  const _DuelCard({required this.duel});
+  const _DuelCard({required this.duel, required this.currentUserId});
 
   final Duel duel;
+  final String? currentUserId;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isPending = duel.status == 'pending';
+    final myParticipants = currentUserId == null
+        ? const <DuelParticipant>[]
+        : duel.participants.where((p) => p.userId == currentUserId).toList(growable: false);
+    final opponentParticipants = currentUserId == null
+        ? duel.participants
+        : duel.participants.where((p) => p.userId != currentUserId).toList(growable: false);
+    final myStreak = myParticipants.isNotEmpty ? myParticipants.first.streak : duel.myStreak;
+    final opponentStreak =
+        opponentParticipants.isNotEmpty ? opponentParticipants.first.streak : duel.opponentStreak;
 
     final gradient = switch (duel.status) {
       'active' => LinearGradient(
@@ -192,7 +205,7 @@ class _DuelCard extends StatelessWidget {
                                   Text('Вы', style: theme.textTheme.bodySmall),
                                   const Spacer(),
                                   Text(
-                                    '${duel.myStreak}🔥',
+                                    '$myStreak🔥',
                                     style: theme.textTheme.titleSmall?.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: theme.colorScheme.primary,
@@ -204,7 +217,7 @@ class _DuelCard extends StatelessWidget {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(4),
                                 child: LinearProgressIndicator(
-                                  value: (duel.myStreak / duel.durationDays).clamp(0, 1),
+                                  value: (myStreak / duel.durationDays).clamp(0, 1),
                                   minHeight: 6,
                                   backgroundColor:
                                       theme.colorScheme.outline.withValues(alpha: 0.2),
@@ -235,7 +248,7 @@ class _DuelCard extends StatelessWidget {
                                   ),
                                   const Spacer(),
                                   Text(
-                                    '${duel.opponentStreak}🔥',
+                                    '$opponentStreak🔥',
                                     style: theme.textTheme.titleSmall?.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: theme.colorScheme.secondary,
@@ -247,7 +260,7 @@ class _DuelCard extends StatelessWidget {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(4),
                                 child: LinearProgressIndicator(
-                                  value: (duel.opponentStreak / duel.durationDays)
+                                  value: (opponentStreak / duel.durationDays)
                                       .clamp(0, 1),
                                   minHeight: 6,
                                   backgroundColor:
@@ -324,10 +337,15 @@ class _InfoChip extends StatelessWidget {
 }
 
 class _AnimatedDuelCard extends StatelessWidget {
-  const _AnimatedDuelCard({required this.duel, required this.index});
+  const _AnimatedDuelCard({
+    required this.duel,
+    required this.index,
+    required this.currentUserId,
+  });
 
   final Duel duel;
   final int index;
+  final String? currentUserId;
 
   @override
   Widget build(BuildContext context) {
@@ -344,7 +362,7 @@ class _AnimatedDuelCard extends StatelessWidget {
           ),
         );
       },
-      child: _DuelCard(duel: duel),
+      child: _DuelCard(duel: duel, currentUserId: currentUserId),
     );
   }
 }

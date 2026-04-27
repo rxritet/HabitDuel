@@ -106,6 +106,13 @@ Future<void> main() async {
     totalWrites += await _commitBatched(
       firestore,
       databasePath,
+      _buildInviteWrites(projectId, duels),
+      label: 'invites',
+    );
+
+    totalWrites += await _commitBatched(
+      firestore,
+      databasePath,
       _buildCheckinWrites(projectId, checkins),
       label: 'checkins',
     );
@@ -150,10 +157,11 @@ Future<List<Map<String, dynamic>>> _readRows(
 
 Object? _replacePlaceholders(Object? value, Map<String, String> substitutions) {
   if (value is String) {
-    return substitutions.entries.fold(
-      value,
-      (text, entry) => text.replaceAll(entry.key, entry.value),
-    );
+    var text = value;
+    for (final entry in substitutions.entries) {
+      text = text.replaceAll(entry.key, entry.value);
+    }
+    return text;
   }
   if (value is List) {
     return value
@@ -262,6 +270,29 @@ List<fs.Write> _buildParticipantWrites(String projectId, List<Map<String, dynami
             'username': _asString(row['username']),
             'streak': _asInt(row['streak']),
             'lastCheckin': _nullableString(row['last_checkin']),
+          },
+        );
+      })
+      .whereType<fs.Write>()
+      .toList(growable: false);
+}
+
+List<fs.Write> _buildInviteWrites(String projectId, List<Map<String, dynamic>> rows) {
+  return rows
+      .map((row) {
+        final inviteCode = _asString(row['invite_code']);
+        final duelId = _asString(row['id']);
+        if (inviteCode.isEmpty || duelId.isEmpty) return null;
+
+        return _upsertWrite(
+          projectId,
+          'invites/$inviteCode',
+          {
+            'duelId': duelId,
+            'creatorId': _asString(row['creator_id']),
+            'habitName': _asString(row['habit_name']),
+            'createdAt': _nullableTimestamp(row['created_at']),
+            'expiresAt': _nullableTimestamp(row['expires_at']),
           },
         );
       })
